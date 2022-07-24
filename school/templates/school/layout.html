@@ -13,7 +13,7 @@
     {% block links %}
     {% endblock %} 
 
-    <title>Main page</title>
+    <title>{% block title %}Main page{% endblock %}</title>
   </head>
   <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,7 +27,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         {% if user.is_teacher == True %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Teacher links</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'school:teacher_view' %}">Teacher page</a>
                             </li>
                         {% elif user.is_sst == True %}
                             <li class="nav-item">

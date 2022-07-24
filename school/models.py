@@ -47,7 +47,10 @@ class Student(models.Model):
                         max_length=100)
     date_join = models.DateField(verbose_name='Date of joining')
     entrygrades = models.PositiveSmallIntegerField()
-    teacher = models.ForeignKey(MyUser, on_delete=models.SET_NULL, null=True)
+    teacher = models.ForeignKey(MyUser, 
+                                on_delete=models.SET_NULL, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True})
 
     class Meta:
         verbose_name_plural = "Students"

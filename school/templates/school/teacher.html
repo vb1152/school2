@@ -13,9 +13,9 @@
             Select student
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            {% for student in students %}
+                <li><a class="dropdown-item" href="{% url 'school:student_data_profile' stud_id=student.id %}">{{ student.first_name }} {{ student.last_name}}</a></li>
+            {% endfor %}
         </ul>
     </div>
     <br>
