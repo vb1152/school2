@@ -1,0 +1,36 @@
+{% extends 'school/layout.html' %}
+{% load static %}
+
+{% block content %}
+    <h3>Hi! 
+        {{ user.first_name|default:'No firstname' }} 
+        {{ user.last_name|default:'No lastname' }}
+    </h3>
+    <div class="dropdown">
+        <a class="btn btn-secondary dropdown-toggle" href="#" 
+            role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" 
+            aria-expanded="false">
+            Select student
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+    </div>
+    <br>
+    <div class="card w-50">
+        <div class="card-body">
+            <form enctype="multipart/form-data" method="post" action="{% url 'school:upload_students' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">
+                        Chose file with list of students to populate database
+                    </label>
+                </div>
+                {{ file_form.as_p }}
+                <input class="btn btn-primary" id="submit" type="submit" value="Upload data" />
+            </form>
+        </div>
+    </div>    
+{% endblock content %}
