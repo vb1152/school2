@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import clear_script_prefix
 
 
 class MyUser(AbstractUser):
@@ -57,3 +58,58 @@ class Student(models.Model):
 
     def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name
+
+
+class NotesPTS(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.DateField()
+    note = models.CharField(max_length=500)
+
+    class Meta:
+        ordering = ['date']
+    
+class Consern(models.Model):
+    date = models.DateField(verbose_name='Date')
+    consern_type = models.CharField(verbose_name='Type of Concern', max_length=200)
+    strategy_used = models.CharField(verbose_name='Strategies Used', max_length=300)
+    num_weeks = models.PositiveSmallIntegerField(verbose_name='Number of weeks')
+    st_responce = models.CharField(verbose_name='Student Response', max_length=300)
+    teach_comm = models.CharField(verbose_name='Teacher Comments', max_length=300)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_consern')
+    teacher = models.ForeignKey(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True})
+    NOREFERRAL = 'NO'
+    REFERRAL = 'R'
+    RESOLVED = 'RES'
+    CONSERN_CHOICES = [(NOREFERRAL, 'No Referral'),(REFERRAL, 'Referral'), (RESOLVED, 'Concern Resolved')]
+    refers = models.CharField(max_length=3, choices=CONSERN_CHOICES, verbose_name='Referral')
+
+    class Meta:
+        ordering = ['-date']
+
+class Intake(models.Model):
+    timeline = models.PositiveSmallIntegerField(verbose_name='ST with teacher')
+    sst_reasoning = models.CharField(verbose_name='Why to SST?', max_length=500)
+    behavior_patterns = models.CharField(verbose_name='Primary behavior patterns', max_length=500)
+    
+    CARE = 'C'
+    GUIDANCE = 'G'
+    SOCIAL = 'S'
+    BEHAVE_CHOICES = [
+                        (CARE, 'A health, development, or academic issue (Care/Therapeutic)?'),
+                        (GUIDANCE, 'A student pushing the school’s behavioral boundaries (Guidance and  Discipline)?'),
+                        (SOCIAL, 'A student having difficulty understanding how to integrate into the fabric of their class (Social Inclusion)?')
+                    ]
+    behavior_quality = models.CharField(max_length=1, choices=BEHAVE_CHOICES, verbose_name='Qualify this behavior')
+    why_consern = models.CharField(verbose_name='Concern reasoning', max_length=500)
+    what_done = models.CharField(verbose_name='What done', max_length=500)
+    smal_done = models.CharField(verbose_name='What done small', max_length=500)
+    didnt_worked = models.CharField(verbose_name='Not worked', max_length=500)
+    worse = models.CharField(verbose_name='Worse', max_length=500)
+    response_level = models.CharField(verbose_name='Responce level', max_length=500)
+    other_info = models.CharField(verbose_name='Other info for SST', max_length=500)
+    estim_result = models.CharField(verbose_name='Estimate result', max_length=500)
+    
+

@@ -73,3 +73,8 @@ def calculate_age(date_of_birth):
     # Get the relativedelta between two dates
     delta = relativedelta.relativedelta(now, start_date)
     return (delta.years, delta.months)
+
+
+def teacher_check(user):
+    '''Check if user is a teacher for user_passes_test decorator'''
+    return user.is_teacher

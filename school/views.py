@@ -1,13 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-from .models import Student
+from .models import NotesPTS, Student
 from .forms import MyUserForm, UploadExcelFileForm
-from .utils import read_excel_with_students, calculate_age
+from .utils import read_excel_with_students, calculate_age, teacher_check
+import json
 
 
 # Create your views here.
@@ -46,6 +47,7 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('school:index'))
 
 @login_required
+@user_passes_test(teacher_check)
 def teacher_view(request):
     excel_form = UploadExcelFileForm()
     # get list of students for one teacher
@@ -74,13 +76,41 @@ def upload_students(request):
 def student_data_profile(request, **kwargs):
     if request.method == 'GET':
         student = get_object_or_404(Student, id=kwargs['stud_id'])
-        
-        print(student.date_of_birth)#, print(type(student.date_of_birth)))
         age_years, age_months = calculate_age(str(student.date_of_birth))
-
+        notes = NotesPTS.objects.filter(student=student)
         context = {
             'student': student,
             'age_years': age_years,
-            'age_months': age_months
+            'age_months': age_months,
+            'notes': notes
         }
         return render(request, 'school/student_profile.html', context)
+
+@login_required
+@user_passes_test(teacher_check)
+def save_note_from_PTC(request):
+    if request.method == 'POST':
+        note = json.load(request)
+        student = Student.objects.get(id=note['stud_id'])
+        note_inst = NotesPTS(student = student, date=note['note_date'], note=note['note_text'] )
+        note_inst.save()
+        # {'note_date': '2022-07-26', 'note_text': 'ads', 'stud_id': '5'}
+
+        all_notes = NotesPTS.objects.filter(student=student).values()
+        data = {'notes': list(all_notes),}
+        return JsonResponse(data, safe=False)
+
+@login_required
+@user_passes_test(teacher_check)
+def make_consern(request, **kwargs):
+    if request.method == 'GET':
+        from .forms import ConsernForm, IntakeForm
+        student = Student.objects.get(id=kwargs['stud_id'])
+        cons_form = ConsernForm()
+        intake_form = IntakeForm()
+        context = {
+            'student': student,
+            'cons_form': cons_form, 
+            'intake_form': intake_form
+        }
+        return render(request, 'school/consern.html', context)

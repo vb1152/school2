@@ -1,5 +1,7 @@
+from tkinter.tix import Tree
+from urllib import request
 from django.forms import ModelForm
-from .models import MyUser
+from .models import MyUser, NotesPTS, Consern, Intake
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -16,9 +18,263 @@ class MyUserForm(ModelForm):
             'password': forms.PasswordInput(attrs={'class':'form-control'})
         }
 
-# class MyUserForm(forms.Form):
-#     username = forms.CharField(label='Username', max_length=100, widget=forms.TextInput(attrs={'class': "form-control"}))
-#     password = forms.URLField()
-
 class UploadExcelFileForm(forms.Form):
+    '''form to upload students'''
     file = forms.FileField()
+
+# class NotesPTSForm(ModelForm):
+#     class Meta:
+#         model = NotesPTS
+#         fields = ['date', 'note']
+#         exclude = ['student']
+
+#         labels = {
+#             'date': _('Pick a date'),
+#             'note': _('Add note')
+#                 }
+#         widgets = {
+#             'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+#             'note': forms.TextInput(attrs={'class':'form-control'})
+#         }
+
+class ConsernForm(ModelForm):
+    date = forms.DateField(
+        required=True,
+        widget=forms.widgets.DateInput(
+            attrs={
+                "placeholder": "Add date ...",
+                "class": "form-control",
+                'type':'date'
+            }
+        ), 
+        label="Date",
+    )
+    consern_type = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                "placeholder": "Add type of Concern",
+                "class": "form-control",
+            }
+        ),
+        label="Type of Concern",
+    )
+    
+    consern_type = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                "placeholder": "Add type of Concern",
+                "class": "form-control",
+            }
+        ),
+        label="Type of Concern",
+    )
+    
+    class Meta:
+        model = Consern
+        exclude = ['student', 'teacher']
+        labels = {
+            # 'date': _('Date'),
+            # 'consern_type': _('Type of Concern'),
+            'strategy_used': _('Strategies Used'),
+            'num_weeks': _('Number of weeks'),
+            'st_responce': _('Student Response'),
+            'teach_comm': _('Teacher Comments'),
+            'refers': _('Referral')
+            }
+
+        widgets = {
+            # 'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
+            # 'consern_type': forms.TextInput(attrs={'class':'form-control'}),
+            'strategy_used': forms.TextInput(attrs={'class':'form-control', 'placeholder':'custom'}),
+            'num_weeks': forms.NumberInput(attrs={'class':'form-control', 'placeholder':'any???'}),
+            'st_responce': forms.TextInput(attrs={'class':'form-control', 'placeholder':'any???'}),
+            'teach_comm': forms.TextInput(attrs={'class':'form-control', 'placeholder':'any???'}),
+            # 'refers': forms.ChoiceField(choices=Consern.CONSERN_CHOICES),
+        }
+
+class IntakeForm(ModelForm):
+    timeline = forms.IntegerField(
+        required=True,
+        widget=forms.widgets.NumberInput(
+            attrs={
+                "placeholder": "TODO ask...",
+                "class": "form-control",
+                'type':'number'
+            }
+        ), 
+        label="How long has the student been with you?",
+    )
+    sst_reasoning = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                "placeholder": "One sentence...",
+                "class": "form-control",
+                'type':'text'
+            }
+        ), 
+        label='''In one sentence, why did you bring this child to the 
+                attention of the SST?''',
+    )
+
+    behavior_patterns = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": 'Please use the following format. EXAMPLE: Ever'
+                                'since (Date), I have observed that (Child) does'
+                                '(Behavior/Concern) when ',
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3' 
+            }
+        ), 
+        label="What are the primary behavior patterns that you are concerned about?",
+    )
+    # behavior_quality = forms.ChoiceField(
+    #     widget=forms.widgets.RadioSelect(
+    #         choices=Intake.BEHAVE_CHOICES
+    #     ), 
+    #     label="What are the primary behavior patterns that you are concerned about?",
+    # )
+    why_consern = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                "placeholder": "Describe your conserns...",
+                "class": "form-control",
+                'type': 'text'
+            }
+        ), 
+        label="Why is this concerning to you?",
+    )
+    what_done = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                "placeholder": '''Refer to the tools listed in your Teacher 
+                                Three Stream Binder''',
+                "class": "form-control",
+                'type': 'text'
+            }
+        ), 
+        label='What have you done to help alleviate or work through'
+                'these concerning patterns',
+    )
+
+    what_done = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                "placeholder": 'Refer to the tools listed in your Teacher Three'
+                                'Stream Binder',
+                "class": "form-control",
+                'type': 'text'
+            }
+        ), 
+        label='''What have you done to help alleviate or work through these 
+                concerning patterns''',
+    )
+
+    smal_done = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label="What have you done that has worked, even to a small extent?",
+    )
+
+    didnt_worked = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label="What have you done that has not worked or shown no positive change?",
+    )
+    worse = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label="What have you done that has made things worse?",
+    )
+
+    response_level = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "(Attach incident report)?",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label= 'What response level do you believe the student is currently in? '
+                'Have there been any threshold events that require an immediate' 
+                'response (Attach incident report)?',
+    )
+    other_info = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "(Attach incident report)?",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label='''What other pieces of information would it be helpful for the SST
+                 to have when deciding on how to move forward with your student?''',
+    )
+
+    other_info = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "(Attach incident report)?",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label='''What other pieces of information would it be helpful for the SST
+                 to have when deciding on how to move forward with your student?''',
+    )
+
+    estim_result = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "",
+                "class": "form-control",
+                'type': 'text',
+                'rows': '3'
+            }
+        ), 
+        label='''What would you like to see out of this process for your student?''',
+    )
+
+    class Meta:
+        model = Intake
+        fields = '__all__'
+
+        labels = {
+            'behavior_quality': _('How would you qualify this behavior? Please choose one: '),
+            }
