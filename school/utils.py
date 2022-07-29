@@ -15,8 +15,11 @@ def read_excel_with_students(request_file):
     stud_data = list(sheet_ranges.values)
 
     students_objects_list = []
+
+    print(stud_data[1:])
     
     for row in stud_data[1:]:
+        
         if Student.objects.filter(first_name = row[1], last_name = row[3], date_of_birth = row[5]).exists():
             continue
         else:
@@ -29,7 +32,8 @@ def read_excel_with_students(request_file):
                     date_of_birth = row[5], 
                     birth_order_in_class = int(row[6]), 
                     birth_order_in_family = int(row[7]), 
-                    gender = row[8],
+                    # add gender to db or empty value if not Male or Femail are actual data in excel. 
+                    gender = 'M' if row[8] == 'Male' else ('F' if row[8] == 'Female' else 'smt'),
                     cur_grade = int(row[9]),
                     grad_year = row[10],
                     email = row[11],

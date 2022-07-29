@@ -47,4 +47,20 @@ document.addEventListener('DOMContentLoaded', function(){
     //set current date to a date field in modal window
     document.getElementById('id_date').value = new Date().toISOString().substring(0, 10);
     })
+
+    //change color of the text in the concern table
+    const refferStatus = document.querySelectorAll(`[data-reffers="reffers"]`) //(`[data-id="box1"]`); data-reffers="reffers"
+    console.log(refferStatus.innerHTML)
+    
+    refferStatus.forEach((element) => { 
+        if (element.innerHTML === 'Concern Resolved') {
+            element.parentElement.setAttribute('class', 'col-sm-3 text-success')
+        }
+        else if (element.innerHTML === 'Referral') {
+            element.parentElement.setAttribute('class', 'col-sm-3 text-danger')
+        }
+    })
+    
+    
+
 })

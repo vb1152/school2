@@ -11,6 +11,8 @@ urlpatterns = [
     path('upload_students', views.upload_students, name='upload_students'),
     path('student_data_profile/<int:stud_id>', views.student_data_profile, name='student_data_profile'),
     path('make_consern/<int:stud_id>', views.make_consern, name='make_consern'),
+    path('make_consern_post', views.make_consern_post, name='make_consern_post'),
+
 
     #API 
     path('save_note_from_PTC', views.save_note_from_PTC, name='save_note_from_PTC')

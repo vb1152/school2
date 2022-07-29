@@ -1,5 +1,4 @@
-from tkinter.tix import Tree
-from urllib import request
+from tkinter.tix import Select
 from django.forms import ModelForm
 from .models import MyUser, NotesPTS, Consern, Intake
 from django.utils.translation import gettext_lazy as _
@@ -70,6 +69,16 @@ class ConsernForm(ModelForm):
         ),
         label="Type of Concern",
     )
+
+    refers = forms.ChoiceField(
+        required=True,
+        widget=forms.widgets.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+        choices = Consern.CONSERN_CHOICES
+    )
     
     class Meta:
         model = Consern
@@ -133,6 +142,17 @@ class IntakeForm(ModelForm):
         ), 
         label="What are the primary behavior patterns that you are concerned about?",
     )
+
+    behavior_quality = forms.ChoiceField(
+        required=True,
+        widget=forms.widgets.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+        choices = Intake.BEHAVE_CHOICES
+    )
+
     # behavior_quality = forms.ChoiceField(
     #     widget=forms.widgets.RadioSelect(
     #         choices=Intake.BEHAVE_CHOICES
@@ -230,19 +250,19 @@ class IntakeForm(ModelForm):
                 'Have there been any threshold events that require an immediate' 
                 'response (Attach incident report)?',
     )
-    other_info = forms.CharField(
-        required=True,
-        widget=forms.widgets.Textarea(
-            attrs={
-                "placeholder": "(Attach incident report)?",
-                "class": "form-control",
-                'type': 'text',
-                'rows': '3'
-            }
-        ), 
-        label='''What other pieces of information would it be helpful for the SST
-                 to have when deciding on how to move forward with your student?''',
-    )
+    # other_info = forms.CharField(
+    #     required=True,
+    #     widget=forms.widgets.Textarea(
+    #         attrs={
+    #             "placeholder": "(Attach incident report)?",
+    #             "class": "form-control",
+    #             'type': 'text',
+    #             'rows': '3'
+    #         }
+    #     ), 
+    #     label='''What other pieces of information would it be helpful for the SST
+    #              to have when deciding on how to move forward with your student?''',
+    # )
 
     other_info = forms.CharField(
         required=True,

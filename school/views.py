@@ -5,8 +5,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-from .models import NotesPTS, Student
-from .forms import MyUserForm, UploadExcelFileForm
+from .models import Consern, NotesPTS, Student, MyUser
+from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm
 from .utils import read_excel_with_students, calculate_age, teacher_check
 import json
 
@@ -78,11 +78,14 @@ def student_data_profile(request, **kwargs):
         student = get_object_or_404(Student, id=kwargs['stud_id'])
         age_years, age_months = calculate_age(str(student.date_of_birth))
         notes = NotesPTS.objects.filter(student=student)
+        concerns = Consern.objects.filter(student = student)
+        
         context = {
             'student': student,
             'age_years': age_years,
             'age_months': age_months,
-            'notes': notes
+            'notes': notes, 
+            'concerns': concerns
         }
         return render(request, 'school/student_profile.html', context)
 
@@ -104,7 +107,7 @@ def save_note_from_PTC(request):
 @user_passes_test(teacher_check)
 def make_consern(request, **kwargs):
     if request.method == 'GET':
-        from .forms import ConsernForm, IntakeForm
+        
         student = Student.objects.get(id=kwargs['stud_id'])
         cons_form = ConsernForm()
         intake_form = IntakeForm()
@@ -114,3 +117,26 @@ def make_consern(request, **kwargs):
             'intake_form': intake_form
         }
         return render(request, 'school/consern.html', context)
+
+@login_required
+@user_passes_test(teacher_check)
+def make_consern_post(request):
+    if request.method == 'POST':
+        cons_form = ConsernForm(request.POST)
+        if cons_form.is_valid():
+            student = Student.objects.get(id=request.POST['stud_id'])
+            teacher = MyUser.objects.get(id = request.user.id)
+
+            new_concern = cons_form.save(commit=False)
+            new_concern.student = student
+            new_concern.teacher = teacher
+            new_concern.save()
+            messages.success(request, 'Thank you! Concern is saved!')
+            return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+        
+        messages.error(request, 'Some error. Concern is not saved.')
+        return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+            
+            
+
+

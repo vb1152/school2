@@ -101,24 +101,20 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
-                <div class="row">
-                    <div class="col-sm-1">
-                        <p class="mb-0">Date</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">Concern</p>
-                    </div>
-                </div>
-                <hr>
-                <div class="row h-auto">
-                    <div class="col-sm-1">
-                        <p class="mb-0">Date</p>
-                    </div>
-                    <div class="col-sm-9">
-                        <p class="text-muted mb-0">Concern</p>
-                    </div>
-                </div>
-                <hr>
+                    {% for concern in concerns%}
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">{{ concern.date }}</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href=""><p class="text-muted mb-0">{{ concern.consern_type}}</p></a>
+                            </div>
+                            <div class="col-sm-3" style="border-radius:5px">
+                                <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
                 <a href="{% url 'school:make_consern' stud_id=student.id %}"" class="btn btn-outline-primary">Make Concern</a>
             </div>
         </div>
@@ -198,5 +194,5 @@
 
 {% block scripts %}
 {{ block.super }}
-<script src="{% static 'school/stud_profile.js' %}"></script>
+    <script src="{% static 'school/stud_profile.js' %}"></script>
 {% endblock %}
