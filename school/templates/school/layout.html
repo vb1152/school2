@@ -31,7 +31,7 @@
                             </li>
                         {% elif user.is_sst == True %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">SST link</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'school:sst_view' %}">SST link</a>
                             </li>
                         {% elif user.is_conselor == True %}
                             <li class="nav-item">

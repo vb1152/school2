@@ -1,0 +1,103 @@
+{% extends 'school/layout.html' %}
+{% load static %}
+
+{% block title%}SST{% endblock %}
+{% block content %}
+    
+
+    <h3>
+        Hi! 
+        {{ user.first_name|default:'No firstname' }} 
+        {{ user.last_name|default:'No lastname' }}
+    </h3>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Conserns from teachers</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Concern</th>
+                                    <th scope="col">Student</th>
+                                    <th scope="col">Teacher</th>
+                                    <th scope="col">Commands</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for concern in concerns %}
+                                    <tr>
+                                        <td>{{ concern.consern_type }}</td>
+                                        <td>{{ concern.student.first_name }} {{ concern.student.last_name }}</td>
+                                        <td>{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}</td>
+                                        <td>
+                                            <input type="button" 
+                                                    data-bs-toggle="modal" data-bs-target="#observModal"
+                                                    class="btn btn-outline-warning btn-sm"
+                                                    id = "observ-btn"
+                                                    value = "Observ."
+                                                    data-observation="observ"
+                                                    data-teacher-id = "{{ concern.teacher.id }}"
+                                                    data-names = "{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}">
+                                            </input>
+                                            <button type="button" class="btn btn-outline-info btn-sm">Support</button>    
+                                        </td>
+                                    </tr>
+                                {% endfor %}    
+                            </tbody>
+                        </table>
+                  </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="observModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Observation and Notes</h5>
+                        <br>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <form id="form-note" action={} method="post">
+                        <input hidden id="teacher-id-in-modal" name="teacher-id-in-modal">
+                        <div class="modal-body">
+                            <h4 class="d-flex justify-content-center" id="teacher-name-in-modal"></h4>
+                            <div class="mb-3">
+                                <label class="form-label">Pick a date:</label>
+                                <input type="date" name="date" class="form-control" required="" id="id_date">
+                            </div>
+                            <div class="mb-3">
+                                <label for="note-text" class="col-form-label">Observation notes</label>
+                                <textarea rows="5" class="form-control" id="note-text" required=""></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="save-note-btn">Save note</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static 'school/sst.js' %}"></script>
+{% endblock %}

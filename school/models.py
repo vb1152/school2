@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import clear_script_prefix
@@ -111,5 +112,35 @@ class Intake(models.Model):
     response_level = models.CharField(verbose_name='Responce level', max_length=2000)
     other_info = models.CharField(verbose_name='Other info for SST', max_length=2000)
     estim_result = models.CharField(verbose_name='Estimate result', max_length=2000)
-    
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_intake', default=None)
+    teacher = models.ForeignKey(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True})
+    concern = models.OneToOneField(Consern, on_delete=models.CASCADE, 
+                                    related_name='consern_intake', 
+                                    default=None, null=True, blank=True)    
 
+
+class Observation(models.Model):
+    date = models.DateField(verbose_name='Date')
+    teacher = models.OneToOneField(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='observations_teacher')
+    sst = models.OneToOneField(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_sst': True},
+                                related_name='sst_observation')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_observation')
+    note = models.CharField(verbose_name='Observation note', max_length=2000)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self) -> str:
+        return 'Observation_note'
+
+        

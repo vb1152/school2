@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import MyUser, Student, NotesPTS, Consern
+from .models import MyUser, Student, NotesPTS, Consern, Intake
 
 
 # Register your models here.
@@ -20,8 +20,13 @@ class NotesPTSAdmin(admin.ModelAdmin):
 class ConsernAdmin(admin.ModelAdmin):
     pass
 
+class IntakeAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(NotesPTS, NotesPTSAdmin)
 admin.site.register(Consern, ConsernAdmin)
+admin.site.register(Intake, IntakeAdmin)
+
 

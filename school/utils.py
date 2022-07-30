@@ -82,3 +82,7 @@ def calculate_age(date_of_birth):
 def teacher_check(user):
     '''Check if user is a teacher for user_passes_test decorator'''
     return user.is_teacher
+
+def sst_check(user):
+    '''Check if user is a sst for user_passes_test decorator'''
+    return user.is_sst

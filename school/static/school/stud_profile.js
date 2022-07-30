@@ -50,8 +50,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     //change color of the text in the concern table
     const refferStatus = document.querySelectorAll(`[data-reffers="reffers"]`) //(`[data-id="box1"]`); data-reffers="reffers"
-    console.log(refferStatus.innerHTML)
-    
     refferStatus.forEach((element) => { 
         if (element.innerHTML === 'Concern Resolved') {
             element.parentElement.setAttribute('class', 'col-sm-3 text-success')
@@ -60,7 +58,5 @@ document.addEventListener('DOMContentLoaded', function(){
             element.parentElement.setAttribute('class', 'col-sm-3 text-danger')
         }
     })
-    
-    
 
 })

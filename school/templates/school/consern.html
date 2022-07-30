@@ -10,7 +10,7 @@
     <h3 class="d-flex justify-content-center">Concern form</h3>
     <div class="mx-auto">
         <div class="mb-3">
-            <form action="{% url 'school:make_consern_post' %}" method="post">
+            <form action="{% url 'school:make_consern_post' %}" method="post" id="consern-form">
                 <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
                 {% csrf_token %}
                 {% for field in cons_form %}
@@ -28,6 +28,41 @@
                     <div id="progress-bar"class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <br>
+                <div id="new-intake-form" hidden>
+                    <h3 class="d-flex justify-content-center">Intake form</h3>
+                    <br>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">DoB</th>
+                                <th scope="col">Birth order in class</th>
+                                <th scope="col">Birth order in family</th>
+                                <th scope="col">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ student.first_name }} {% if tudent.middle_name != None %} {{ student.middle_name }} {% else %} {% endif %} {{ student.last_name }}</td>
+                                <td>{{ student.date_of_birth }}</td>
+                                <td>{{ student.birth_order_in_class }}</td>
+                                <td>{{ student.birth_order_in_family }}</td>
+                                <td>{{ student.cur_grade }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% for field in intake_form %}
+                        {{ field.errors }}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="input-group mb-3">
+                            {{ field }}
+                        </div>
+
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 <div class="col-auto">
                     <input type="submit" value="Save Concern" class="btn btn-primary mb-3" id="submit-btn-concern">
                 </div>
@@ -36,7 +71,7 @@
     </div>
 </div>
 <div class="container py-5" id='containter-intake' hidden>
-    <h3 class="d-flex justify-content-center">Intake form</h3>
+    <!-- <h3 class="d-flex justify-content-center">Intake form</h3>
     <br>
     <table class="table">
         <thead>
@@ -57,13 +92,13 @@
                 <td>{{ student.cur_grade }}</td>
             </tr>
         </tbody>
-    </table>
+    </table> -->
     
     
     <br>
     <div class="mx-auto">
         <div class="mb-3">
-            <form action="" method="post">
+            <!-- <form action="{% url 'school:make_consern_post' %}" method="post" id="intake-form">
                 <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
                 {% csrf_token %}
                 {% for field in intake_form %}
@@ -77,13 +112,14 @@
                     <p class="help">{{ field.help_text|safe }}</p>
                     {% endif %}
                 {% endfor %}
-                <br>
+                
                 
                 To submit two forms (Concern and Intake) click "Save both forms".
-                <div class="col-auto">
-                    <input type="submit" value="Save both forms" class="btn btn-primary mb-3" id="submit-btn">
+                <br>
+                <div class="col-auto" id="submit-btn">
+                    <input type="submit" value="Save both forms" class="btn btn-primary mb-3">
                 </div>
-            </form>
+            </form> -->
 
         </div>
     </div>

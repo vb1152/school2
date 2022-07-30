@@ -1,3 +1,5 @@
+from math import fabs
+from pickle import FALSE
 from tkinter.tix import Select
 from django.forms import ModelForm
 from .models import MyUser, NotesPTS, Consern, Intake
@@ -105,18 +107,20 @@ class ConsernForm(ModelForm):
 
 class IntakeForm(ModelForm):
     timeline = forms.IntegerField(
-        required=True,
+        required=False,
         widget=forms.widgets.NumberInput(
             attrs={
                 "placeholder": "TODO ask...",
                 "class": "form-control",
-                'type':'number'
+                'type':'number',
+                
             }
         ), 
-        label="How long has the student been with you?",
+        label="How long has the student been with you?"
     )
+
     sst_reasoning = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.TextInput(
             attrs={
                 "placeholder": "One sentence...",
@@ -125,11 +129,11 @@ class IntakeForm(ModelForm):
             }
         ), 
         label='''In one sentence, why did you bring this child to the 
-                attention of the SST?''',
+                attention of the SST?'''
     )
 
     behavior_patterns = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": 'Please use the following format. EXAMPLE: Ever'
@@ -144,23 +148,18 @@ class IntakeForm(ModelForm):
     )
 
     behavior_quality = forms.ChoiceField(
-        required=True,
+        required=False,
         widget=forms.widgets.Select(
             attrs={
                 "class": "form-control",
             }
         ),
-        choices = Intake.BEHAVE_CHOICES
+        choices = Intake.BEHAVE_CHOICES,
+        label='How would you qualify this behavior? Please choose one: ',
     )
 
-    # behavior_quality = forms.ChoiceField(
-    #     widget=forms.widgets.RadioSelect(
-    #         choices=Intake.BEHAVE_CHOICES
-    #     ), 
-    #     label="What are the primary behavior patterns that you are concerned about?",
-    # )
     why_consern = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.TextInput(
             attrs={
                 "placeholder": "Describe your conserns...",
@@ -170,8 +169,9 @@ class IntakeForm(ModelForm):
         ), 
         label="Why is this concerning to you?",
     )
+
     what_done = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.TextInput(
             attrs={
                 "placeholder": '''Refer to the tools listed in your Teacher 
@@ -185,7 +185,7 @@ class IntakeForm(ModelForm):
     )
 
     what_done = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.TextInput(
             attrs={
                 "placeholder": 'Refer to the tools listed in your Teacher Three'
@@ -199,7 +199,7 @@ class IntakeForm(ModelForm):
     )
 
     smal_done = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": "",
@@ -212,7 +212,7 @@ class IntakeForm(ModelForm):
     )
 
     didnt_worked = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": "",
@@ -223,8 +223,9 @@ class IntakeForm(ModelForm):
         ), 
         label="What have you done that has not worked or shown no positive change?",
     )
+
     worse = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": "",
@@ -237,7 +238,7 @@ class IntakeForm(ModelForm):
     )
 
     response_level = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": "(Attach incident report)?",
@@ -250,22 +251,9 @@ class IntakeForm(ModelForm):
                 'Have there been any threshold events that require an immediate' 
                 'response (Attach incident report)?',
     )
-    # other_info = forms.CharField(
-    #     required=True,
-    #     widget=forms.widgets.Textarea(
-    #         attrs={
-    #             "placeholder": "(Attach incident report)?",
-    #             "class": "form-control",
-    #             'type': 'text',
-    #             'rows': '3'
-    #         }
-    #     ), 
-    #     label='''What other pieces of information would it be helpful for the SST
-    #              to have when deciding on how to move forward with your student?''',
-    # )
 
     other_info = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": "(Attach incident report)?",
@@ -279,7 +267,7 @@ class IntakeForm(ModelForm):
     )
 
     estim_result = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.widgets.Textarea(
             attrs={
                 "placeholder": "",
@@ -293,8 +281,4 @@ class IntakeForm(ModelForm):
 
     class Meta:
         model = Intake
-        fields = '__all__'
-
-        labels = {
-            'behavior_quality': _('How would you qualify this behavior? Please choose one: '),
-            }
+        exclude = ['student', 'teacher', 'concern']

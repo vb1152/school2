@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-from .models import Consern, NotesPTS, Student, MyUser
+from .models import Consern, Intake, NotesPTS, Student, MyUser
 from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm
-from .utils import read_excel_with_students, calculate_age, teacher_check
+from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check
 import json
 
 
@@ -27,6 +27,8 @@ def login_view(request):
             login(request, user)
             if user.is_teacher == True: #redirect to a teacher page
                 return HttpResponseRedirect(reverse('school:teacher_view'))
+            elif user.is_sst == True:
+                return HttpResponseRedirect(reverse('school:sst_view'))
             else:
                 return HttpResponseRedirect(reverse('school:index'))
         
@@ -121,22 +123,60 @@ def make_consern(request, **kwargs):
 @login_required
 @user_passes_test(teacher_check)
 def make_consern_post(request):
+    '''Function to save concern and intake forms to database.'''
     if request.method == 'POST':
-        cons_form = ConsernForm(request.POST)
-        if cons_form.is_valid():
-            student = Student.objects.get(id=request.POST['stud_id'])
-            teacher = MyUser.objects.get(id = request.user.id)
 
+        cons_form = ConsernForm(request.POST)
+        intake_form = IntakeForm(request.POST)
+
+        student = Student.objects.get(id=request.POST['stud_id'])
+        teacher = MyUser.objects.get(id=request.user.id)
+
+        if cons_form.is_valid():
             new_concern = cons_form.save(commit=False)
             new_concern.student = student
             new_concern.teacher = teacher
             new_concern.save()
+            
+            if intake_form.is_valid() and 'timeline' in request.POST and 'sst_reasoning' in request.POST:
+                
+                new_intake = intake_form.save(commit=False)
+                new_intake.student = student
+                new_intake.teacher = teacher
+                new_intake.consern = new_concern
+                new_intake.save()
+
+                messages.success(request, 'Thank you! Concern and Intake data is saved!')
+                return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+            
             messages.success(request, 'Thank you! Concern is saved!')
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
         
         messages.error(request, 'Some error. Concern is not saved.')
-        return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+        return HttpResponseRedirect(reverse('school:student_data_profile', args=[request.POST['stud_id']]))
             
-            
+# @login_required
+@user_passes_test(sst_check)
+def sst_view(request):
+    if request.method == 'GET':
+        concerns = Consern.objects.filter(refers = Consern.REFERRAL)
+        print(concerns.values())
+        context = {
+            'concerns': concerns
+        }
+
+        return render(request, 'school/sst.html', context)
+
+@user_passes_test(sst_check)
+def save_observation(request):
+    if request.method == 'POST':
+        print(request.POST)
+        pass
 
 
+# save observation note from SST 
+# show observation note on teacher page 
+# save support from SST 
+# show supports note on teacher page 
+
+# reply from teacher to a support
