@@ -170,7 +170,8 @@ def sst_view(request):
 @user_passes_test(sst_check)
 def save_observation(request):
     if request.method == 'POST':
-        print(request.POST)
+        print(json.load(request))
+        print(request)
         pass
 
 

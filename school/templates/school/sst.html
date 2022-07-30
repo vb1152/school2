@@ -41,7 +41,8 @@
                                                     value = "Observ."
                                                     data-observation="observ"
                                                     data-teacher-id = "{{ concern.teacher.id }}"
-                                                    data-names = "{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}">
+                                                    data-names = "{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}"
+                                                    data-student-id = "{{ concern.student.id }}">
                                             </input>
                                             <button type="button" class="btn btn-outline-info btn-sm">Support</button>    
                                         </td>
@@ -73,21 +74,23 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     
-                    <form id="form-note" action={} method="post">
+                    <form id="form-observ" action="" method="post">
                         <input hidden id="teacher-id-in-modal" name="teacher-id-in-modal">
+                        <input hidden id="student-id-in-modal" name="student-id-in-modal">
+
                         <div class="modal-body">
                             <h4 class="d-flex justify-content-center" id="teacher-name-in-modal"></h4>
                             <div class="mb-3">
-                                <label class="form-label">Pick a date:</label>
-                                <input type="date" name="date" class="form-control" required="" id="id_date">
+                                <label for="id_date_observ" class="form-label">Pick a date:</label>
+                                <input type="date" name="date" class="form-control" required="" id="id_date_observ">
                             </div>
                             <div class="mb-3">
-                                <label for="note-text" class="col-form-label">Observation notes</label>
-                                <textarea rows="5" class="form-control" id="note-text" required=""></textarea>
+                                <label for="obs-text" class="col-form-label">Observation notes</label>
+                                <textarea rows="5" class="form-control" id="obs-text" required=""></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="close-modal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="close-modal-obs" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary" id="save-note-btn">Save note</button>
                         </div>
                     </form>
