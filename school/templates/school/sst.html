@@ -44,7 +44,7 @@
                                                     data-names = "{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}"
                                                     data-student-id = "{{ concern.student.id }}">
                                             </input>
-                                            <button type="button" class="btn btn-outline-info btn-sm">Support</button>    
+                                            <a href="{% url 'school:support' stud_id=concern.student.id %}" type="button" class="btn btn-outline-info btn-sm">Support</a>  
                                         </td>
                                     </tr>
                                 {% endfor %}    

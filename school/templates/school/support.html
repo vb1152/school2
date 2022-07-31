@@ -1,0 +1,49 @@
+{% extends 'school/layout.html' %}
+{% load static %}
+
+{% block title %}Support {{ student.first_name }} {{ student.last_name }}{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <div class="container py-5">
+        <h3 class="d-flex justify-content-center">Support</h3>
+        <div class="mx-auto">
+            <hr>
+            <h5>Student: {{ student.first_name }} {{ student.last_name }}</h5>
+            <h5>Teacher: {{ student.teacher.first_name }} {{ student.teacher.last_name }}</h5>
+            <hr>
+
+            <div class="mb-3">
+                <form action="{% url 'school:make_support_post' %}" method="post" id="support-form">
+                    <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
+                    <input id='teach_id' class="form-control" hidden value="{{ student.teacher.id }}" name="teach_id">
+
+                    {% csrf_token %}
+                    {% for field in support_form %}
+                        {{ field.errors }}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="input-group mb-3">
+                            {{ field }}
+                        </div>
+
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" value="Save Support" class="btn btn-primary mb-3" id="submit-btn-support">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% else %}
+    You are not authenticated
+{% endif %}
+ 
+{% endblock content %}
+
+{% block scripts %}
+    {{ block.super }}
+{% endblock %}

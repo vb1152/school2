@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -5,8 +6,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-from .models import Consern, Intake, NotesPTS, Student, MyUser
-from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm
+from .models import Consern, Intake, NotesPTS, Student, MyUser, Observation, Support
+from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm, SupportForm
 from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check
 import json
 
@@ -76,18 +77,23 @@ def upload_students(request):
 
 @login_required
 def student_data_profile(request, **kwargs):
+    '''Function to show student data profile for a teacher'''
     if request.method == 'GET':
         student = get_object_or_404(Student, id=kwargs['stud_id'])
         age_years, age_months = calculate_age(str(student.date_of_birth))
         notes = NotesPTS.objects.filter(student=student)
         concerns = Consern.objects.filter(student = student)
+        observations = Observation.objects.filter(student=student)
+        supports = Support.objects.filter(student=student)
         
         context = {
             'student': student,
             'age_years': age_years,
             'age_months': age_months,
             'notes': notes, 
-            'concerns': concerns
+            'concerns': concerns,
+            'observations': observations,
+            'supports': supports
         }
         return render(request, 'school/student_profile.html', context)
 
@@ -158,6 +164,7 @@ def make_consern_post(request):
 # @login_required
 @user_passes_test(sst_check)
 def sst_view(request):
+    '''Function to show main page for SST'''
     if request.method == 'GET':
         concerns = Consern.objects.filter(refers = Consern.REFERRAL)
         print(concerns.values())
@@ -169,15 +176,51 @@ def sst_view(request):
 
 @user_passes_test(sst_check)
 def save_observation(request):
+    '''Function to save observation from SST team
+    via fetch api call'''
     if request.method == 'POST':
-        print(json.load(request))
-        print(request)
-        pass
+        observ_data = json.load(request)
+        observation = Observation(
+                                date = observ_data['obs_date'],
+                                note = observ_data['obs_text'],
+                                teacher = MyUser.objects.get(id=observ_data['teach_id']),
+                                student = Student.objects.get(id=observ_data['stud_id']),
+                                sst = request.user
+                                )
+        observation.save()
+        data = {'status': 200}
+        return JsonResponse(data, safe=False)
+
+@user_passes_test(sst_check)
+def support(request, **kwargs):
+    if request.method == 'GET':
+        student = Student.objects.get(id=kwargs['stud_id'])
+        support_form = SupportForm()
+        context = {
+            'support_form':support_form,
+            'student': student
+            }
+        return render(request, 'school/support.html', context)
+
+@user_passes_test(sst_check)
+def make_support_post(request):
+    if request.method == "POST":
+        support_form = SupportForm(request.POST)
+        if support_form.is_valid():
+            student = Student.objects.get(id=request.POST['stud_id'])
+            teacher = MyUser.objects.get(id=request.POST['teach_id'])
+            sst = request.user
+            new_support = support_form.save(commit=False)
+            new_support.student = student
+            new_support.sst = sst
+            new_support.teacher = teacher
+            new_support.save()
+
+            messages.success(request, 'Thank you! Support note is saved!')
+            return HttpResponseRedirect(reverse('school:sst_view'))
 
 
-# save observation note from SST 
-# show observation note on teacher page 
-# save support from SST 
+
 # show supports note on teacher page 
 
 # reply from teacher to a support

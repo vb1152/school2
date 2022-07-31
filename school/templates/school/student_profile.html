@@ -116,7 +116,8 @@
                 <a href="{% url 'school:make_consern' stud_id=student.id %}"" class="btn btn-outline-primary">Make Concern</a>
             </div>
         </div>
-    </div>        
+    </div>    
+</div>    
         <!-- <div class="row">
             <div class="col-md-6">
                 <div class="card mb-4 mb-md-0">
@@ -189,44 +190,59 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>SST Team Member Observation and Notes</strong></h5>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Data</p>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href=""><p class="text-muted mb-0">Data</p></a>
-                        </div>
-                        <div class="col-sm-3" style="border-radius:5px">
-                            <p data-reffers="reffers" class="mb-0">data</p>
-                        </div>
-                    </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Note</th>
+                            <th scope="col">SST</th>
+                        </tr>                    
+                    </thead>
+                    <tbody>
+                        {% for observ in observations %}
+                        <tr>
+                            <td>{{ observ.date }}</td>
+                            <td>{{ observ.note }}</td>
+                            <td>{{ observ.sst.first_name }} {{ observ.sst.last_name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>    
             </div>
-
         </div>
     </div>
 
-        <div class="col-lg-12">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="card-title"><strong>Supports from SST</strong></h5>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">data</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href=""><p class="text-muted mb-0">data</p></a>
-                            </div>
-                            <div class="col-sm-3" style="border-radius:5px">
-                                <p data-reffers="reffers" class="mb-0">data</p>
-                            </div>
-                        </div>
-                </div>
+    <div class="col-lg-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title"><strong>Supports from SST</strong></h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Support Text</th>
+                            <th scope="col">Support Note</th>
+                            <th scope="col">SST</th>
+                            <th scope="col">Commands</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for support in supports %}
+                            <tr>
+                                <td>{{ support.date }}</td>
+                                <td>{{ support.suport_text }}</td>
+                                <td>{{ support.note }}</td>
+                                <td>{{ support.sst.first_name }} {{ support.sst.last_name }}</td> 
+                                <td><a href="" type="button" class="btn btn-outline-info btn-sm">Result</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-</div>
+
 
 
 <!-- </div> -->

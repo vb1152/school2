@@ -9,6 +9,10 @@ urlpatterns = [
     path('logout', views.logout_view, name='logout'),
     path('teacher', views.teacher_view, name='teacher_view'),
     path('sst', views.sst_view, name='sst_view'),
+    path('sst/support/<int:stud_id>', views.support, name='support'),
+    path('make_support_post/', views.make_support_post, name='make_support_post'),
+
+
     path('upload_students', views.upload_students, name='upload_students'),
     path('student_data_profile/<int:stud_id>', views.student_data_profile, name='student_data_profile'),
     path('make_consern/<int:stud_id>', views.make_consern, name='make_consern'),

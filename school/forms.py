@@ -1,8 +1,11 @@
+from ast import Try
+from dataclasses import field
 from math import fabs
 from pickle import FALSE
 from tkinter.tix import Select
-from django.forms import ModelForm
-from .models import MyUser, NotesPTS, Consern, Intake
+from tkinter.ttk import LabelFrame
+from django.forms import DateInput, ModelForm
+from .models import MyUser, NotesPTS, Consern, Intake, Observation, Support
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -282,3 +285,47 @@ class IntakeForm(ModelForm):
     class Meta:
         model = Intake
         exclude = ['student', 'teacher', 'concern']
+
+
+class SupportForm(ModelForm):
+    date = forms.DateField(
+        required=True,
+        widget=forms.widgets.DateInput(
+            attrs={
+                "class": "form-control",
+                "type": "date"
+            }
+        ),
+        label="Support date",
+    )
+
+    suport_text = forms.CharField(
+        required=True, 
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "TODO: Do we have any plaseholder?",
+                "class": "form-control",
+                "type": "text",
+                "rows": '2'
+            }
+        ),
+        label = 'Support text',
+    )
+        
+    note = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "TODO: Do we have any plaseholder?",
+                "class": 'form-control',
+                'type': 'text',
+                "rows": '3'
+            }
+        ),
+        label='Support note note'
+    )
+
+    class Meta:
+        model = Support
+        # fields = ['date', 'support_text', 'support_note']
+        exclude = ['teacher', 'sst', 'student']

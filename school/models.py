@@ -124,12 +124,12 @@ class Intake(models.Model):
 
 class Observation(models.Model):
     date = models.DateField(verbose_name='Date')
-    teacher = models.OneToOneField(MyUser, 
+    teacher = models.ForeignKey(MyUser, 
                                 on_delete=models.PROTECT, 
                                 null=True,
                                 limit_choices_to={'is_teacher': True},
                                 related_name='observations_teacher')
-    sst = models.OneToOneField(MyUser, 
+    sst = models.ForeignKey(MyUser, 
                                 on_delete=models.PROTECT, 
                                 null=True,
                                 limit_choices_to={'is_sst': True},
@@ -142,5 +142,27 @@ class Observation(models.Model):
 
     def __str__(self) -> str:
         return 'Observation_note'
+
+class Support(models.Model):
+    date = models.DateField(verbose_name='Date')
+    teacher = models.ForeignKey(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='support_teacher')
+    sst = models.ForeignKey(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_sst': True},
+                                related_name='sst_support')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_support')
+    suport_text = models.CharField(verbose_name='Support text', max_length=2000)
+    note = models.CharField(verbose_name='Support note', max_length=2000)
+
+    class Meta:
+        ordering = ["-date"]
+
+
+
 
         

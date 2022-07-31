@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function(){
         e.preventDefault()
         
         var url = '/save_observation'
-        let obs_date = document.getElementById('id_date_observ').value
-        let obs_text = document.getElementById('obs-text').value
+        let obs_date = document.getElementById('id_date_observ')
+        let obs_text = document.getElementById('obs-text')
         let teach_id = document.getElementById('teacher-id-in-modal').value
         let stud_id = document.getElementById('student-id-in-modal').value
 
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', function(){
             'X-CSRFToken': csrftoken
             },
             body: JSON.stringify({
-                                  'obs_date': obs_date, 
-                                  'obs_text': obs_text,
+                                  'obs_date': obs_date.value, 
+                                  'obs_text': obs_text.value,
                                   'teach_id': teach_id,
                                   'stud_id': stud_id
                                 })
@@ -47,11 +47,11 @@ document.addEventListener('DOMContentLoaded', function(){
             .then(response => response.json())
             .then(data => {
             console.log(data);
-            note_text.value = ''
+            obs_text.value = ''
+            obs_date.value = ''
             document.getElementById('close-modal-obs').click();
 
-    //         //TODO Create new note on SDP profile, after geting responce from back-end
-
+            alert('Thank you! Observation is saved!')
             })
         })
     
