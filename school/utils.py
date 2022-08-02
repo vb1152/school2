@@ -5,18 +5,12 @@ from .models import Student, MyUser
 def read_excel_with_students(request_file):
     '''Function to read data from excel file uploaded from a user
     and save data to a database'''
-    print(request_file)
     wb = load_workbook(filename = request_file, data_only=True)
     sheet_ranges = wb.active
-
     sheet_ranges.max_column
     sheet_ranges.max_row
-
     stud_data = list(sheet_ranges.values)
-
     students_objects_list = []
-
-    print(stud_data[1:])
     
     for row in stud_data[1:]:
         
@@ -86,3 +80,7 @@ def teacher_check(user):
 def sst_check(user):
     '''Check if user is a sst for user_passes_test decorator'''
     return user.is_sst
+
+def staff_check(user):
+    '''Check if user is a sst for user_passes_test decorator'''
+    return user.is_staff

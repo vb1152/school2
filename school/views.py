@@ -5,10 +5,11 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Consern, Intake, NotesPTS, Student, MyUser, Observation, Support
 from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm, SupportForm
-from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check
+from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check, staff_check
 import json
 
 
@@ -30,6 +31,8 @@ def login_view(request):
                 return HttpResponseRedirect(reverse('school:teacher_view'))
             elif user.is_sst == True:
                 return HttpResponseRedirect(reverse('school:sst_view'))
+            elif user.is_staff:
+                return HttpResponseRedirect(reverse('school:staff_view'))
             else:
                 return HttpResponseRedirect(reverse('school:index'))
         
@@ -67,13 +70,12 @@ def upload_students(request):
     if request.method == 'POST':
         form = UploadExcelFileForm(request.POST, request.FILES)
         if form.is_valid():
-            print(request.user)
             result, message = read_excel_with_students(request.FILES['file'])
             messages.success(request, f'Saved {result} students profiles!')
-            return HttpResponseRedirect(reverse('school:teacher_view'))
+            return HttpResponseRedirect(reverse('school:staff_view'))
         else:
             messages.error(request, 'Something wrong')
-            return HttpResponseRedirect(reverse('school:teacher_view'))
+            return HttpResponseRedirect(reverse('school:staff_view'))
 
 @login_required
 def student_data_profile(request, **kwargs):
@@ -149,7 +151,7 @@ def make_consern_post(request):
                 new_intake = intake_form.save(commit=False)
                 new_intake.student = student
                 new_intake.teacher = teacher
-                new_intake.consern = new_concern
+                new_intake.concern = new_concern
                 new_intake.save()
 
                 messages.success(request, 'Thank you! Concern and Intake data is saved!')
@@ -167,7 +169,7 @@ def sst_view(request):
     '''Function to show main page for SST'''
     if request.method == 'GET':
         concerns = Consern.objects.filter(refers = Consern.REFERRAL)
-        print(concerns.values())
+        # print(concerns.values())
         context = {
             'concerns': concerns
         }
@@ -219,8 +221,70 @@ def make_support_post(request):
             messages.success(request, 'Thank you! Support note is saved!')
             return HttpResponseRedirect(reverse('school:sst_view'))
 
+@user_passes_test(staff_check)
+def staff_view(request):
+    '''Function for main page for user with is_staff rights'''
+    if request.method == 'GET':
+        excel_form = UploadExcelFileForm()
+        context = {
+            'file_form': excel_form
+        }
+        return render(request, 'school/staff.html', context)
+
+@user_passes_test(sst_check)
+def sst_view_intake(request):
+    if request.method == 'POST':
+        concern = Consern.objects.get(id = request.POST['concern_id'])
+        concern_form = ConsernForm(instance=concern)
+        for fieldname in concern_form.fields:
+            concern_form.fields[fieldname].disabled = True
+
+        intake_data = Intake.objects.get(concern=concern)
+        intake_form = IntakeForm(instance=intake_data)
+        for fieldname in intake_form.fields:
+            intake_form.fields[fieldname].disabled = True
+
+        student = Student.objects.get(stud_consern=concern)
+        
+        print(intake_data.sst_reasoning)
+        print(student.first_name)
+        context = {
+            'cons_form': concern_form,
+            'intake_form': intake_form,
+            'student': student
+
+        }
+        return render(request, 'school/sst_intake.html', context)
+
+
+@user_passes_test(teacher_check)
+def update_concern(request):
+    '''Function to update concern form and intake forms'''
+    if request.method == 'GET':
+        concern = Consern.objects.get(id =request.GET['concern_id'])
+        concern_form = ConsernForm(instance=concern)
+        
+        try: 
+            intake_form = IntakeForm(instance=concern.consern_intake)
+            student = concern.student
+            context = {
+                    'concern_form': concern_form,
+                    'intake_form': intake_form,
+                    'student': student
+                }
+        # if concern doesn have an intake form 
+        except ObjectDoesNotExist:
+            context = {
+                    'concern_form': concern_form,
+                }
+        return render(request, 'school/update_concern.html', context)
+
+    if request.method == 'POST':
+        print(request.POST)
+        pass
+    # save concerns updates 
+    # TODO Teacher can update concern form 
 
 
 # show supports note on teacher page 
-
 # reply from teacher to a support

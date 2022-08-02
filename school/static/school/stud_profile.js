@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function(){
     const refferStatus = document.querySelectorAll(`[data-reffers="reffers"]`) //(`[data-id="box1"]`); data-reffers="reffers"
     refferStatus.forEach((element) => { 
         if (element.innerHTML === 'Concern Resolved') {
-            element.parentElement.setAttribute('class', 'col-sm-3 text-success')
+            element.parentElement.setAttribute('class', 'col text-success')
         }
         else if (element.innerHTML === 'Referral') {
-            element.parentElement.setAttribute('class', 'col-sm-3 text-danger')
+            element.parentElement.setAttribute('class', 'col text-danger')
         }
     })
 

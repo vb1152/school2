@@ -99,21 +99,43 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
-                    {% for concern in concerns%}
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">{{ concern.date }}</p>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href=""><p class="text-muted mb-0">{{ concern.consern_type}}</p></a>
-                            </div>
-                            <div class="col-sm-3" style="border-radius:5px">
-                                <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
-                            </div>
-                        </div>
-                        <hr>
-                    {% endfor %}
-                <a href="{% url 'school:make_consern' stud_id=student.id %}"" class="btn btn-outline-primary">Make Concern</a>
+                    <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Links</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for concern in concerns %}
+                                <tr>
+                                    <td>{{ concern.date }}</td>
+                                    <td>{{ concern.consern_type}}</td>
+                                    <td>
+                                        <div class="col" style="border-radius:5px">
+                                            <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+                                            <form action="{% url 'school:update_concern' %}" method="get">
+                                                <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
+                                                <button type="submit" class="btn btn-sm btn-outline-info">Update</button>
+                                            </form>
+                                            
+                                            <button type="button" class="btn btn-outline-warning">ND</button>
+                                            <button type="button" class="btn btn-outline-success">ND</button>
+                                          </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                
+                
+                    <a href="{% url 'school:make_consern' stud_id=student.id %}"" class="btn btn-outline-primary">Make Concern</a>
             </div>
         </div>
     </div>    
@@ -233,7 +255,7 @@
                                 <td>{{ support.suport_text }}</td>
                                 <td>{{ support.note }}</td>
                                 <td>{{ support.sst.first_name }} {{ support.sst.last_name }}</td> 
-                                <td><a href="" type="button" class="btn btn-outline-info btn-sm">Result</a></td>
+                                <td><a href="" type="button" class="btn btn-outline-info btn-sm">Response</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

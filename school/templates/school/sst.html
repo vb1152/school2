@@ -13,13 +13,15 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <!-- <div class="col-sm-6"> -->
+            <div class="col">
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Conserns from teachers</h5>
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th scope="col">Date</th>
                                     <th scope="col">Concern</th>
                                     <th scope="col">Student</th>
                                     <th scope="col">Teacher</th>
@@ -30,10 +32,16 @@
                             <tbody>
                                 {% for concern in concerns %}
                                     <tr>
+                                        <td>{{ concern.date }}</td>
                                         <td>{{ concern.consern_type }}</td>
                                         <td>{{ concern.student.first_name }} {{ concern.student.last_name }}</td>
                                         <td>{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}</td>
                                         <td>
+                                            <form action="{% url 'school:sst_view_intake' %}" method="post">
+                                                <input hidden class='form-control' name="concern_id" value="{{concern.id}}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-success btn-sm">View</button>
+                                            </form>
                                             <input type="button" 
                                                     data-bs-toggle="modal" data-bs-target="#observModal"
                                                     class="btn btn-outline-warning btn-sm"
@@ -53,7 +61,7 @@
                   </div>
                 </div>
             </div>
-            <div class="col-sm-6">
+            <!-- <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Special title treatment</h5>
@@ -61,7 +69,7 @@
                     <a href="#" class="btn btn-primary">Go somewhere</a>
                   </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         
         <!-- Modal -->
