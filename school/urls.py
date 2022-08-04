@@ -24,5 +24,9 @@ urlpatterns = [
     path('save_note_from_PTC', views.save_note_from_PTC, name='save_note_from_PTC'),
     path('save_observation', views.save_observation, name='save_observation'),
 
-    path('update_concern/', views.update_concern, name='update_concern')
+    path('update_concern/', views.update_concern, name='update_concern'), 
+    path('ocupational_therapy/<int:stud_id>', views.ocupational_therapy, name='ocupational_therapy'), 
+    path('ocupational_therapy_post', views.ocupational_therapy_post, name = 'ocupational_therapy_post'),
+    path('speech_therapy/<int:stud_id>', views.speech_therapy, name='speech_therapy'),
+    path('speech_therapy_post', views.speech_therapy_post, name='speech_therapy_post')
 ]

@@ -47,6 +47,55 @@
                 
             </div>
         </div>
+        
+    </div>
+    <!-- Teacher Concerns Form -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Links</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for concern in concerns %}
+                            <tr>
+                                <td>{{ concern.date }}</td>
+                                <td>{{ concern.consern_type}}</td>
+                                <td>
+                                    <div class="col" style="border-radius:5px">
+                                        <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+                                        <form action="{% url 'school:update_concern' %}" method="get">
+                                            <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
+                                            <button type="submit" class="btn btn-sm btn-outline-info">Update</button>
+                                        </form>
+                                        
+                                        <button type="button" class="btn btn-outline-warning">ND</button>
+                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                    <a href="{% url 'school:make_consern' stud_id=student.id %}"" class="btn btn-outline-primary">Make Concern</a>
+            </div>
+        </div>
+    </div>
+</div>    
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Notes from Parent-Teacher Conference and modal-->
         <div class="card mb-4 mb-2">
             <div class="card-body">
                 <h4 class="card-title"><strong>Notes from Parent-Teacher Conference</strong></h5>
@@ -94,120 +143,85 @@
 
         
     </div>
-    <!-- Teacher Concerns Form -->
     <div class="col-lg-8">
-        <div class="card mb-4">
+        <div class="card mb-4 mb-2">
             <div class="card-body">
-                <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
-                    <table class="table table-sm">
-                        <thead>
-                          <tr>
+                <h4 class="card-title">
+                    <div class="row">
+                        <div class="col">
+                            <strong>OT, ST, PM, Read Screen</strong> 
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Choose Therapy
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{% url 'school:ocupational_therapy' stud_id=student.id %}">Occupational Therapy</a></li>
+                                <li><a class="dropdown-item" href="{% url 'school:speech_therapy' stud_id=student.id %}">Speech Therapy</a></li>
+                                <li><a class="dropdown-item" href="#">Reading Screening</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
                             <th scope="col">Date</th>
                             <th scope="col">Type</th>
-                            <th scope="col">Status</th>
                             <th scope="col">Links</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            {% for concern in concerns %}
-                                <tr>
-                                    <td>{{ concern.date }}</td>
-                                    <td>{{ concern.consern_type}}</td>
-                                    <td>
-                                        <div class="col" style="border-radius:5px">
-                                            <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                                            <form action="{% url 'school:update_concern' %}" method="get">
-                                                <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
-                                                <button type="submit" class="btn btn-sm btn-outline-info">Update</button>
-                                            </form>
-                                            
-                                            <button type="button" class="btn btn-outline-warning">ND</button>
-                                            <button type="button" class="btn btn-outline-success">ND</button>
-                                          </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                      </table>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for el in student.stud_st.all %}
+                            <tr>
+                                <td>{{el.screen_date}}</td>
+                                <td>Speech_therapy</td>
+                                <td>
+                                    
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+                                        <form action="{% url 'school:update_concern' %}" method="get">
+                                            <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
+                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
+                                        </form>
+                                        
+                                        <button type="button" class="btn btn-outline-warning">ND</button>
+                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        
+                        <hr>
+                        
+                        {% for el in student.stud_ot.all %}
+                            <tr>
+                                <td>{{el.screen_date}}</td>
+                                <td>Ocupational_therapy</td>
+                                <td>
+                                    
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+                                        <form action="{% url 'school:update_concern' %}" method="get">
+                                            <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
+                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
+                                        </form>
+                                        
+                                        <button type="button" class="btn btn-outline-warning">ND</button>
+                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
                 
-                
-                    <a href="{% url 'school:make_consern' stud_id=student.id %}"" class="btn btn-outline-primary">Make Concern</a>
             </div>
         </div>
-    </div>    
-</div>    
-        <!-- <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4 mb-md-0">
-                <div class="card-body">
-                    <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-                    </p>
-                    <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-                    <div class="progress rounded mb-2" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-4 mb-md-0">
-                <div class="card-body">
-                    <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-                    </p>
-                    <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-                    <div class="progress rounded" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-                    <div class="progress rounded mb-2" style="height: 5px;">
-                    <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-                        aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div> -->
+    </div>
+</div>
     <div class = "col-lg-12">
         <div class="card mb-4">
             <div class="card-body">

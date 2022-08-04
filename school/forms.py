@@ -5,7 +5,7 @@ from pickle import FALSE
 from tkinter.tix import Select
 from tkinter.ttk import LabelFrame
 from django.forms import DateInput, ModelForm
-from .models import MyUser, NotesPTS, Consern, Intake, Observation, Support
+from .models import MyUser, NotesPTS, Consern, Intake, Observation, Support, OcupationalTherapy, SpeechTherapy
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -322,10 +322,101 @@ class SupportForm(ModelForm):
                 "rows": '3'
             }
         ),
-        label='Support note note'
+        label='Support note'
     )
 
     class Meta:
         model = Support
         # fields = ['date', 'support_text', 'support_note']
         exclude = ['teacher', 'sst', 'student']
+
+
+class OcupationalTherapyForm(ModelForm):
+    screen_date = forms.DateField(
+        required=True,
+        widget=forms.widgets.DateInput(
+            attrs={
+                "class": "form-control",
+                "type": "date"
+            }
+        ),
+        label="Screen date",
+    )
+    screen_time = forms.TimeField(
+        required=True,
+        widget=forms.widgets.TimeInput(
+            attrs={
+                "class": "form-control",
+                "type": "time"
+            }
+        ),
+        label="Screen time (e.g. 05.00 PM)",
+    )
+    full_screen_recom = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "TODO: Do we have any plaseholder?",
+                "class": 'form-control',
+                'type': 'text',
+                "rows": '3'
+            }
+        ),
+        label='Full Screening Recommended?'
+    )
+    notes = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "TODO: Do we have any plaseholder?",
+                "class": 'form-control',
+                'type': 'text',
+                "rows": '3'
+            }
+        ),
+        label='Note'
+    )
+    class Meta:
+        model = OcupationalTherapy
+        # exclude = ['teacher', 'student', 'created_at', 'updated_at']
+        fields = ['screen_date', 'screen_time', 'full_screen_recom', 'notes']
+
+class SpeechTherapyForm(ModelForm):
+    screen_date = forms.DateField(
+        required=True,
+        widget=forms.widgets.DateInput(
+            attrs={
+                "class": "form-control",
+                "type": "date"
+            }
+        ),
+        label="Screen date",
+    )
+    add_notes = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "TODO: Do we have any plaseholder?",
+                "class": 'form-control',
+                'type': 'text',
+                "rows": '3'
+            }
+        ),
+        label='Additional Notes'
+    )
+    scr_res = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                "placeholder": "TODO: Do we have any plaseholder?",
+                "class": 'form-control',
+                'type': 'text',
+                "rows": '3'
+            }
+        ),
+        label='Screening Results / Recommendations'
+    )
+    class Meta:
+        model = SpeechTherapy
+        fields = ['screen_date', 'add_notes', 'scr_res']
+

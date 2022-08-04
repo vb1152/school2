@@ -11,6 +11,7 @@
             <div class="mb-3">
                 <form action="{% url 'school:update_concern' %}" method="post" id="consern-form">
                     <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
+                    <input id="concern_id" class="form-control" hidden value="{{ concern.id }}" name="concern_id"> 
                     {% csrf_token %}
                     {% for field in concern_form %}
                         {{ field.errors }}
@@ -27,8 +28,8 @@
                         <div id="progress-bar"class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <br>
-                    {% if student %}
-                        <div id="new-intake-form">
+                    <!-- {% if student %} -->
+                        <div id="new-intake-form" hidden>
                             <h3 class="d-flex justify-content-center">Intake form</h3>
                             <br>
                             <table class="table">
@@ -63,8 +64,8 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
-                    {% else %}
-                    {% endif %}
+                    <!-- {% else %}
+                    {% endif %} -->
                     <div class="col-auto">
                         <input type="submit" value="Save Updates" class="btn btn-primary mb-3" id="submit-btn-concern">
                     </div>
@@ -79,4 +80,5 @@
 
 {% block scripts %}
     {{ block.super }}
+    <script src="{% static 'school/update_concern.js' %}"></script>
 {% endblock %}

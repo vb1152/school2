@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Consern, Intake, NotesPTS, Student, MyUser, Observation, Support
-from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm, SupportForm
+from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm, SupportForm, OcupationalTherapyForm, SpeechTherapyForm
 from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check, staff_check
 import json
 
@@ -261,30 +261,128 @@ def sst_view_intake(request):
 def update_concern(request):
     '''Function to update concern form and intake forms'''
     if request.method == 'GET':
-        concern = Consern.objects.get(id =request.GET['concern_id'])
+        concern = Consern.objects.get(id=request.GET['concern_id'])
         concern_form = ConsernForm(instance=concern)
-        
+        student = concern.student
+       
         try: 
             intake_form = IntakeForm(instance=concern.consern_intake)
-            student = concern.student
             context = {
+                    'concern': concern,
                     'concern_form': concern_form,
                     'intake_form': intake_form,
                     'student': student
                 }
         # if concern doesn have an intake form 
         except ObjectDoesNotExist:
+            intake_form = IntakeForm()
+            for fieldname in intake_form.fields:
+                intake_form.fields[fieldname].disabled = True
+            
             context = {
+                    'concern': concern,
                     'concern_form': concern_form,
+                    'intake_form': intake_form,
+                    'student': student
                 }
         return render(request, 'school/update_concern.html', context)
 
     if request.method == 'POST':
-        print(request.POST)
-        pass
-    # save concerns updates 
-    # TODO Teacher can update concern form 
+        concern = Consern.objects.get(id=request.POST['concern_id'])
+        concern_form = ConsernForm(request.POST, instance=concern)
+     
+        # update current Intake data 
+        if 'timeline' in request.POST and 'sst_reasoning' in request.POST:
+            # means that intake form are filled and data sent 
+            try:
+                intake = Intake.objects.get(concern=concern)
+                intake_form = IntakeForm(request.POST, instance=intake)
+                if intake_form.has_changed():
+                    intake_form.save()
+                    if concern_form.has_changed():
+                        concern_form.save()
+                        # case: concern and intake forms updated
+                        messages.success(request, 'Thank you! Concern updates and Intake updates is saved!')
+                        return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
+                    # case: intake forms updated
+                    messages.success(request, 'Thank you! Intake updates is saved!')
+                    return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
+            except ObjectDoesNotExist:
+                # case when update Concern form and ADD intake form
+                if concern_form.has_changed():
+                    concern_form.save()
+                
+                intake_form = IntakeForm(request.POST)
+                if intake_form.is_valid():
+                    new_intake = intake_form.save(commit=False)
+                    new_intake.student = concern.student
+                    new_intake.teacher = concern.teacher
+                    new_intake.concern = concern
+                    new_intake.save()
+
+                    messages.success(request, 'Thank you! Intake form added to the Concern!')
+                    return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
+
+        # case only concern form updated.  
+        if concern_form.has_changed():
+            concern_form.save()
+            messages.success(request, 'Thank you! Concern data is updated!')
+            return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
+        else: 
+            messages.info(request, 'No changes in Concern data are detected.')
+            return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
 
 
-# show supports note on teacher page 
-# reply from teacher to a support
+@user_passes_test(teacher_check)
+def ocupational_therapy(request, *, stud_id):
+    '''Function to open OcupationalTherapyForm'''
+    if request.method == 'GET':
+        student = Student.objects.get(id=stud_id)
+        ocup_therap_form = OcupationalTherapyForm()
+        context = {
+            'ocup_therap_form': ocup_therap_form,
+            'student': student
+        }
+        return render(request, 'school/occup_therap.html', context)
+
+@user_passes_test(teacher_check)
+def ocupational_therapy_post(request):
+    '''Function to save data from Ocupational Therapy Form'''
+    if request.method == 'POST':
+        ocup_therap_form = OcupationalTherapyForm(request.POST)
+        if ocup_therap_form.is_valid():
+            student = Student.objects.get(id=request.POST['stud_id'])
+            new_ocup = ocup_therap_form.save(commit=False)
+            new_ocup.student = student
+            new_ocup.teacher = request.user
+            new_ocup.save()
+
+            messages.success(request, 'Thank you! Occupational Therapy service data  is saved.')
+            return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+
+@user_passes_test(teacher_check)
+def speech_therapy(request, *, stud_id):
+    '''Function to show SpeechTherapyForm for the user'''
+    if request.method == 'GET':
+        student = Student.objects.get(id=stud_id)
+        speech_form = SpeechTherapyForm()
+        context = {
+            'student': student,
+            'speech_form': speech_form
+        }
+        return render(request, 'school/speech_therap.html', context)
+
+@user_passes_test(teacher_check)
+def speech_therapy_post(request):
+    '''Function to save result of Speech Therapy'''
+    if request.method == 'POST':
+        speech_form = SpeechTherapyForm(request.POST)
+        if speech_form.is_valid():
+            student = Student.objects.get(id=request.POST['stud_id'])
+            new_speech_ther = speech_form.save(commit=False)
+            new_speech_ther.teacher = request.user
+            new_speech_ther.student = student
+            new_speech_ther.save()
+
+            messages.success(request, 'Thank you! Speech Therapy results are saved!')
+            return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))

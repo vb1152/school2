@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import MyUser, Student, NotesPTS, Consern, Intake, Observation, Support
+from .models import MyUser, Student, NotesPTS, Consern, Intake, Observation, Support, OcupationalTherapy, SpeechTherapy
+
 
 
 # Register your models here.
@@ -29,6 +30,12 @@ class ObservationAdmin(admin.ModelAdmin):
 class SupportAdmin(admin.ModelAdmin):
     pass
 
+class OcupationalTherapyAdmin(admin.ModelAdmin):
+    pass
+
+class SpeechTherapyAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(NotesPTS, NotesPTSAdmin)
@@ -36,6 +43,10 @@ admin.site.register(Consern, ConsernAdmin)
 admin.site.register(Intake, IntakeAdmin)
 admin.site.register(Observation, ObservationAdmin)
 admin.site.register(Support, SupportAdmin)
+admin.site.register(OcupationalTherapy, OcupationalTherapyAdmin)
+admin.site.register(SpeechTherapy, SpeechTherapyAdmin)
+
+
 
 
 

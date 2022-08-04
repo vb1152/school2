@@ -1,8 +1,8 @@
+from operator import mod
 from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.urls import clear_script_prefix
-
+from django.utils import timezone
 
 class MyUser(AbstractUser):
     is_sst = models.BooleanField(verbose_name='SST role', default=False)
@@ -161,6 +161,46 @@ class Support(models.Model):
 
     class Meta:
         ordering = ["-date"]
+
+
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(db_index=True, default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+# Occupational Therapy service model 
+class OcupationalTherapy(BaseModel):
+    screen_date = models.DateField(verbose_name='Screening Date')
+    screen_time = models.TimeField(verbose_name='Screening Time')
+    full_screen_recom = models.CharField(max_length=2000, verbose_name='Full Screening Recommended?')
+    notes = models.CharField(max_length=2000, verbose_name='Notes')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_ot', default=None)
+    teacher = models.ForeignKey(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='teacher_ot')
+    class Meta:
+        ordering = ['-screen_date']
+
+
+class SpeechTherapy(BaseModel):
+    screen_date = models.DateField(verbose_name='Screen Speech Date')
+    add_notes = models.CharField(max_length=2000, verbose_name='Additional Notes')
+    scr_res = models.CharField(max_length=2000, verbose_name='Screening Results / Recommendations')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_st', default=None)
+    teacher = models.ForeignKey(MyUser, 
+                                on_delete=models.PROTECT, 
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='teacher_st')
+    class Meta:
+        ordering = ['-screen_date']
+
+    def __str__(self) -> str:
+        return str(self.screen_date)
 
 
 
