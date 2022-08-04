@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from openpyxl import load_workbook
 from .models import Student, MyUser
 
