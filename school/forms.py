@@ -17,7 +17,7 @@ class MyUserForm(ModelForm):
         }
 
 class UploadExcelFileForm(forms.Form):
-    '''form to upload students'''
+    '''form to upload data from excel files'''
     file = forms.FileField()
 
 # class NotesPTSForm(ModelForm):

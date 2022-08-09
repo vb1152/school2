@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', function(){
     
+    // $(document).ready( function () {
+        $('#student_table').DataTable({
+            searching: true,
+            order: [[0, 'desc']],
+        });
+    // });
+    
+    
     //select all observation buttons
     const observBtn = Array.from(document.querySelectorAll(`[data-observation="observ"]`))
     // set event listener and values on button after click 

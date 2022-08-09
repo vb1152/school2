@@ -31,7 +31,7 @@
                 <div class="col-auto">
                     <p hidden id="stud_id">{{ student.id }}</p>
                     <p class="text-muted mb-0 d-flex justify-content-left" id="">
-                        {{ student.first_name }} {% if tudent.middle_name != None %} {{ student.middle_name }} {% else %} {% endif %} {{ student.last_name }}
+                        {{ student.first_name }} {% if student.middle_name != None %} {{ student.middle_name }} {% else %} {% endif %} {{ student.last_name }}
                     </p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_of_birth }}</p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.birth_order_in_class }}</p>
@@ -75,20 +75,13 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">Update</button>
-                                        </form>
-                                        
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="" type="button" class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                <a href="{% url 'school:make_consern' stud_id=student.id %}" class="btn btn-outline-primary">Make Concern</a>
             </div>
         </div>
     </div>
@@ -108,9 +101,6 @@
                             <hr class="mb-0 mt-1">
                         {% endfor %}
                     </div>
-                <div class="d-flex justify-content-center mb-2">
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="addNoteBtn">Add note</button>
-                </div>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -152,16 +142,6 @@
                             <strong>OT, ST, PM, Read Screen</strong> 
                         </div>
                         <div class="col-sm-3">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Choose Therapy
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="{% url 'school:ocupational_therapy' stud_id=student.id %}">Occupational Therapy</a></li>
-                                <li><a class="dropdown-item" href="{% url 'school:speech_therapy' stud_id=student.id %}">Speech Therapy</a></li>
-                                <li><a class="dropdown-item" href="#">Reading Screening</a></li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </h4>
@@ -174,50 +154,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
                         {% for el in student.stud_st.all %}
                             <tr>
                                 <td>{{el.screen_date}}</td>
                                 <td>Speech_therapy</td>
                                 <td>
-                                    
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
-                                        </form>
-                                        
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="{% url 'school:show_speech_sst' el.pk %}" type="button" class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>
                         {% endfor %}
-                        
                         <hr>
-                        
                         {% for el in student.stud_ot.all %}
                             <tr>
                                 <td>{{el.screen_date}}</td>
                                 <td>Ocupational_therapy</td>
                                 <td>
-                                    
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}" name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
-                                        </form>
-                                        
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="{% url 'school:show_therapy_sst' el.pk %}" type="button" class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>
                         {% endfor %}
-                        
                     </tbody>
                 </table>
-                
             </div>
         </div>
     </div>
@@ -277,9 +238,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 <!-- </div> -->
 </section>

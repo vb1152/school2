@@ -5,11 +5,22 @@ from django.utils import timezone
 class MyUser(AbstractUser):
     is_sst = models.BooleanField(verbose_name='SST role', default=False)
     is_teacher = models.BooleanField(verbose_name='Teacher role', default=False)
-    is_conselor = models.BooleanField(verbose_name='Conselor role', default=False)
+    is_conselor = models.BooleanField(verbose_name='Counselor role', default=False)
 
     def __str__(self) -> str:
-        return self.username
+        return self.first_name + ' ' + self.last_name
 
+class UsersData(models.Model):
+    '''Model to store data from excel file. Person id, '''
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE, related_name='users_data')
+    person_id = models.CharField(max_length=10, verbose_name='personid')
+    grades = models.CharField(max_length=100, verbose_name='grades')
+    
+    class Meta:
+        verbose_name = 'Users data'
+
+    def __str__(self) -> str:
+        return self.user.username
 
 class Student(models.Model):
     school_id = models.CharField(max_length=10, verbose_name='school_id')

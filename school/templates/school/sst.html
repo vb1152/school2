@@ -71,7 +71,37 @@
                 </div>
             </div> -->
         </div>
-        
+        <br>
+        <div class="mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">All students</h5>
+                    <br>
+                    <table class="table table-sm" id="student_table">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">First name</th>
+                                <th scope="col">Last name</th>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Teacher</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td><a href="{% url 'school:student_profile' student.id %}">{{ student.school_id }}</a></td>
+                                <td>{{ student.first_name }}</td>
+                                <td>{{ student.last_name }}</td>
+                                <td>{{ student.cur_grade }}</td>
+                                <td>{{ student.teacher }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="observModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -110,5 +140,10 @@
 {% endblock content %}
 {% block scripts %}
     {{ block.super }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     <script src="{% static 'school/sst.js' %}"></script>
 {% endblock %}

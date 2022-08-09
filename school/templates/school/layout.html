@@ -38,7 +38,7 @@
                             </li>
                         {% elif user.is_staff %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Staff page</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'school:staff_view' %}">Staff page</a>
                             </li>
                         {% else %}
                             

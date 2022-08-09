@@ -1,14 +1,15 @@
+from multiprocessing import context
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Consern, Intake, NotesPTS, Student, MyUser, Observation, Support
+from .models import Consern, Intake, NotesPTS, Student, MyUser, Observation, Support, OcupationalTherapy, SpeechTherapy
 from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm, SupportForm, OcupationalTherapyForm, SpeechTherapyForm
-from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check, staff_check
+from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check, staff_check, read_excel_save_users
 import json
 
 
@@ -63,7 +64,7 @@ def teacher_view(request):
     }
     return render(request, 'school/teacher.html', context)
 
-@login_required
+@user_passes_test(sst_check)
 def upload_students(request):
     '''Save student to the data base '''
     if request.method == 'POST':
@@ -168,9 +169,12 @@ def sst_view(request):
     '''Function to show main page for SST'''
     if request.method == 'GET':
         concerns = Consern.objects.filter(refers = Consern.REFERRAL)
+        students = Student.objects.all()
         # print(concerns.values())
         context = {
-            'concerns': concerns
+            'concerns': concerns,
+            'students': students
+            
         }
 
         return render(request, 'school/sst.html', context)
@@ -245,8 +249,8 @@ def sst_view_intake(request):
 
         student = Student.objects.get(stud_consern=concern)
         
-        print(intake_data.sst_reasoning)
-        print(student.first_name)
+        # print(intake_data.sst_reasoning)
+        # print(student.first_name)
         context = {
             'cons_form': concern_form,
             'intake_form': intake_form,
@@ -385,3 +389,69 @@ def speech_therapy_post(request):
 
             messages.success(request, 'Thank you! Speech Therapy results are saved!')
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+
+@user_passes_test(staff_check)
+def upload_users(request):
+    if request.method == 'POST':
+        saved_users = read_excel_save_users(request)
+
+        messages.success(request, f'Saved {saved_users} users profiles!')
+        return HttpResponseRedirect(reverse('school:staff_view'))
+
+    messages.error(request, 'Some error. Sorry')
+    return HttpResponseRedirect(reverse('school:staff_view'))
+
+@user_passes_test(sst_check)
+def student_profile(request, *, pk):
+    '''Function to show Student profile for SST'''
+    if request.method == 'GET':
+        student = get_object_or_404(Student, id=pk)
+        age_years, age_months = calculate_age(str(student.date_of_birth))
+        notes = NotesPTS.objects.filter(student=student)
+        concerns = Consern.objects.filter(student = student)
+        observations = Observation.objects.filter(student=student)
+        supports = Support.objects.filter(student=student)
+        
+        context = {
+            'student': student,
+            'age_years': age_years,
+            'age_months': age_months,
+            'notes': notes, 
+            'concerns': concerns,
+            'observations': observations,
+            'supports': supports
+        }
+    return render(request, 'school/student_profile_sst.html', context)
+
+@user_passes_test(sst_check)
+def show_therapy_sst(request, *, pk):
+    '''Function to show Ocupational therapy data of the student for SST'''
+    if request.method == 'GET':
+        ocup_therapy = OcupationalTherapy.objects.get(pk=pk)
+        ocup_therap_form = OcupationalTherapyForm(instance=ocup_therapy)
+        # disable formfields
+        for fieldname in ocup_therap_form.fields:
+            ocup_therap_form.fields[fieldname].disabled = True
+
+        context = {
+            'ocup_therap_form': ocup_therap_form,
+            'ocup_therapy': ocup_therapy
+        }
+        return render(request, 'school/occup_therap_sst.html', context)
+
+@user_passes_test(sst_check)
+def show_speech_sst(request, *, pk):
+    if request.method == 'GET':
+        speech_therapy = SpeechTherapy.objects.get(pk=pk)
+        speech_therapy_form = SpeechTherapyForm(instance=speech_therapy)
+        # disable formfields
+        for fieldname in speech_therapy_form.fields:
+            speech_therapy_form.fields[fieldname].disabled = True
+
+        context = {
+            'speech_form': speech_therapy_form,
+            'speech_therapy': speech_therapy
+        }
+        return render(request, 'school/speech_therapy_sst.html', context)
+
+

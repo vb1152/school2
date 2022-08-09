@@ -1,5 +1,7 @@
+from tkinter.tix import Tree
 from openpyxl import load_workbook
-from .models import Student, MyUser
+from .models import Student, MyUser, UsersData
+from .forms import UploadExcelFileForm
 
 def read_excel_with_students(request_file):
     '''Function to read data from excel file uploaded from a user
@@ -41,6 +43,42 @@ def read_excel_with_students(request_file):
     new_sudents = Student.objects.bulk_create(students_objects_list)#, ignore_conflicts=True)
 
     return (len(new_sudents), 'Success!')
+
+def read_excel_save_users(request):
+    form = UploadExcelFileForm(request.POST, request.FILES)
+    if form.is_valid():
+        request_file = request.FILES['file']
+        wb = load_workbook(filename = request_file, data_only=True)
+        sheet_ranges = wb.active
+        sheet_ranges.max_column
+        sheet_ranges.max_row
+        user_data = list(sheet_ranges.values)
+        user_counter = 0
+        for row in user_data[1:]:
+            if MyUser.objects.filter(username=row[1]).exists():
+                continue
+            else:
+                user = MyUser.objects.create_user(
+                                    username=row[1],
+                                    password = row[1],
+                                    first_name = row[3],
+                                    last_name = row[4],
+                                    email = row[6])
+                
+                if row[5] == 'teacher':
+                    user.is_teacher = True
+                elif row[5] == 'sst':
+                    user.is_sst = True
+                elif row[5] == 'counselor':
+                    user.is_conselor = True
+                user_data = UsersData.objects.create(
+                                    user=user,
+                                    person_id=row[0],
+                                    grades = row[2])
+                user_data.save()
+                user_counter += 1 
+        return user_counter
+
 
 
 def get_teacher(teacher_data) -> object:
