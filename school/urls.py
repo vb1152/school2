@@ -11,11 +11,18 @@ urlpatterns = [
     path('sst', views.sst_view, name='sst_view'),
     path('sst/support/<int:stud_id>', views.support, name='support'),
     path('sst/intake/', views.sst_view_intake, name='sst_view_intake'),
-    path('sst/student_profile/<int:pk>/', views.student_profile, name='student_profile'),
-    path('sst/student_profile/<int:pk>/occupational_therapy', views.show_therapy_sst, name='show_therapy_sst'),
-    path('sst/student_profile/<int:pk>/speech_therapy', views.show_speech_sst, name='show_speech_sst'),
     
-    # show_therapy_sst
+    # path('sst/student_profile/<int:pk>/', views.student_profile, name='student_profile'),
+    path('sst/student_profile/<int:pk>/', views.StudentProfileSstView.as_view(), name='student_profile'),
+    
+    # StudentProfileSstView
+    # path('sst/student_profile/<int:pk>/occupational_therapy', views.show_therapy_sst, name='show_therapy_sst'),
+    path('sst/student_profile/<int:pk>/occupational_therapy', views.OccupationalTherapyView.as_view(), name='show_therapy_sst'),
+    
+    # path('sst/student_profile/<int:pk>/speech_therapy', views.show_speech_sst, name='show_speech_sst'),
+    path('sst/student_profile/<int:pk>/speech_therapy', views.SpeechTherapyView.as_view(), name='show_speech_sst'),
+    # show_consern_sst
+    path('sst/student_profile/<int:pk>/concern', views.ShowConcernSST.as_view(), name='show_concern_sst'),
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.urls import reverse
 
 class MyUser(AbstractUser):
     is_sst = models.BooleanField(verbose_name='SST role', default=False)
@@ -68,6 +69,20 @@ class Student(models.Model):
 
     def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name
+
+    @property
+    def calculate_age(self):
+        '''Calculate students age form date of birth'''
+        from datetime import datetime
+        from dateutil import relativedelta
+
+        now = datetime.now()
+        # convert string to date object
+        start_date = datetime.strptime(str(self.date_of_birth), "%Y-%m-%d")
+        # Get the relativedelta between two dates
+        delta = relativedelta.relativedelta(now, start_date)
+        return (delta.years, delta.months)
+
 
 
 class NotesPTS(models.Model):
@@ -196,9 +211,11 @@ class OcupationalTherapy(BaseModel):
 
 
 class SpeechTherapy(BaseModel):
-    screen_date = models.DateField(verbose_name='Screen Speech Date')
-    add_notes = models.CharField(max_length=2000, verbose_name='Additional Notes')
-    scr_res = models.CharField(max_length=2000, verbose_name='Screening Results / Recommendations')
+    screen_date = models.DateField(verbose_name='Screen Speech Date', help_text='Screen Speech Date')
+    add_notes = models.CharField(max_length=2000, verbose_name='Additional Notes', help_text='Additional notes')
+    scr_res = models.CharField(max_length=2000, 
+                                verbose_name='Screening Results / Recommendations',
+                                help_text='Screening Results / Recommendations')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='stud_st', default=None)
     teacher = models.ForeignKey(MyUser, 
                                 on_delete=models.PROTECT, 
@@ -208,10 +225,10 @@ class SpeechTherapy(BaseModel):
     class Meta:
         ordering = ['-screen_date']
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular instance of MyModelName."""
+        return reverse('school:show_speech_sst', kwargs={'pk' : self.pk})
+
     def __str__(self) -> str:
         return str(self.screen_date)
-
-
-
-
         

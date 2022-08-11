@@ -1,4 +1,5 @@
-from tkinter.tix import Tree
+from django.contrib.auth.mixins import UserPassesTestMixin
+
 from openpyxl import load_workbook
 from .models import Student, MyUser, UsersData
 from .forms import UploadExcelFileForm
@@ -121,3 +122,10 @@ def sst_check(user):
 def staff_check(user):
     '''Check if user is a sst for user_passes_test decorator'''
     return user.is_staff
+
+class SstCheckMixin(UserPassesTestMixin):
+    '''Check if user is a sst for user_passes_test decorator'''
+    def test_func(self):
+        return self.request.user.is_sst
+
+        # http://127.0.0.1:8000/sst/student_profile/2/speech_therapy

@@ -30,11 +30,11 @@
                             </li>
                         {% elif user.is_sst == True %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{% url 'school:sst_view' %}">SST link</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'school:sst_view' %}">SST page</a>
                             </li>
                         {% elif user.is_conselor == True %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Conselor links</a>
+                                <a class="nav-link active" aria-current="page" href="#">Counselor page</a>
                             </li>
                         {% elif user.is_staff %}
                             <li class="nav-item">

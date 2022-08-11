@@ -36,7 +36,7 @@
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_of_birth }}</p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.birth_order_in_class }}</p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.birth_order_in_family }}</p>
-                    <p class="text-muted mb-0 d-flex justify-content-left">{{ age_years }} years {{ age_months }} months</p>
+                    <p class="text-muted mb-0 d-flex justify-content-left">{{ student.calculate_age.0 }} years {{ student.calculate_age.1 }} months</p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.gender }}</p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.cur_grade }}</p>
                     <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_join }}</p>
@@ -64,7 +64,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for concern in concerns %}
+                        {% for concern in object.stud_consern.all %}
                             <tr>
                                 <td>{{ concern.date }}</td>
                                 <td>{{ concern.consern_type}}</td>
@@ -75,7 +75,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                                        <a href="" type="button" class="btn btn-outline-info btn-sm">View</a>
+                                        <a href="{% url 'school:show_concern_sst' concern.pk %}" type="button" class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>

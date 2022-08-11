@@ -1,11 +1,13 @@
-from multiprocessing import context
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
+
+from django.views.generic import DetailView
+from .utils import SstCheckMixin
 
 from .models import Consern, Intake, NotesPTS, Student, MyUser, Observation, Support, OcupationalTherapy, SpeechTherapy
 from .forms import MyUserForm, UploadExcelFileForm, ConsernForm, IntakeForm, SupportForm, OcupationalTherapyForm, SpeechTherapyForm
@@ -81,6 +83,7 @@ def upload_students(request):
 def student_data_profile(request, **kwargs):
     '''Function to show student data profile for a teacher'''
     if request.method == 'GET':
+        print('student_data_profile')
         student = get_object_or_404(Student, id=kwargs['stud_id'])
         age_years, age_months = calculate_age(str(student.date_of_birth))
         notes = NotesPTS.objects.filter(student=student)
@@ -401,57 +404,49 @@ def upload_users(request):
     messages.error(request, 'Some error. Sorry')
     return HttpResponseRedirect(reverse('school:staff_view'))
 
-@user_passes_test(sst_check)
-def student_profile(request, *, pk):
-    '''Function to show Student profile for SST'''
-    if request.method == 'GET':
-        student = get_object_or_404(Student, id=pk)
-        age_years, age_months = calculate_age(str(student.date_of_birth))
-        notes = NotesPTS.objects.filter(student=student)
-        concerns = Consern.objects.filter(student = student)
-        observations = Observation.objects.filter(student=student)
-        supports = Support.objects.filter(student=student)
+# @user_passes_test(sst_check)
+# def student_profile(request, *, pk):
+#     '''Function to show Student profile for SST'''
+#     if request.method == 'GET':
+#         student = get_object_or_404(Student, id=pk)
+#         age_years, age_months = calculate_age(str(student.date_of_birth))
+#         notes = NotesPTS.objects.filter(student=student)
+#         concerns = Consern.objects.filter(student = student)
+#         observations = Observation.objects.filter(student=student)
+#         supports = Support.objects.filter(student=student)
         
-        context = {
-            'student': student,
-            'age_years': age_years,
-            'age_months': age_months,
-            'notes': notes, 
-            'concerns': concerns,
-            'observations': observations,
-            'supports': supports
-        }
-    return render(request, 'school/student_profile_sst.html', context)
+#         context = {
+#             'student': student,
+#             'age_years': age_years,
+#             'age_months': age_months,
+#             'notes': notes, 
+#             'concerns': concerns,
+#             'observations': observations,
+#             'supports': supports
+#         }
+#     return render(request, 'school/student_profile_sst.html', context)
 
-@user_passes_test(sst_check)
-def show_therapy_sst(request, *, pk):
-    '''Function to show Ocupational therapy data of the student for SST'''
-    if request.method == 'GET':
-        ocup_therapy = OcupationalTherapy.objects.get(pk=pk)
-        ocup_therap_form = OcupationalTherapyForm(instance=ocup_therapy)
-        # disable formfields
-        for fieldname in ocup_therap_form.fields:
-            ocup_therap_form.fields[fieldname].disabled = True
+class ShowConcernSST(SstCheckMixin, DetailView):
+    pass
 
-        context = {
-            'ocup_therap_form': ocup_therap_form,
-            'ocup_therapy': ocup_therapy
-        }
-        return render(request, 'school/occup_therap_sst.html', context)
-
-@user_passes_test(sst_check)
-def show_speech_sst(request, *, pk):
-    if request.method == 'GET':
-        speech_therapy = SpeechTherapy.objects.get(pk=pk)
-        speech_therapy_form = SpeechTherapyForm(instance=speech_therapy)
-        # disable formfields
-        for fieldname in speech_therapy_form.fields:
-            speech_therapy_form.fields[fieldname].disabled = True
-
-        context = {
-            'speech_form': speech_therapy_form,
-            'speech_therapy': speech_therapy
-        }
-        return render(request, 'school/speech_therapy_sst.html', context)
+class StudentProfileSstView(SstCheckMixin, DetailView):
+    '''Function to show Student profile for SST'''
+    model = Student
+    template_name = 'school/student_profile_sst.html'
+    login_url = 'login'
 
 
+class OccupationalTherapyView(SstCheckMixin, DetailView):
+    '''Show occupational therapy for a sst team from a student profile'''
+    model = OcupationalTherapy
+    template_name = 'school/occup_therap_sst.html'
+    login_url = 'login'
+
+
+class SpeechTherapyView(SstCheckMixin, DetailView):
+    '''Show speach therapy for SST team from a student profile'''
+    model = SpeechTherapy
+    template_name = "school/speech_therapy_sst.html"
+    login_url = 'login'
+    # Designates the name of the variable to use in the context.
+    # context_object_name = 'speech'

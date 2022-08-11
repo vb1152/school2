@@ -21,30 +21,30 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ speech_therapy.student.first_name }} {% if speech_therapy.student.middle_name != None %} 
-                            {{ speech_therapy.student.middle_name }} {% else %} {% endif %} {{ speech_therapy.student.last_name }}</td>
-                        <td>{{ speech_therapy.student.date_of_birth }}</td>
-                        <td>{{ speech_therapy.student.birth_order_in_class }}</td>
-                        <td>{{ speech_therapy.student.birth_order_in_family }}</td>
-                        <td>{{ speech_therapy.student.cur_grade }}</td>
+                        <td>{{ object.student.first_name }} {% if object.student.middle_name != None %} 
+                            {{ object.student.middle_name }} {% else %} {% endif %} {{ object.student.last_name }}</td>
+                        <td>{{ object.student.date_of_birth }}</td>
+                        <td>{{ object.student.birth_order_in_class }}</td>
+                        <td>{{ object.student.birth_order_in_family }}</td>
+                        <td>{{ object.student.cur_grade }}</td>
                     </tr>
                 </tbody>
             </table>
-            <form action="{% url 'school:speech_therapy_post' %}" method="post" id="ocup-therap-form">
-                <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
-                {% csrf_token %}
-                {% for field in speech_form %}
-                    {{ field.errors }}
-                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    <div class="input-group mb-3">
-                        {{ field }}
-                    </div>
-
-                    {% if field.help_text %}
-                    <p class="help">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                {% endfor %}
-            </form>
+            <br>
+            
+            <div class="col-md-8">
+                <article class="blog-post">
+                    <h2 class="blog-post-title">Speech therapy data</h2>
+                    <hr>
+                    <h5>Speech screening date:</h5>
+                    <p>{{ object.screen_date }}</p>
+                    <h5>Additional notes:</h5>
+                    <p>{{ object.add_notes }}</p>
+                    <h5>Screening Results / Recommendations:</h5>
+                    <p>{{ object.scr_res }}</p>
+                </article>
+            </div>
+            <a href="{% url 'school:student_profile'  object.student.pk %}"><-Back</a>
         </div>
     </div>
 </div>
