@@ -31,7 +31,7 @@
                         <div class="col-auto">
                             <p hidden id="stud_id">{{ student.id }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left" id="">
-                                {{ student.first_name }} {% if tudent.middle_name != None %} {{ student.middle_name }}
+                                {{ student.first_name }} {% if student.middle_name != None %} {{ student.middle_name }}
                                 {% else %} {% endif %} {{ student.last_name }}
                             </p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_of_birth }}</p>
@@ -39,8 +39,8 @@
                             </p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.birth_order_in_family }}
                             </p>
-                            <p class="text-muted mb-0 d-flex justify-content-left">{{ age_years }} years {{ age_months
-                                }} months</p>
+                            <p class="text-muted mb-0 d-flex justify-content-left">{{ student.calculate_age.0 }} years
+                                {{ student.calculate_age.1 }} months</p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.gender }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.cur_grade }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_join }}</p>
@@ -68,7 +68,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for concern in concerns %}
+                                {% for concern in object.stud_consern.all %}
                                 <tr>
                                     <td>{{ concern.date }}</td>
                                     <td>{{ concern.consern_type}}</td>
@@ -80,23 +80,14 @@
                                     <td>
                                         <div class="btn-group btn-group-sm" role="group"
                                             aria-label="Basic mixed styles example">
-                                            <form action="{% url 'school:update_concern' %}" method="get">
-                                                <input hidden class="form-control" value="{{ concern.id }}"
-                                                    name="concern_id">
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-outline-info">Update</button>
-                                            </form>
-
-                                            <button type="button" class="btn btn-outline-warning">ND</button>
-                                            <button type="button" class="btn btn-outline-success">ND</button>
+                                            <a href="{% url 'school:show_concern_sst' concern.pk %}" type="button"
+                                                class="btn btn-outline-info btn-sm">View</a>
                                         </div>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <a href="{% url 'school:make_consern' stud_id=student.id %}"
-                            class="btn btn-outline-primary">Make Concern</a>
                 </div>
             </div>
         </div>
@@ -108,17 +99,13 @@
                 <div class="card-body">
                     <h4 class="card-title"><strong>Notes from Parent-Teacher Conference</strong></h5>
                         <div id="notes-list">
-                            {% for note in notes %}
+                            {% for note in student.student_notes.all %}
                             <div class="row mb-0 mt-1">
                                 <p class="mb-0">{{ note.date }}</p>
                                 <p class="mb-0">{{ note.note }}</p>
                             </div>
                             <hr class="mb-0 mt-1">
                             {% endfor %}
-                        </div>
-                        <div class="d-flex justify-content-center mb-2">
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal" id="addNoteBtn">Add note</button>
                         </div>
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -167,21 +154,6 @@
                                 <strong>OT, ST, PM, Read Screen</strong>
                             </div>
                             <div class="col-sm-3">
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Choose Therapy
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item"
-                                                href="{% url 'school:ocupational_therapy' stud_id=student.id %}">Occupational
-                                                Therapy</a></li>
-                                        <li><a class="dropdown-item"
-                                                href="{% url 'school:speech_therapy' stud_id=student.id %}">Speech
-                                                Therapy</a></li>
-                                        <li><a class="dropdown-item" href="#">Reading Screening</a></li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     </h4>
@@ -194,54 +166,35 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             {% for el in student.stud_st.all %}
                             <tr>
                                 <td>{{el.screen_date}}</td>
                                 <td>Speech_therapy</td>
                                 <td>
-
                                     <div class="btn-group btn-group-sm" role="group"
                                         aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}"
-                                                name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
-                                        </form>
-
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="{% url 'school:show_speech_sst' el.pk %}" type="button"
+                                            class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
-
                             <hr>
-
                             {% for el in student.stud_ot.all %}
                             <tr>
                                 <td>{{el.screen_date}}</td>
                                 <td>Ocupational_therapy</td>
                                 <td>
-
                                     <div class="btn-group btn-group-sm" role="group"
                                         aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}"
-                                                name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
-                                        </form>
-
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="{% url 'school:show_therapy_sst' el.pk %}" type="button"
+                                            class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
-
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
@@ -259,7 +212,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for observ in observations %}
+                            {% for observ in student.stud_observation.all %}
                             <tr>
                                 <td>{{ observ.date }}</td>
                                 <td>{{ observ.note }}</td>
@@ -271,7 +224,8 @@
             </div>
         </div>
     </div>
-    <!-- Suports table  -->
+
+    {% if student.stud_support.all %}
     <div class="col-lg-12">
         <div class="card mb-4">
             <div class="card-body">
@@ -287,14 +241,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for support in supports %}
+                            {% for support in student.stud_support.all %}
                             <tr>
                                 <td>{{ support.date }}</td>
                                 <td>{{ support.suport_text }}</td>
                                 <td>{{ support.note }}</td>
                                 <td>{{ support.sst.first_name }} {{ support.sst.last_name }}</td>
-                                <td><a href="{% url 'school:create_response' student.id support.pk %}" type="button"
-                                        class="btn btn-outline-info btn-sm">Response</a></td>
+                                <td><a href="" type="button" class="btn btn-outline-info btn-sm">Show responses</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -302,9 +255,8 @@
             </div>
         </div>
     </div>
-
-
-
+    {% else %}
+    {% endif %}
 
     <!-- </div> -->
 </section>
