@@ -1,3 +1,4 @@
+from tkinter.tix import Tree
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -284,3 +285,36 @@ class ResponceToSupport(BaseModel):
 
     def __str__(self) -> str:
         return self.intervention[:15]
+
+
+class ReadingScreening(BaseModel):
+    INDEPENDENT = 'IND'
+    INSTRUCTIONAL = 'IST'
+    FRUSTRATIONAL = 'FRS'
+    PP_FRUSTRATIONAL = 'PPF'
+    READING_CHOISES = [(INDEPENDENT, 'Independent'),
+                       (INSTRUCTIONAL, 'Instructional'),
+                       (FRUSTRATIONAL, 'Frustrational'),
+                       (PP_FRUSTRATIONAL, 'PP-Frustrational')]
+    screen_type = models.CharField(
+        max_length=3, choices=READING_CHOISES, verbose_name='Screening type')
+    date_screen = models.DateField(verbose_name='Screen date')
+    errors_screen = models.CharField(
+        max_length=2000, verbose_name='Decoding errors')
+    question_screen = models.CharField(
+        max_length=2000, verbose_name='Comprehension questions')
+    notes = models.CharField(max_length=2000, blank=True,
+                             null=True, verbose_name='Additional notes')
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name='student_reading')
+    teacher = models.ForeignKey(MyUser,
+                                on_delete=models.PROTECT,
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='teacher_read_screen')
+
+    class Meta:
+        ordering = ['-date_screen']
+
+    def __str__(self) -> str:
+        return self.screen_type[:15]

@@ -12,16 +12,12 @@ urlpatterns = [
     path('sst/support/<int:stud_id>', views.support, name='support'),
     path('sst/intake/', views.sst_view_intake, name='sst_view_intake'),
 
-    # path('sst/student_profile/<int:pk>/', views.student_profile, name='student_profile'),
     path('sst/student_profile/<int:pk>/',
          views.StudentProfileSstView.as_view(), name='student_profile'),
-
     # StudentProfileSstView
-    # path('sst/student_profile/<int:pk>/occupational_therapy', views.show_therapy_sst, name='show_therapy_sst'),
     path('sst/student_profile/<int:pk>/occupational_therapy',
          views.OccupationalTherapyView.as_view(), name='show_therapy_sst'),
 
-    # path('sst/student_profile/<int:pk>/speech_therapy', views.show_speech_sst, name='show_speech_sst'),
     path('sst/student_profile/<int:pk>/speech_therapy',
          views.SpeechTherapyView.as_view(), name='show_speech_sst'),
     # show_consern_sst
@@ -29,21 +25,39 @@ urlpatterns = [
          views.ShowConcernSST.as_view(), name='show_concern_sst'),
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
-
-
     path('upload_students', views.upload_students, name='upload_students'),
+
+    # Teacher
     path('student_data_profile/<int:stud_id>',
          views.student_data_profile, name='student_data_profile'),
-    # create_response
     path('student_data_profile/<int:stud_id>/create_response/<int:supp_pk>/',
          views.CreateResponse.as_view(), name='create_response'),
+
+    path('student_data_profile/<int:stud_id>/speech_therapy/<int:pk>/',
+         views.ShowSpeechTherapy.as_view(), name='show_speech_ther'),
+    path('student_data_profile/<int:stud_id>/occup_therapy/<int:pk>/',
+         views.ShowOcupTherapy.as_view(), name='show_occup_ther'),
+
+    path('student_data_profile/<int:stud_id>/show_support/<int:pk>/',
+         views.ShowSupport.as_view(), name='read_full_support'),
+
+    path('student_data_profile/<int:stud_id>/show_note/<int:pk>/',
+         views.ShowNote.as_view(), name='show_note_text'),
+    # show_observation
+    path('student_data_profile/<int:stud_id>/show_observation/<int:pk>/',
+         views.ShowObservation.as_view(), name='show_observation'),
+
+
+    # path('student_data_profile/<int:stud_id>/save_read_screen/',
+    #      views.ReadingScreenView.as_view(), name='save_read_screen'),
 
     path('make_consern/<int:stud_id>', views.make_consern, name='make_consern'),
     path('make_consern_post', views.make_consern_post, name='make_consern_post'),
     path('staff', views.staff_view, name='staff_view'),
 
     # API
-    path('save_note_from_PTC', views.save_note_from_PTC, name='save_note_from_PTC'),
+    path('save_note_from_PTC', views.save_note_from_PTC,
+         name='save_note_from_PTC'),
     path('save_observation', views.save_observation, name='save_observation'),
 
     path('update_concern/', views.update_concern, name='update_concern'),

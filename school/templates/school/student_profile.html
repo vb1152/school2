@@ -39,8 +39,8 @@
                             </p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.birth_order_in_family }}
                             </p>
-                            <p class="text-muted mb-0 d-flex justify-content-left">{{ age_years }} years {{ age_months
-                                }} months</p>
+                            <p class="text-muted mb-0 d-flex justify-content-left">
+                                {{ age_years }} years {{ age_months }} months</p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.gender }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.cur_grade }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_join }}</p>
@@ -71,7 +71,7 @@
                                 {% for concern in concerns %}
                                 <tr>
                                     <td>{{ concern.date }}</td>
-                                    <td>{{ concern.consern_type}}</td>
+                                    <td>{{ concern.consern_type|truncatechars:25 }}</td>
                                     <td>
                                         <div class="col" style="border-radius:5px">
                                             <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
@@ -86,9 +86,6 @@
                                                 <button type="submit"
                                                     class="btn btn-sm btn-outline-info">Update</button>
                                             </form>
-
-                                            <button type="button" class="btn btn-outline-warning">ND</button>
-                                            <button type="button" class="btn btn-outline-success">ND</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -110,8 +107,12 @@
                         <div id="notes-list">
                             {% for note in notes %}
                             <div class="row mb-0 mt-1">
-                                <p class="mb-0">{{ note.date }}</p>
-                                <p class="mb-0">{{ note.note }}</p>
+                                <p class="mb-0">
+                                    <a href="{% url 'school:show_note_text' student.id note.id %}">
+                                        {{ note.date }}
+                                    </a>
+                                </p>
+                                <p class="mb-0">{{ note.note|truncatechars:40 }}</p>
                             </div>
                             <hr class="mb-0 mt-1">
                             {% endfor %}
@@ -174,12 +175,20 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item"
-                                                href="{% url 'school:ocupational_therapy' stud_id=student.id %}">Occupational
-                                                Therapy</a></li>
+                                                href="{% url 'school:ocupational_therapy' stud_id=student.id %}">
+                                                Occupational Therapy
+                                            </a>
+                                        </li>
                                         <li><a class="dropdown-item"
-                                                href="{% url 'school:speech_therapy' stud_id=student.id %}">Speech
-                                                Therapy</a></li>
-                                        <li><a class="dropdown-item" href="#">Reading Screening</a></li>
+                                                href="{% url 'school:speech_therapy' stud_id=student.id %}">
+                                                Speech Therapy
+                                            </a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                href="{% url 'school:save_read_screen' stud_id=student.id %}">
+                                                Reading Screening
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -195,45 +204,30 @@
                         </thead>
                         <tbody>
 
-                            {% for el in student.stud_st.all %}
+                            {% for speech in student.stud_st.all %}
                             <tr>
-                                <td>{{el.screen_date}}</td>
+                                <td>{{ speech.screen_date }}</td>
                                 <td>Speech_therapy</td>
                                 <td>
 
                                     <div class="btn-group btn-group-sm" role="group"
                                         aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}"
-                                                name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
-                                        </form>
-
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="{% url 'school:show_speech_ther' student.pk speech.pk  %}"
+                                            type="button" class="btn btn-outline-info btn-sm">Read</a>
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
-
                             <hr>
-
                             {% for el in student.stud_ot.all %}
                             <tr>
                                 <td>{{el.screen_date}}</td>
                                 <td>Ocupational_therapy</td>
                                 <td>
-
                                     <div class="btn-group btn-group-sm" role="group"
                                         aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}"
-                                                name="concern_id">
-                                            <button type="submit" class="btn btn-sm btn-outline-info">View</button>
-                                        </form>
-
-                                        <button type="button" class="btn btn-outline-warning">ND</button>
-                                        <button type="button" class="btn btn-outline-success">ND</button>
+                                        <a href="{% url 'school:show_occup_ther' student.pk el.pk  %}" type="button"
+                                            class="btn btn-outline-info btn-sm">Read</a>
                                     </div>
                                 </td>
                             </tr>
@@ -256,14 +250,17 @@
                                 <th scope="col">Date</th>
                                 <th scope="col">Note</th>
                                 <th scope="col">SST</th>
+                                <th scope="Links">Read</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for observ in observations %}
                             <tr>
                                 <td>{{ observ.date }}</td>
-                                <td>{{ observ.note }}</td>
+                                <td>{{ observ.note|truncatechars:50 }}</td>
                                 <td>{{ observ.sst.first_name }} {{ observ.sst.last_name }}</td>
+                                <td><a href="{% url 'school:show_observation' student.pk observ.pk  %}" type="button"
+                                        class="btn btn-outline-info btn-sm">Read</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -283,18 +280,21 @@
                                 <th scope="col">Support Text</th>
                                 <th scope="col">Support Note</th>
                                 <th scope="col">SST</th>
-                                <th scope="col">Commands</th>
+                                <th scope="col">Links</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for support in supports %}
                             <tr>
                                 <td>{{ support.date }}</td>
-                                <td>{{ support.suport_text }}</td>
-                                <td>{{ support.note }}</td>
+                                <td>{{ support.suport_text|truncatechars:25 }}</td>
+                                <td>{{ support.note|truncatechars:25 }}</td>
                                 <td>{{ support.sst.first_name }} {{ support.sst.last_name }}</td>
                                 <td><a href="{% url 'school:create_response' student.id support.pk %}" type="button"
-                                        class="btn btn-outline-info btn-sm">Response</a></td>
+                                        class="btn btn-outline-info btn-sm">Response</a>
+                                    <a href="{% url 'school:read_full_support' student.id support.pk %}"
+                                        class="btn btn-outline-warning btn-sm">Read</a>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

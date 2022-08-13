@@ -1,0 +1,69 @@
+{% extends 'school/layout.html' %}
+{% load static %}
+
+{% block title %}Reading results{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container py-5">
+    <h3 class="d-flex justify-content-center">Speech Therapy Results</h3>
+    <div class="mx-auto">
+        <div class="mb-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">DoB</th>
+                        <th scope="col">Birth order in class</th>
+                        <th scope="col">Birth order in family</th>
+                        <th scope="col">Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {{ student.first_name }}
+                            {% if object.student.middle_name != None %}
+                            {{ object.student.middle_name }}
+                            {% else %}
+                            {% endif %}
+                            {{ student.last_name }}
+                        </td>
+                        <td>{{ object.student.date_of_birth }}</td>
+                        <td>{{ object.student.birth_order_in_class }}</td>
+                        <td>{{ object.student.birth_order_in_family }}</td>
+                        <td>{{ object.student.cur_grade }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mb-3">
+            <form action="" method="post" id="">
+                {% csrf_token %}
+                {% for field in form %}
+                {{ field.errors }}
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="input-group mb-3">
+                    {{ field }}
+                </div>
+
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+                {% endfor %}
+                <br>
+                <div class="col-auto">
+                    <input type="submit" value="Save Concern" class="btn btn-primary mb-3" id="submit-btn-concern">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+{% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+{{ block.super }}
+{% endblock %}

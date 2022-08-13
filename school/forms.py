@@ -1,6 +1,17 @@
+from cProfile import label
 from tkinter.tix import Tree
 from django.forms import DateInput, ModelForm
-from .models import MyUser, NotesPTS, Consern, Intake, Observation, Support, OcupationalTherapy, SpeechTherapy, ResponceToSupport
+from .models import (MyUser,
+                     NotesPTS,
+                     Consern,
+                     Intake,
+                     Observation,
+                     Support,
+                     OcupationalTherapy,
+                     SpeechTherapy,
+                     ResponceToSupport,
+                     #  ReadingScreening
+                     )
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -464,3 +475,55 @@ class ResponceToSupportForm(ModelForm):
     class Meta:
         model = ResponceToSupport
         fields = ['date', 'intervention', 'note']
+
+
+# class ReadingScreeningForm(ModelForm):
+#     screen_type = forms.ChoiceField(
+#         required=True,
+#         widget=forms.widgets.Select(
+#             attrs={
+#                 'class': 'form-control'
+#             }
+#         ),
+#         choices=ReadingScreening.READING_CHOISES,
+#         label='Select type of screening',
+#     )
+#     errors = forms.CharField(
+#         required=True,
+#         widget=forms.widgets.TextInput(
+#             attrs={
+#                 'placeholder': '''EXAMPLE: 3 decoding errors;
+#                                     2 minor / 1 significant''',
+#                 'class': 'form-control',
+#                 'type': 'text'
+#             }
+#         ),
+#         label='Describe errors happened during the screening'
+#     )
+
+#     question = forms.CharField(
+#         required=True,
+#         widget=forms.widgets.TextInput(
+#             attrs={
+#                 'placeholder': 'EXAMPLE: 7-8/10 comprehesion questions',
+#                 'class': 'form-control',
+#                 'type': 'text'
+#             }
+#         ),
+#         label='Describe results of questions'
+#     )
+#     notes = forms.CharField(
+#         required=True,
+#         widget=forms.widgets.TextInput(
+#             attrs={
+#                 'placeholder': 'Recomendations, notes, additional information',
+#                 'class': 'form-control',
+#                 'type': 'text'
+#             }
+#         ),
+#         label='Do you have any recomendations or notes?'
+#     )
+
+#     class Meta:
+#         model = ReadingScreening
+#         fields = ['screen_type', 'errors', 'question', 'notes']
