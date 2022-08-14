@@ -1,4 +1,3 @@
-from pprint import pprint
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -24,8 +23,11 @@ from .forms import (MyUserForm, UploadExcelFileForm, ConsernForm,
                     SpeechTherapyForm, ResponceToSupportForm,
                     ReadingScreeningForm
                     )
-
-from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check, staff_check, read_excel_save_users
+from .utils import (read_excel_with_students,
+                    calculate_age, sst_check,
+                    teacher_check, staff_check,
+                    read_excel_save_users
+                    )
 import json
 
 
@@ -71,7 +73,6 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('school:index'))
 
 
-@ login_required
 @ user_passes_test(teacher_check)
 def teacher_view(request):
     excel_form = UploadExcelFileForm()
@@ -84,7 +85,7 @@ def teacher_view(request):
     return render(request, 'school/teacher.html', context)
 
 
-@ user_passes_test(sst_check)
+@ user_passes_test(staff_check)
 def upload_students(request):
     '''Save student to the data base '''
     if request.method == 'POST':
@@ -136,7 +137,6 @@ def save_note_from_PTC(request):
         return JsonResponse(data, safe=False)
 
 
-@ login_required
 @ user_passes_test(teacher_check)
 def make_consern(request, **kwargs):
     if request.method == 'GET':
@@ -152,7 +152,6 @@ def make_consern(request, **kwargs):
         return render(request, 'school/consern.html', context)
 
 
-@ login_required
 @ user_passes_test(teacher_check)
 def make_consern_post(request):
     '''Function to save concern and intake forms to database.'''
@@ -211,11 +210,13 @@ def save_observation(request):
     via fetch api call'''
     if request.method == 'POST':
         observ_data = json.load(request)
+        print(observ_data)
         observation = Observation(
             date=observ_data['obs_date'],
             note=observ_data['obs_text'],
             teacher=MyUser.objects.get(id=observ_data['teach_id']),
             student=Student.objects.get(id=observ_data['stud_id']),
+            concern=Consern.objects.get(id=observ_data['cons_id']),
             sst=request.user
         )
         observation.save()
@@ -226,11 +227,12 @@ def save_observation(request):
 @ user_passes_test(sst_check)
 def support(request, **kwargs):
     if request.method == 'GET':
-        student = Student.objects.get(id=kwargs['stud_id'])
+        concern = Consern.objects.select_related(
+            'student').get(id=kwargs['conc_id'])
         support_form = SupportForm()
         context = {
             'support_form': support_form,
-            'student': student
+            'concern': concern,
         }
         return render(request, 'school/support.html', context)
 
@@ -242,11 +244,13 @@ def make_support_post(request):
         if support_form.is_valid():
             student = Student.objects.get(id=request.POST['stud_id'])
             teacher = MyUser.objects.get(id=request.POST['teach_id'])
+            concern = Consern.objects.get(id=request.POST['cons_id'])
             sst = request.user
             new_support = support_form.save(commit=False)
             new_support.student = student
             new_support.sst = sst
             new_support.teacher = teacher
+            new_support.concern = concern
             new_support.save()
 
             messages.success(request, 'Thank you! Support note is saved!')

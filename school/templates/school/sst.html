@@ -3,65 +3,62 @@
 
 {% block title%}SST{% endblock %}
 {% block content %}
-    
 
-    <h3>
-        Hi! 
-        {{ user.first_name|default:'No firstname' }} 
-        {{ user.last_name|default:'No lastname' }}
-    </h3>
 
-    <div class="container">
-        <div class="row">
-            <!-- <div class="col-sm-6"> -->
-            <div class="col">
-                <div class="card">
-                  <div class="card-body">
+<h3>
+    Hi!
+    {{ user.first_name|default:'No firstname' }}
+    {{ user.last_name|default:'No lastname' }}
+</h3>
+
+<div class="container">
+    <div class="row">
+        <!-- <div class="col-sm-6"> -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
                     <h5 class="card-title">Conserns from teachers</h5>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Concern</th>
-                                    <th scope="col">Student</th>
-                                    <th scope="col">Teacher</th>
-                                    <th scope="col">Commands</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for concern in concerns %}
-                                    <tr>
-                                        <td>{{ concern.date }}</td>
-                                        <td>{{ concern.consern_type }}</td>
-                                        <td>{{ concern.student.first_name }} {{ concern.student.last_name }}</td>
-                                        <td>{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}</td>
-                                        <td>
-                                            <form action="{% url 'school:sst_view_intake' %}" method="post">
-                                                <input hidden class='form-control' name="concern_id" value="{{concern.id}}">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-outline-success btn-sm">View</button>
-                                            </form>
-                                            <input type="button" 
-                                                    data-bs-toggle="modal" data-bs-target="#observModal"
-                                                    class="btn btn-outline-warning btn-sm"
-                                                    id = "observ-btn"
-                                                    value = "Observ."
-                                                    data-observation="observ"
-                                                    data-teacher-id = "{{ concern.teacher.id }}"
-                                                    data-names = "{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}"
-                                                    data-student-id = "{{ concern.student.id }}">
-                                            </input>
-                                            <a href="{% url 'school:support' stud_id=concern.student.id %}" type="button" class="btn btn-outline-info btn-sm">Support</a>  
-                                        </td>
-                                    </tr>
-                                {% endfor %}    
-                            </tbody>
-                        </table>
-                  </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Concern</th>
+                                <th scope="col">Student</th>
+                                <th scope="col">Teacher</th>
+                                <th scope="col">Commands</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for concern in concerns %}
+                            <tr>
+                                <td>{{ concern.date }}</td>
+                                <td>{{ concern.consern_type }}</td>
+                                <td>{{ concern.student.first_name }} {{ concern.student.last_name }}</td>
+                                <td>{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}</td>
+                                <td>
+                                    <form action="{% url 'school:sst_view_intake' %}" method="post">
+                                        <input hidden class='form-control' name="concern_id" value="{{concern.id}}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-success btn-sm">View</button>
+                                    </form>
+                                    <input type="button" data-bs-toggle="modal" data-bs-target="#observModal"
+                                        class="btn btn-outline-warning btn-sm" id="observ-btn" value="Observ."
+                                        data-observation="observ" data-teacher-id="{{ concern.teacher.id }}"
+                                        data-names="{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}"
+                                        data-student-id="{{ concern.student.id }}" data-consern-id="{{ concern.id }}">
+                                    </input>
+                                    <a href="{% url 'school:support' concern.id %}" type="button"
+                                        class="btn btn-outline-info btn-sm">Support</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <!-- <div class="col-sm-6">
+        </div>
+        <!-- <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Special title treatment</h5>
@@ -70,80 +67,82 @@
                   </div>
                 </div>
             </div> -->
-        </div>
-        <br>
-        <div class="mx-auto">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">All students</h5>
-                    <br>
-                    <table class="table table-sm" id="student_table">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">First name</th>
-                                <th scope="col">Last name</th>
-                                <th scope="col">Grade</th>
-                                <th scope="col">Teacher</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in students %}
-                            <tr>
-                                <td><a href="{% url 'school:student_profile' student.id %}">{{ student.school_id }}</a></td>
-                                <td>{{ student.first_name }}</td>
-                                <td>{{ student.last_name }}</td>
-                                <td>{{ student.cur_grade }}</td>
-                                <td>{{ student.teacher }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="observModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Observation and Notes</h5>
-                        <br>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    
-                    <form id="form-observ" action="" method="post">
-                        <input hidden id="teacher-id-in-modal" name="teacher-id-in-modal">
-                        <input hidden id="student-id-in-modal" name="student-id-in-modal">
-
-                        <div class="modal-body">
-                            <h4 class="d-flex justify-content-center" id="teacher-name-in-modal"></h4>
-                            <div class="mb-3">
-                                <label for="id_date_observ" class="form-label">Pick a date:</label>
-                                <input type="date" name="date" class="form-control" required="" id="id_date_observ">
-                            </div>
-                            <div class="mb-3">
-                                <label for="obs-text" class="col-form-label">Observation notes</label>
-                                <textarea rows="5" class="form-control" id="obs-text" required=""></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="close-modal-obs" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="save-note-btn">Save note</button>
-                        </div>
-                    </form>
-                </div>
+    </div>
+    <br>
+    <div class="mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">All students</h5>
+                <br>
+                <table class="table table-sm" id="student_table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">First name</th>
+                            <th scope="col">Last name</th>
+                            <th scope="col">Grade</th>
+                            <th scope="col">Teacher</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><a href="{% url 'school:student_profile' student.id %}">{{ student.school_id }}</a></td>
+                            <td>{{ student.first_name }}</td>
+                            <td>{{ student.last_name }}</td>
+                            <td>{{ student.cur_grade }}</td>
+                            <td>{{ student.teacher }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    
+    <!-- Modal -->
+    <div class="modal fade" id="observModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Observation and Notes</h5>
+                    <br>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="form-observ" action="" method="post">
+                    <input hidden id="teacher-id-in-modal" name="teacher-id-in-modal">
+                    <input hidden id="student-id-in-modal" name="student-id-in-modal">
+                    <input hidden id="consern-id-in-modal" name="consern-id-in-modal">
+
+                    <div class="modal-body">
+                        <h4 class="d-flex justify-content-center" id="teacher-name-in-modal"></h4>
+                        <div class="mb-3">
+                            <label for="id_date_observ" class="form-label">Pick a date:</label>
+                            <input type="date" name="date" class="form-control" required="" id="id_date_observ">
+                        </div>
+                        <div class="mb-3">
+                            <label for="obs-text" class="col-form-label">Observation notes</label>
+                            <textarea rows="5" class="form-control" id="obs-text" required=""></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="close-modal-obs" type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="save-note-btn">Save note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 {% block scripts %}
-    {{ block.super }}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-    crossorigin="anonymous"></script>
+{{ block.super }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-    <script src="{% static 'school/sst.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script src="{% static 'school/sst.js' %}"></script>
 {% endblock %}

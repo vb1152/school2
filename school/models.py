@@ -172,7 +172,15 @@ class Intake(models.Model):
                                    default=None, null=True, blank=True)
 
 
-class Observation(models.Model):
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(db_index=True, default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Observation(BaseModel):
     date = models.DateField(verbose_name='Date')
     teacher = models.ForeignKey(MyUser,
                                 on_delete=models.PROTECT,
@@ -187,6 +195,8 @@ class Observation(models.Model):
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name='stud_observation')
     note = models.CharField(verbose_name='Observation note', max_length=2000)
+    concern = models.ForeignKey(
+        Consern, on_delete=models.CASCADE, related_name='observation_consern')
 
     class Meta:
         ordering = ["-date"]
@@ -212,20 +222,14 @@ class Support(models.Model):
     suport_text = models.CharField(
         verbose_name='Support text', max_length=2000)
     note = models.CharField(verbose_name='Support note', max_length=2000)
+    concern = models.ForeignKey(
+        Consern, on_delete=models.CASCADE, related_name='concern_support', default=None)
 
     class Meta:
         ordering = ["-date"]
 
     def __str__(self) -> str:
         return self.suport_text[:15]
-
-
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(db_index=True, default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
 
 
 class OcupationalTherapy(BaseModel):

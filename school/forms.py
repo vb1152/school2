@@ -319,7 +319,7 @@ class SupportForm(ModelForm):
     class Meta:
         model = Support
         # fields = ['date', 'support_text', 'support_note']
-        exclude = ['teacher', 'sst', 'student']
+        exclude = ['teacher', 'sst', 'student', 'concern']
 
 
 class OcupationalTherapyForm(ModelForm):

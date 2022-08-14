@@ -1,13 +1,13 @@
-document.addEventListener('DOMContentLoaded', function(){
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     // $(document).ready( function () {
-        $('#student_table').DataTable({
-            searching: true,
-            order: [[0, 'desc']],
-        });
+    $('#student_table').DataTable({
+        searching: true,
+        order: [[0, 'desc']],
+    });
     // });
-    
-    
+
+
     //select all observation buttons
     const observBtn = Array.from(document.querySelectorAll(`[data-observation="observ"]`))
     // set event listener and values on button after click 
@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function(){
             document.getElementById('teacher-id-in-modal').setAttribute('value', btn.target.getAttribute('data-teacher-id'))
             document.getElementById('teacher-name-in-modal').innerHTML = btn.target.getAttribute('data-names')
             document.getElementById('student-id-in-modal').setAttribute('value', btn.target.getAttribute('data-student-id'))
+            document.getElementById('consern-id-in-modal').setAttribute('value', btn.target.getAttribute('data-consern-id'))
+
         })
     })
 
@@ -23,45 +25,44 @@ document.addEventListener('DOMContentLoaded', function(){
     const formObserv = document.getElementById('form-observ')
     formObserv.addEventListener('submit', function (e) {
         e.preventDefault()
-        
+
         var url = '/save_observation'
         let obs_date = document.getElementById('id_date_observ')
         let obs_text = document.getElementById('obs-text')
         let teach_id = document.getElementById('teacher-id-in-modal').value
         let stud_id = document.getElementById('student-id-in-modal').value
-
-        console.log(obs_date, obs_text, teach_id, stud_id)
-
-    //     if (note_text.value.length === 0) {
-    //         alert('Empty note is not allowed!')
-    //         document.getElementById('close-modal').click();
-    //     }
-    //     let stud_id = document.getElementById('stud_id').innerHTML
-    //     console.log('subm')
+        let cons_id = document.getElementById('consern-id-in-modal').value
 
         fetch(url, {
             method: 'POST',
             headers: {
-            'Content-Type':'application/json',
-            'X-CSRFToken': csrftoken
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
             },
             body: JSON.stringify({
-                                  'obs_date': obs_date.value, 
-                                  'obs_text': obs_text.value,
-                                  'teach_id': teach_id,
-                                  'stud_id': stud_id
-                                })
-            })
-            .then(response => response.json())
-            .then(data => {
-            console.log(data);
-            obs_text.value = ''
-            obs_date.value = ''
-            document.getElementById('close-modal-obs').click();
-
-            alert('Thank you! Observation is saved!')
+                'obs_date': obs_date.value,
+                'obs_text': obs_text.value,
+                'teach_id': teach_id,
+                'stud_id': stud_id,
+                'cons_id': cons_id
             })
         })
-    
+            .then(response => response.json())
+            .then(data => {
+                obs_text.value = ''
+                obs_date.value = ''
+                document.getElementById('close-modal-obs').click();
+
+                alert('Thank you! Observation is saved!')
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                obs_text.value = ''
+                obs_date.value = ''
+                document.getElementById('close-modal-obs').click();
+                alert('ERROR! Some problem.')
+            });
+    })
+
 
 });
