@@ -14,19 +14,14 @@ urlpatterns = [
 
     path('sst/student_profile/<int:pk>/',
          views.StudentProfileSstView.as_view(), name='student_profile'),
-    # StudentProfileSstView
     path('sst/student_profile/<int:pk>/occupational_therapy',
          views.OccupationalTherapyView.as_view(), name='show_therapy_sst'),
-
     path('sst/student_profile/<int:pk>/speech_therapy',
          views.SpeechTherapyView.as_view(), name='show_speech_sst'),
-    # show_consern_sst
     path('sst/student_profile/<int:pk>/concern',
          views.ShowConcernSST.as_view(), name='show_concern_sst'),
-    # # read_full_support_sst
     path('sst/student_profile/<int:pk>/support/',
          views.ReadSupportSstView.as_view(), name='read_full_support_text_sst'),
-    # read_full_observ_text_sst
     path('sst/student_profile/<int:pk>/observation/',
          views.ShowObservationTextSstView.as_view(), name='read_full_observ_text_sst'),
 
