@@ -71,7 +71,7 @@
                                 {% for concern in object.stud_consern.all %}
                                 <tr>
                                     <td>{{ concern.date }}</td>
-                                    <td>{{ concern.consern_type}}</td>
+                                    <td>{{ concern.consern_type|truncatechars:25 }}</td>
                                     <td>
                                         <div class="col" style="border-radius:5px">
                                             <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
@@ -102,7 +102,7 @@
                             {% for note in student.student_notes.all %}
                             <div class="row mb-0 mt-1">
                                 <p class="mb-0">{{ note.date }}</p>
-                                <p class="mb-0">{{ note.note }}</p>
+                                <p class="mb-0">{{ note.note|truncatechars:30 }}</p>
                             </div>
                             <hr class="mb-0 mt-1">
                             {% endfor %}
@@ -203,20 +203,23 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>SST Team Member Observation and Notes</strong></h5>
-                    <table class="table">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
                                 <th scope="col">Note</th>
                                 <th scope="col">SST</th>
+                                <th scope="col">Links</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for observ in student.stud_observation.all %}
                             <tr>
                                 <td>{{ observ.date }}</td>
-                                <td>{{ observ.note }}</td>
+                                <td>{{ observ.note|truncatechars:25 }}</td>
                                 <td>{{ observ.sst.first_name }} {{ observ.sst.last_name }}</td>
+                                <td><a href="{% url 'school:read_full_observ_text_sst' observ.pk %}" type="button"
+                                        class="btn btn-outline-info btn-sm">View</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -230,7 +233,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>Supports from SST</strong></h5>
-                    <table class="table">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
@@ -241,13 +244,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for support in student.stud_support.all %}
+                            {% for support in supports %}
                             <tr>
                                 <td>{{ support.date }}</td>
-                                <td>{{ support.suport_text }}</td>
-                                <td>{{ support.note }}</td>
+                                <td>{{ support.suport_text|truncatechars:25 }}</td>
+                                <td>{{ support.note|truncatechars:25 }}</td>
                                 <td>{{ support.sst.first_name }} {{ support.sst.last_name }}</td>
-                                <td><a href="" type="button" class="btn btn-outline-info btn-sm">Show responses</a></td>
+                                <td><a href="{% url 'school:read_full_support_text_sst' support.pk %}" type="button"
+                                        class="btn btn-outline-info btn-sm">View</a>
+                                    {% if support.responce_support.all %}
+                                    Responded
+                                    {% else %}
+                                    {% endif %}
+
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

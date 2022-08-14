@@ -17,12 +17,12 @@ from .models import (Consern, Intake, NotesPTS,
                      Student, MyUser, Observation,
                      Support, OcupationalTherapy,
                      SpeechTherapy, ResponceToSupport,
-                     #  ReadingScreening
+                     ReadingScreening
                      )
 from .forms import (MyUserForm, UploadExcelFileForm, ConsernForm,
                     IntakeForm, SupportForm, OcupationalTherapyForm,
                     SpeechTherapyForm, ResponceToSupportForm,
-                    # ReadingScreeningForm
+                    ReadingScreeningForm
                     )
 
 from .utils import read_excel_with_students, calculate_age, sst_check, teacher_check, staff_check, read_excel_save_users
@@ -187,8 +187,6 @@ def make_consern_post(request):
 
         messages.error(request, 'Some error. Concern is not saved.')
         return HttpResponseRedirect(reverse('school:student_data_profile', args=[request.POST['stud_id']]))
-
-# @login_required
 
 
 @ user_passes_test(sst_check)
@@ -441,32 +439,49 @@ def upload_users(request):
     messages.error(request, 'Some error. Sorry')
     return HttpResponseRedirect(reverse('school:staff_view'))
 
-# class ReadingScreenView(TeacherCheckMixin, CreateView):
-#     'Save result of reading screening'
-#     model = ReadingScreening
-#     template_name = 'school/teacher/create_read_screen.html'
-#     form_class = ReadingScreeningForm
-#     login_url = 'login'
 
-#     def form_valid(self, form) -> HttpResponse:
-#         form.instance.teacher = self.request.user
-#         print(form.instance)
-#         # form.instance.student
-#         return super().form_valid(form)
+class ShowObservationTextSstView(SstCheckMixin, DetailView):
+    model = Observation
+    template_name = 'school/sst/show_observation_text_sst.html'
+    login_url = 'login'
 
-#     def get_success_url(self) -> str:
-#         messages.success(self.request,
-#                          'Thank you! Reading screening results are saved!')
-#         return reverse('school:student_data_profile', args=(self.kwargs['stud_id'],))
 
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(*args, **kwargs)  # call super
-#         # add to the returned dictionary
-#         print(kwargs)
-#         # context['object'] = Student.objects.get(
-#         #     id=self.kwargs['supp_pk'])
-#         # context['responce'] = ResponceToSupport.objects.all()
-#         return context
+class ReadSupportSstView(SstCheckMixin, DetailView):
+    'View to show support data to sst'
+    model = Support
+    template_name = 'school/sst/show_support_text_sst.html'
+    login_url = 'login'
+
+
+class ShowReadScreen(LoginRequiredMixin, DetailView):
+    '''View to show results of reading screening'''
+    model = ReadingScreening
+    template_name = 'school/teacher/show_read_screen.html'
+    login_url = 'login'
+
+
+class ReadingScreenView(TeacherCheckMixin, CreateView):
+    'Save result of reading screening'
+    model = ReadingScreening
+    template_name = 'school/teacher/create_read_screen.html'
+    form_class = ReadingScreeningForm
+    login_url = 'login'
+
+    # save data in db
+    def form_valid(self, form) -> HttpResponse:
+        form.instance.teacher = self.request.user
+        form.instance.student = Student.objects.get(id=self.kwargs['stud_id'])
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        messages.success(self.request,
+                         'Thank you! Reading screening results are saved!')
+        return reverse('school:student_data_profile', args=(self.kwargs['stud_id'],))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['student'] = Student.objects.get(id=self.kwargs['stud_id'])
+        return context
 
 
 class ShowObservation(LoginRequiredMixin, DetailView):
@@ -542,6 +557,13 @@ class StudentProfileSstView(SstCheckMixin, DetailView):
     model = Student
     template_name = 'school/sst/student_profile_sst.html'
     login_url = 'login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['supports'] = Support.objects.filter(
+            student=self.get_object())
+
+        return context
 
 
 class OccupationalTherapyView(SstCheckMixin, DetailView):

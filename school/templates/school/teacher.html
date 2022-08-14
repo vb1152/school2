@@ -2,22 +2,59 @@
 {% load static %}
 
 {% block content %}
-    <h3>Hi! 
-        {{ user.first_name|default:'No firstname' }} 
-        {{ user.last_name|default:'No lastname' }}
-    </h3>
-    <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" href="#" 
-            role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" 
-            aria-expanded="false">
-            Select student
-        </a>
-        <ul class="dropdown-menu">
-            {% for student in students %}
-                <li><a class="dropdown-item" href="{% url 'school:student_data_profile' stud_id=student.id %}">{{ student.first_name }} {{ student.last_name}}</a></li>
-            {% endfor %}
-        </ul>
+<h3>Hi!
+    {{ user.first_name|default:'No firstname' }}
+    {{ user.last_name|default:'No lastname' }}
+</h3>
+<br>
+<div class="mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">All students</h5>
+            <br>
+            <table class="table table-sm" id="student_table_teacher">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Grade</th>
+                        <th scope="col">Teacher</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><a href="{% url 'school:student_data_profile' stud_id=student.id %}">
+                                {{ student.school_id}}
+                            </a>
+                        </td>
+                        <td>{{ student.first_name }}</td>
+                        <td>{{ student.last_name }}</td>
+                        <td>{{ student.cur_grade }}</td>
+                        <td>{{ student.teacher }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <br>
-    
+</div>
+
 {% endblock content %}
+{% block scripts %}
+{{ block.super }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#student_table_teacher').DataTable({
+            searching: true,
+            order: [[0, 'desc']],
+        });
+    });
+</script>
+{% endblock %}

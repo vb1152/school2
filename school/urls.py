@@ -23,33 +23,35 @@ urlpatterns = [
     # show_consern_sst
     path('sst/student_profile/<int:pk>/concern',
          views.ShowConcernSST.as_view(), name='show_concern_sst'),
+    # # read_full_support_sst
+    path('sst/student_profile/<int:pk>/support/',
+         views.ReadSupportSstView.as_view(), name='read_full_support_text_sst'),
+    # read_full_observ_text_sst
+    path('sst/student_profile/<int:pk>/observation/',
+         views.ShowObservationTextSstView.as_view(), name='read_full_observ_text_sst'),
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
     path('upload_students', views.upload_students, name='upload_students'),
-
     # Teacher
     path('student_data_profile/<int:stud_id>',
          views.student_data_profile, name='student_data_profile'),
     path('student_data_profile/<int:stud_id>/create_response/<int:supp_pk>/',
          views.CreateResponse.as_view(), name='create_response'),
-
     path('student_data_profile/<int:stud_id>/speech_therapy/<int:pk>/',
          views.ShowSpeechTherapy.as_view(), name='show_speech_ther'),
     path('student_data_profile/<int:stud_id>/occup_therapy/<int:pk>/',
          views.ShowOcupTherapy.as_view(), name='show_occup_ther'),
-
     path('student_data_profile/<int:stud_id>/show_support/<int:pk>/',
          views.ShowSupport.as_view(), name='read_full_support'),
-
     path('student_data_profile/<int:stud_id>/show_note/<int:pk>/',
          views.ShowNote.as_view(), name='show_note_text'),
-    # show_observation
     path('student_data_profile/<int:stud_id>/show_observation/<int:pk>/',
          views.ShowObservation.as_view(), name='show_observation'),
+    path('student_data_profile/<int:stud_id>/new_read_screen/',
+         views.ReadingScreenView.as_view(), name='new_read_screen'),
+    path('student_data_profile/<int:stud_id>/show_read_screen/<int:pk>/',
+         views.ShowReadScreen.as_view(), name='show_read_screen'),
 
-
-    # path('student_data_profile/<int:stud_id>/save_read_screen/',
-    #      views.ReadingScreenView.as_view(), name='save_read_screen'),
 
     path('make_consern/<int:stud_id>', views.make_consern, name='make_consern'),
     path('make_consern_post', views.make_consern_post, name='make_consern_post'),

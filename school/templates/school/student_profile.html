@@ -185,7 +185,7 @@
                                             </a>
                                         </li>
                                         <li><a class="dropdown-item"
-                                                href="{% url 'school:save_read_screen' stud_id=student.id %}">
+                                                href="{% url 'school:new_read_screen' stud_id=student.id %}">
                                                 Reading Screening
                                             </a>
                                         </li>
@@ -203,7 +203,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             {% for speech in student.stud_st.all %}
                             <tr>
                                 <td>{{ speech.screen_date }}</td>
@@ -213,12 +212,11 @@
                                     <div class="btn-group btn-group-sm" role="group"
                                         aria-label="Basic mixed styles example">
                                         <a href="{% url 'school:show_speech_ther' student.pk speech.pk  %}"
-                                            type="button" class="btn btn-outline-info btn-sm">Read</a>
+                                            type="button" class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>
                             {% endfor %}
-                            <hr>
                             {% for el in student.stud_ot.all %}
                             <tr>
                                 <td>{{el.screen_date}}</td>
@@ -227,7 +225,20 @@
                                     <div class="btn-group btn-group-sm" role="group"
                                         aria-label="Basic mixed styles example">
                                         <a href="{% url 'school:show_occup_ther' student.pk el.pk  %}" type="button"
-                                            class="btn btn-outline-info btn-sm">Read</a>
+                                            class="btn btn-outline-info btn-sm">View</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% for read in student.student_reading.all %}
+                            <tr>
+                                <td>{{ read.date_screen }}</td>
+                                <td>Reading screening</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group"
+                                        aria-label="Basic mixed styles example">
+                                        <a href="{% url 'school:show_read_screen' student.pk read.pk  %}" type="button"
+                                            class="btn btn-outline-info btn-sm">View</a>
                                     </div>
                                 </td>
                             </tr>

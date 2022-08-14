@@ -1,16 +1,12 @@
-from cProfile import label
-from tkinter.tix import Tree
-from django.forms import DateInput, ModelForm
+from django.forms import ModelForm
 from .models import (MyUser,
-                     NotesPTS,
                      Consern,
                      Intake,
-                     Observation,
                      Support,
                      OcupationalTherapy,
                      SpeechTherapy,
                      ResponceToSupport,
-                     #  ReadingScreening
+                     ReadingScreening
                      )
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -33,21 +29,6 @@ class MyUserForm(ModelForm):
 class UploadExcelFileForm(forms.Form):
     '''form to upload data from excel files'''
     file = forms.FileField()
-
-# class NotesPTSForm(ModelForm):
-#     class Meta:
-#         model = NotesPTS
-#         fields = ['date', 'note']
-#         exclude = ['student']
-
-#         labels = {
-#             'date': _('Pick a date'),
-#             'note': _('Add note')
-#                 }
-#         widgets = {
-#             'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-#             'note': forms.TextInput(attrs={'class':'form-control'})
-#         }
 
 
 class ConsernForm(ModelForm):
@@ -477,53 +458,65 @@ class ResponceToSupportForm(ModelForm):
         fields = ['date', 'intervention', 'note']
 
 
-# class ReadingScreeningForm(ModelForm):
-#     screen_type = forms.ChoiceField(
-#         required=True,
-#         widget=forms.widgets.Select(
-#             attrs={
-#                 'class': 'form-control'
-#             }
-#         ),
-#         choices=ReadingScreening.READING_CHOISES,
-#         label='Select type of screening',
-#     )
-#     errors = forms.CharField(
-#         required=True,
-#         widget=forms.widgets.TextInput(
-#             attrs={
-#                 'placeholder': '''EXAMPLE: 3 decoding errors;
-#                                     2 minor / 1 significant''',
-#                 'class': 'form-control',
-#                 'type': 'text'
-#             }
-#         ),
-#         label='Describe errors happened during the screening'
-#     )
+class ReadingScreeningForm(ModelForm):
+    date_screen = forms.DateField(
+        required=True,
+        widget=forms.widgets.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }
+        ),
+        label='Screening date'
+    )
 
-#     question = forms.CharField(
-#         required=True,
-#         widget=forms.widgets.TextInput(
-#             attrs={
-#                 'placeholder': 'EXAMPLE: 7-8/10 comprehesion questions',
-#                 'class': 'form-control',
-#                 'type': 'text'
-#             }
-#         ),
-#         label='Describe results of questions'
-#     )
-#     notes = forms.CharField(
-#         required=True,
-#         widget=forms.widgets.TextInput(
-#             attrs={
-#                 'placeholder': 'Recomendations, notes, additional information',
-#                 'class': 'form-control',
-#                 'type': 'text'
-#             }
-#         ),
-#         label='Do you have any recomendations or notes?'
-#     )
+    screen_type = forms.ChoiceField(
+        required=True,
+        widget=forms.widgets.Select(
+            attrs={
+                'class': 'form-control'
+            }
+        ),
+        choices=ReadingScreening.READING_CHOISES,
+        label='Select type of screening',
+    )
+    errors_screen = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                'placeholder': '3 decoding errors; 2 minor/1 significant',
+                'class': 'form-control',
+                'type': 'text',
+            }
+        ),
+        label='Describe errors happened during the screening'
+    )
 
-#     class Meta:
-#         model = ReadingScreening
-#         fields = ['screen_type', 'errors', 'question', 'notes']
+    question_screen = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={
+                'placeholder': '7-8/10 comprehesion questions',
+                'class': 'form-control',
+                'type': 'text',
+            }
+        ),
+        label='Describe results of questions'
+    )
+    notes = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                'placeholder': 'Recomendations, notes, additional information',
+                'class': 'form-control',
+                'type': 'text',
+                'rows': 2
+            }
+        ),
+        label='Do you have any recomendations or notes?'
+    )
+
+    class Meta:
+        model = ReadingScreening
+        fields = ['date_screen', 'screen_type',
+                  'errors_screen', 'question_screen', 'notes']
