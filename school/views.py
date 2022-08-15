@@ -198,7 +198,6 @@ def sst_view(request):
         context = {
             'concerns': concerns,
             'students': students
-
         }
 
         return render(request, 'school/sst.html', context)

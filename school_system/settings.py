@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import django_on_heroku
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -132,7 +133,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configure Django App for Heroku.
-import django_on_heroku
 django_on_heroku.settings(locals())
 
 AUTH_USER_MODEL = 'school.MyUser'
@@ -140,3 +140,7 @@ AUTH_USER_MODEL = 'school.MyUser'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+# add for tests assertTemplateUsed
+# https://docs.djangoproject.com/en/4.0/ref/contrib/staticfiles/#django.contrib.staticfiles.storage.ManifestStaticFilesStorage.manifest_strict
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
