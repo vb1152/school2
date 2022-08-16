@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
         searching: true,
         order: [[0, 'desc']],
     });
+
+    $('#consern_table').DataTable({
+        searching: true,
+        order: [[0, 'desc']],
+    });
     // });
 
 
