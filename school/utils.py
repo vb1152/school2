@@ -76,6 +76,8 @@ def read_excel_save_users(request):
                     user.is_sst = True
                 elif row[5] == 'counselor':
                     user.is_conselor = True
+                user.save()
+
                 user_data = UsersData.objects.create(
                     user=user,
                     person_id=row[0],
