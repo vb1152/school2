@@ -2,38 +2,53 @@
 {% load static %}
 
 {% block content %}
-    
-    <div class="card w-50">
-        <div class="card-body">
-            <h5 class="card-title">Upload students</h5>
-            <form enctype="multipart/form-data" method="post" action="{% url 'school:upload_students' %}">
-                {% csrf_token %}
-                <div class="mb-3 text-muted">
-                    <label for="formFile" class="form-label">
-                        Chose file with list of students to populate database
-                    </label>
-                </div>
-                {{ file_form.as_p }}
-                <input class="btn btn-outline-primary" id="submit" type="submit" value="Upload students" />
-            </form>
-        </div>
+
+<div class="card w-50">
+    <div class="card-body">
+        <h5 class="card-title">Upload students</h5>
+        <form enctype="multipart/form-data" method="post" action="{% url 'school:upload_students' %}">
+            {% csrf_token %}
+            <div class="mb-3 text-muted">
+                <label for="formFile" class="form-label">
+                    Chose file with list of students to populate database
+                </label>
+            </div>
+            {{ file_form.as_p }}
+            <input class="btn btn-outline-primary" id="submit" type="submit" value="Upload students" />
+        </form>
     </div>
-    <br>
-    <div class="card w-50">
-        <div class="card-body">
-            <h5 class="card-title">Upload users</h5>
-            <form enctype="multipart/form-data" method="post" action="{% url 'school:upload_users' %}">
-                {% csrf_token %}
-                <div class="mb-3 text-muted">
-                    <label for="formFile" class="form-label">
-                        Chose file with list of users to populate database
-                    </label>
-                </div>
-                {{ file_form.as_p }}
-                <input class="btn btn-outline-primary" id="submit" type="submit" value="Upload users" />
-            </form>
-        </div>
+    <div class="card-footer text-muted">
+        <form action="{% url 'school:download_sample_users' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" class="form-control" name="sample" type="hidden" value="students"></input>
+            <input type="submit" class="btn btn-outline-secondary btn-sm" value="Download sample file"></input>
+        </form>
     </div>
+
+</div>
+<br>
+<div class="card w-50">
+    <div class="card-body">
+        <h5 class="card-title">Upload users</h5>
+        <form enctype="multipart/form-data" method="post" action="{% url 'school:upload_users' %}">
+            {% csrf_token %}
+            <div class="mb-3 text-muted">
+                <label for="formFile" class="form-label">
+                    Chose file with list of users to populate database
+                </label>
+            </div>
+            {{ file_form.as_p }}
+            <input class="btn btn-outline-primary" id="submit" type="submit" value="Upload users" />
+        </form>
+    </div>
+    <div class="card-footer text-muted">
+        <form action="{% url 'school:download_sample_users' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" class="form-control" name="sample" type="hidden" value="users"></input>
+            <input type="submit" class="btn btn-outline-secondary btn-sm" value="Download sample file"></input>
+        </form>
+    </div>
+</div>
 
 
 {% endblock content %}

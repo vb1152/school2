@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
     path('upload_students', views.upload_students, name='upload_students'),
+
     # Teacher
     path('student_data_profile/<int:stud_id>',
          views.student_data_profile, name='student_data_profile'),
@@ -56,6 +57,9 @@ urlpatterns = [
     path('save_note_from_PTC', views.save_note_from_PTC,
          name='save_note_from_PTC'),
     path('save_observation', views.save_observation, name='save_observation'),
+    path('download_users', views.DownloadSampleUsers.as_view(),
+         name='download_sample_users'),
+
 
     path('update_concern/', views.update_concern, name='update_concern'),
     path('ocupational_therapy/<int:stud_id>',
@@ -67,5 +71,4 @@ urlpatterns = [
     path('speech_therapy_post', views.speech_therapy_post,
          name='speech_therapy_post'),
     path('upload_users', views.upload_users, name='upload_users'),
-
 ]

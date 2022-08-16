@@ -1,3 +1,4 @@
+from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -10,7 +11,9 @@ from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .utils import SstCheckMixin, TeacherCheckMixin
+from .utils import (SstCheckMixin, TeacherCheckMixin,
+                    StaffCheckMixin,
+                    )
 
 from .models import (Consern, Intake, NotesPTS,
                      Student, MyUser, Observation,
@@ -26,7 +29,9 @@ from .forms import (MyUserForm, UploadExcelFileForm, ConsernForm,
 from .utils import (read_excel_with_students,
                     calculate_age, sst_check,
                     teacher_check, staff_check,
-                    read_excel_save_users
+                    read_excel_save_users,
+                    create_sample_excel_users,
+                    create_sample_excel_students
                     )
 import json
 
@@ -581,8 +586,13 @@ class SpeechTherapyView(SstCheckMixin, DetailView):
     model = SpeechTherapy
     template_name = "school/speech_therapy_sst.html"
     login_url = 'login'
-    # Designates the name of the variable to use in the context.
-    # context_object_name = 'speech'
 
 
-# TODO Check intake form working and submit!
+class DownloadSampleUsers(StaffCheckMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        if request.POST['sample'] == 'users':
+            return create_sample_excel_users(request)
+
+        elif request.POST['sample'] == 'students':
+            return create_sample_excel_students(request)
