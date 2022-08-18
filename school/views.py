@@ -1,15 +1,20 @@
 from django.views import View
+from django.views.generic.edit import CreateView
+from django.views.generic import DetailView
+
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import ObjectDoesNotExist
 
-from django.views.generic.edit import CreateView
-from django.views.generic import DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 from .utils import (SstCheckMixin, TeacherCheckMixin,
                     StaffCheckMixin,
@@ -596,3 +601,14 @@ class DownloadSampleUsers(StaffCheckMixin, View):
 
         elif request.POST['sample'] == 'students':
             return create_sample_excel_students(request)
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    '''Custom class to change password'''
+    template_name = 'registration/custom_password_change_form.html'
+    success_url = reverse_lazy("school:password_change_done_custom")
+
+
+class CustomPasswordDoneView(PasswordChangeDoneView):
+    '''Custom class to verify password changes'''
+    template_name = 'registration/custom_password_change_done.html'

@@ -22,8 +22,8 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent"> 
+                    <ul class="navbar-nav mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         {% if user.is_teacher == True %}
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="{% url 'school:teacher_view' %}">Teacher page</a>
@@ -52,14 +52,18 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="#">Conselor links</a>
                             </li> -->
-                        {% endif %}    
+                        {% endif %}  
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'school:logout' %}">Logout</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'school:password_change' %}">Change password </a>
+                        </li>
                     {% else %}
-                            <a class="navbar-brand" href="{% url 'school:login' %}">Login</a>
-                    </ul>
-                    {% endif %}    
+                        <a class="navbar-brand" href="{% url 'school:login' %}">Login</a>
+                    {% endif %}
+                </ul>
+
                 </div>
             </div>
         </nav>

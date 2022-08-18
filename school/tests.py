@@ -1,10 +1,10 @@
 from django.test import TestCase, SimpleTestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser, User
-from .models import MyUser
 from django.contrib.auth import get_user_model
 from django.urls import reverse, resolve
+from datetime import date
 
-from .models import MyUser
+from .models import MyUser, Student, NotesPTS
 from .views import (index, login_view, upload_users,
                     teacher_view, sst_view, support,
                     sst_view_intake, make_support_post,
@@ -22,9 +22,6 @@ from .views import (index, login_view, upload_users,
                     ShowNote, ShowObservation, ReadingScreenView,
                     ShowReadScreen,
                     )
-# from school_system.school import views
-
-# Create your tests here.
 
 
 class TestUrls(SimpleTestCase):
@@ -65,137 +62,136 @@ class TestUrls(SimpleTestCase):
 
     def test_teacher_url_resolves(self):
         url = reverse('school:teacher_view')
-        self.assertEquals(resolve(url).func, teacher_view)
+        self.assertEqual(resolve(url).func, teacher_view)
 
     def test_sst_url_resolves(self):
         url = reverse('school:sst_view')
-        self.assertEquals(resolve(url).func, sst_view)
+        self.assertEqual(resolve(url).func, sst_view)
 
     def test_sst_support_url_resolves(self):
         url = reverse('school:support', args=[1])
-        self.assertEquals(resolve(url).func, support)
+        self.assertEqual(resolve(url).func, support)
 
     def test_sst_intake_url_resolve(self):
         url = reverse('school:sst_view_intake')
-        self.assertEquals(resolve(url).func, sst_view_intake)
+        self.assertEqual(resolve(url).func, sst_view_intake)
 
     def test_sst_student_profile_url_resolve(self):
         url = reverse('school:student_profile', args=[1])
-        self.assertEquals(resolve(url).func.view_class,
-                          StudentProfileSstView)
+        self.assertEqual(resolve(url).func.view_class,
+                         StudentProfileSstView)
 
     def test_sst_show_therapy_url_resolve(self):
         url = reverse('school:show_therapy_sst', args=[1])
-        self.assertEquals(resolve(url).func.view_class,
-                          OccupationalTherapyView)
+        self.assertEqual(resolve(url).func.view_class,
+                         OccupationalTherapyView)
 
     def test_sst_show_speech_url_resolve(self):
         url = reverse('school:show_speech_sst', args=[1])
-        self.assertEquals(resolve(url).func.view_class,
-                          SpeechTherapyView)
+        self.assertEqual(resolve(url).func.view_class,
+                         SpeechTherapyView)
 
     def test_sst_show_concern_url_resolve(self):
         url = reverse('school:show_concern_sst', args=[1])
-        self.assertEquals(resolve(url).func.view_class,
-                          ShowConcernSST)
+        self.assertEqual(resolve(url).func.view_class,
+                         ShowConcernSST)
 
     def test_sst_read_full_support_url_resolve(self):
         url = reverse('school:read_full_support_text_sst', args=[1])
-        self.assertEquals(resolve(url).func.view_class,
-                          ReadSupportSstView)
+        self.assertEqual(resolve(url).func.view_class,
+                         ReadSupportSstView)
 
     def test_sst_read_observat_url_resolve(self):
         url = reverse('school:read_full_observ_text_sst', args=[1])
-        self.assertEquals(resolve(url).func.view_class,
-                          ShowObservationTextSstView)
+        self.assertEqual(resolve(url).func.view_class,
+                         ShowObservationTextSstView)
 
     def test_make_support_url_resolve(self):
         url = reverse('school:make_support_post')
-        self.assertEquals(resolve(url).func, make_support_post)
+        self.assertEqual(resolve(url).func, make_support_post)
 
     def test_uload_students_url_resolve(self):
         url = reverse('school:upload_students')
-        self.assertEquals(resolve(url).func, upload_students)
+        self.assertEqual(resolve(url).func, upload_students)
 
     def test_student_profile_teacher_url_resolve(self):
         url = reverse('school:student_data_profile', args=[1])
-        self.assertEquals(resolve(url).func, student_data_profile)
+        self.assertEqual(resolve(url).func, student_data_profile)
 
     def test_create_responce_teacher_url_resolve(self):
         url = reverse('school:create_response', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class, CreateResponse)
+        self.assertEqual(resolve(url).func.view_class, CreateResponse)
 
     def test_show_seech_therap_teacher_url_resolve(self):
         url = reverse('school:show_speech_ther', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class,
-                          ShowSpeechTherapy)
+        self.assertEqual(resolve(url).func.view_class,
+                         ShowSpeechTherapy)
 
     def test_show_ocup_therapy_teacher_url_resolve(self):
         url = reverse('school:show_occup_ther', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class,
-                          ShowOcupTherapy)
+        self.assertEqual(resolve(url).func.view_class,
+                         ShowOcupTherapy)
 
     def test_show_support_url_resolve(self):
         url = reverse('school:read_full_support', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class,
-                          ShowSupport)
+        self.assertEqual(resolve(url).func.view_class,
+                         ShowSupport)
 
     def test_show_note_url_resolve(self):
         url = reverse('school:show_note_text', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class, ShowNote)
+        self.assertEqual(resolve(url).func.view_class, ShowNote)
 
     def test_show_observations_url_resolve(self):
         url = reverse('school:show_observation', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class, ShowObservation)
+        self.assertEqual(resolve(url).func.view_class, ShowObservation)
 
     def test_read_screen_url_resolve(self):
         url = reverse('school:new_read_screen', args=[1])
-        self.assertEquals(resolve(url).func.view_class, ReadingScreenView)
+        self.assertEqual(resolve(url).func.view_class, ReadingScreenView)
 
     def test_show_readscreen_url_resolve(self):
         url = reverse('school:show_read_screen', args=[1, 2])
-        self.assertEquals(resolve(url).func.view_class, ShowReadScreen)
+        self.assertEqual(resolve(url).func.view_class, ShowReadScreen)
 
     def test_make_consern_url_resolve(self):
         url = reverse('school:make_consern', args=[1])
-        self.assertEquals(resolve(url).func, make_consern)
+        self.assertEqual(resolve(url).func, make_consern)
 
     def test_make_consern_post_url_resolve(self):
         url = reverse('school:make_consern_post')
-        self.assertEquals(resolve(url).func, make_consern_post)
+        self.assertEqual(resolve(url).func, make_consern_post)
 
     def test_staff_view_url_resolve(self):
         url = reverse('school:staff_view')
-        self.assertEquals(resolve(url).func, staff_view)
+        self.assertEqual(resolve(url).func, staff_view)
 
     def test_save_note_url_resolve(self):
         url = reverse('school:save_note_from_PTC')
-        self.assertEquals(resolve(url).func, save_note_from_PTC)
+        self.assertEqual(resolve(url).func, save_note_from_PTC)
 
     def test_save_observations_url_resolve(self):
         url = reverse('school:save_observation')
-        self.assertEquals(resolve(url).func, save_observation)
+        self.assertEqual(resolve(url).func, save_observation)
 
     def test_update_concern_url_resolve(self):
         url = reverse('school:update_concern')
-        self.assertEquals(resolve(url).func, update_concern)
+        self.assertEqual(resolve(url).func, update_concern)
 
     def test_ocupationl_ther_url_resove(self):
         url = reverse('school:ocupational_therapy', args=[1])
-        self.assertEquals(resolve(url).func, ocupational_therapy)
+        self.assertEqual(resolve(url).func, ocupational_therapy)
 
-    # kwargs={'stud_id': 1} # stud_id
     def test_ocupational_therapy_post(self):
         url = reverse('school:ocupational_therapy_post')
-        self.assertEquals(resolve(url).func, ocupational_therapy_post)
+        self.assertEqual(resolve(url).func, ocupational_therapy_post)
 
     def test_speech_therap_url_resolve(self):
         url = reverse('school:speech_therapy', args=[1])
-        self.assertEquals(resolve(url).func, speech_therapy)
+        self.assertEqual(resolve(url).func, speech_therapy)
 
     def test_speech_therapy_post_url_resolve(self):
         url = reverse('school:speech_therapy_post')
-        self.assertEquals(resolve(url).func, speech_therapy_post)
+        self.assertEqual(resolve(url).func, speech_therapy_post)
 
     def test_upload_users_post_url_resolve(self):
         url = reverse('school:upload_users')
@@ -207,12 +203,71 @@ class MyTest(TestCase):
     def setUp(self) -> None:
         self.client = Client()
         self.factory = RequestFactory()
+        MyUser = get_user_model()
+
         self.teacher_user = MyUser.objects.create_user(
             username='Amy_Doe', email='a@a.com', password='1', is_teacher=True)
         self.sst_user = MyUser.objects.create_user(
             username='Bar_SST', email='sst@sst.com', password='1', is_sst=True)
 
-    # required registered user
+        self.staf_user = MyUser.objects.create_user(
+            username='Staff', email='staff@staff.com', password='1',
+            is_staff=True)
+
+        self.student = Student.objects.create(
+            school_id='53',
+            first_name='Alex',
+            middle_name=None,
+            last_name='Max',
+            preferred_name='Alex',
+            date_of_birth=date(2019, 12, 4),
+            birth_order_in_class=2,
+            birth_order_in_family=3,
+            gender='Male',
+            cur_grade=5,
+            grad_year='2023',
+            email=None,
+            home_lang='English',
+            date_join=date(2021, 9, 1),
+            entrygrades=5,
+            teacher=self.teacher_user
+        )
+
+        self.note_pts = NotesPTS.objects.create(
+            student=self.student,
+            date=date.today(),
+            note='Some note from PTS'
+        )
+
+        logged_in = self.client.login(
+            username=self.teacher_user.username, password='1')
+
+    def test_student_string_representation(self):
+        student = Student(first_name='Name', last_name='Last')
+        self.assertEqual(str(student), student.first_name
+                         + ' ' + student.last_name)
+
+    def test_notepts_string_representation(self):
+        note = NotesPTS(date=date.today().strftime("%d/%m/%y"))
+        self.assertEqual(str(note), note.date)
+
+    def test_create_users(self):
+        self.assertEqual(self.teacher_user.username, 'Amy_Doe')
+        self.assertEqual(self.teacher_user.email, 'a@a.com')
+        self.assertTrue(self.teacher_user.is_teacher)
+        self.assertFalse(self.teacher_user.is_staff)
+        self.assertFalse(self.teacher_user.is_sst)
+
+        self.assertEqual(self.sst_user.username, 'Bar_SST')
+        self.assertEqual(self.sst_user.email, 'sst@sst.com')
+        self.assertTrue(self.sst_user.is_sst)
+        self.assertFalse(self.sst_user.is_teacher)
+
+        self.assertEqual(self.staf_user.username, 'Staff')
+        self.assertEqual(self.staf_user.email, 'staff@staff.com')
+        self.assertTrue(self.staf_user.is_staff)
+        self.assertFalse(self.staf_user.is_superuser)
+
     def test_teacher_url_exists(self):
         logged_in = self.client.login(
             username=self.teacher_user.username, password='1')
@@ -237,3 +292,27 @@ class MyTest(TestCase):
             username=self.sst_user.username, password='1')
         resp = self.client.get(reverse('school:sst_view'))
         self.assertTemplateUsed(resp, 'school/sst.html')
+
+    def test_change_password_url_exists_at_proper_location(self):
+        logged_in = self.client.login(
+            username=self.teacher_user.username, password='1')
+        resp = self.client.get('/change-password/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_change_passw_use_propper_template(self):
+        logged_in = self.client.login(
+            username=self.staf_user.username, password='1')
+        resp = self.client.get(reverse('school:password_change'))
+        self.assertTemplateUsed(resp, 'registration/custom_password_change_form.html')
+
+    def test_password_change_done_url_exists(self):
+        logged_in = self.client.login(
+            username=self.staf_user.username, password='1')
+        resp = self.client.get('/change-password/done/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_change_password_done_use_proper_template(self):
+        logged_in = self.client.login(
+            username=self.staf_user.username, password='1')
+        resp = self.client.get(reverse('school:password_change_done_custom'))
+        self.assertTemplateUsed(resp, 'registration/custom_password_change_done.html')

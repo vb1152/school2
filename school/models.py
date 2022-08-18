@@ -99,6 +99,9 @@ class NotesPTS(models.Model):
     class Meta:
         ordering = ['date']
 
+    def __str__(self) -> str:
+        return str(self.date)
+
 
 class Consern(models.Model):
     date = models.DateField(verbose_name='Date')
