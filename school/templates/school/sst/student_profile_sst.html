@@ -213,7 +213,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for observ in student.stud_observation.all %}
+                            {% for observ in observations %}
                             <tr>
                                 <td>{{ observ.date }}</td>
                                 <td>{{ observ.note|truncatechars:25 }}</td>

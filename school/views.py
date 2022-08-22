@@ -85,11 +85,9 @@ def logout_view(request):
 
 @ user_passes_test(teacher_check)
 def teacher_view(request):
-    excel_form = UploadExcelFileForm()
     # get list of students for one teacher
-    students = Student.objects.filter(teacher=request.user)
+    students = Student.objects.filter(teacher=request.user).select_related('teacher')
     context = {
-        'file_form': excel_form,
         'students': students
     }
     return render(request, 'school/teacher.html', context)
@@ -117,8 +115,8 @@ def student_data_profile(request, **kwargs):
         age_years, age_months = calculate_age(str(student.date_of_birth))
         notes = NotesPTS.objects.filter(student=student)
         concerns = Consern.objects.filter(student=student)
-        observations = Observation.objects.filter(student=student)
-        supports = Support.objects.filter(student=student)
+        observations = Observation.objects.filter(student=student).select_related('sst')
+        supports = Support.objects.filter(student=student).select_related('sst')
 
         context = {
             'student': student,
@@ -202,8 +200,8 @@ def make_consern_post(request):
 def sst_view(request):
     '''Function to show main page for SST'''
     if request.method == 'GET':
-        concerns = Consern.objects.filter(refers=Consern.REFERRAL)
-        students = Student.objects.all()
+        concerns = Consern.objects.filter(refers=Consern.REFERRAL).select_related('teacher')
+        students = Student.objects.all().select_related('teacher')
         # print(concerns.values())
         context = {
             'concerns': concerns,
@@ -573,8 +571,8 @@ class StudentProfileSstView(SstCheckMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['supports'] = Support.objects.filter(
-            student=self.get_object())
+        context['supports'] = Support.objects.filter(student=self.object).select_related('sst')
+        context['observations'] = Observation.objects.filter(student=self.object).select_related('sst')
 
         return context
 

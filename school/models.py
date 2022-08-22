@@ -68,7 +68,8 @@ class Student(models.Model):
     teacher = models.ForeignKey(MyUser,
                                 on_delete=models.SET_NULL,
                                 null=True,
-                                limit_choices_to={'is_teacher': True})
+                                limit_choices_to={'is_teacher': True},
+                                related_name='students')
 
     class Meta:
         verbose_name_plural = "Students"

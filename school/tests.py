@@ -239,9 +239,7 @@ class MyTest(TestCase):
             note='Some note from PTS'
         )
 
-        logged_in = self.client.login(
-            username=self.teacher_user.username, password='1')
-
+        
     def test_student_string_representation(self):
         student = Student(first_name='Name', last_name='Last')
         self.assertEqual(str(student), student.first_name
@@ -268,18 +266,10 @@ class MyTest(TestCase):
         self.assertTrue(self.staf_user.is_staff)
         self.assertFalse(self.staf_user.is_superuser)
 
-    def test_teacher_url_exists(self):
-        logged_in = self.client.login(
-            username=self.teacher_user.username, password='1')
-        resp = self.client.get('/teacher')
-        self.assertEqual(resp.status_code, 200)
+    
 
      # required registered user
-    def test_teacher_view_use_template(self):
-        logged_in = self.client.login(
-            username=self.teacher_user.username, password='1')
-        resp = self.client.get(reverse('school:teacher_view'))
-        self.assertTemplateUsed(resp, 'school/teacher.html')
+   
 
     def test_sst_url_exists(self):
         logged_in = self.client.login(
@@ -304,6 +294,7 @@ class MyTest(TestCase):
             username=self.staf_user.username, password='1')
         resp = self.client.get(reverse('school:password_change'))
         self.assertTemplateUsed(resp, 'registration/custom_password_change_form.html')
+        self.assertContains(resp, "Password Change")
 
     def test_password_change_done_url_exists(self):
         logged_in = self.client.login(
@@ -316,3 +307,73 @@ class MyTest(TestCase):
             username=self.staf_user.username, password='1')
         resp = self.client.get(reverse('school:password_change_done_custom'))
         self.assertTemplateUsed(resp, 'registration/custom_password_change_done.html')
+
+class TestTeacherPages(TestCase):
+    
+    def setUp(self) -> None:
+        self.client = Client()
+        self.factory = RequestFactory()
+        MyUser = get_user_model()
+
+        self.teacher_user = MyUser.objects.create_user(
+            username='Amy_Doe', email='a@a.com', password='1', is_teacher=True)
+        
+        self.teacher_user2 = MyUser.objects.create_user(
+            username='Jamie_Doe', email='b@b.com', password='1', is_teacher=True)
+
+        self.student = Student.objects.create(
+            school_id='53',
+            first_name='Alex',
+            middle_name=None,
+            last_name='Max',
+            preferred_name='Alex',
+            date_of_birth=date(2019, 12, 4),
+            birth_order_in_class=2,
+            birth_order_in_family=3,
+            gender='Male',
+            cur_grade=5,
+            grad_year='2023',
+            email=None,
+            home_lang='English',
+            date_join=date(2021, 9, 1),
+            entrygrades=5,
+            teacher=self.teacher_user
+        )
+        # another student with another teacher
+        self.student = Student.objects.create(
+            school_id='6',
+            first_name='Mart',
+            middle_name=None,
+            last_name='Mat',
+            preferred_name='Bar',
+            date_of_birth=date(2019, 12, 4),
+            birth_order_in_class=2,
+            birth_order_in_family=3,
+            gender='Male',
+            cur_grade=5,
+            grad_year='2023',
+            email=None,
+            home_lang='English',
+            date_join=date(2021, 9, 1),
+            entrygrades=5,
+            teacher=self.teacher_user2
+        )
+
+        logged_in = self.client.login(
+            username=self.teacher_user.username, password='1')
+
+    def test_teacher_url_exists(self):
+        resp = self.client.get('/teacher')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_teacher_view_use_template(self):
+        resp = self.client.get(reverse('school:teacher_view'))
+        self.assertTemplateUsed(resp, 'school/teacher.html')
+        self.assertContains(resp, "All students")
+        # teacher page should contain links to teacher's students
+        self.assertContains(resp, 'href="/student_data_profile/1"')
+        self.assertNotContains(resp, 'href="/student_data_profile/2"')
+
+    def test_student_profile_url_exists(self):
+        resp = self.client.get('/student_data_profile/1')
+        self.assertEqual(resp.status_code, 200)

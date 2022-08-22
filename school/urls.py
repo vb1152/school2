@@ -72,9 +72,7 @@ urlpatterns = [
     path('speech_therapy_post', views.speech_therapy_post,
          name='speech_therapy_post'),
     path('upload_users', views.upload_users, name='upload_users'),
-
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='password_change'),
-    
     path('change-password/done/', views.CustomPasswordDoneView.as_view(), name='password_change_done_custom')
     
 

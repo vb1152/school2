@@ -24,3 +24,9 @@ urlpatterns = [
     
     # path('__debug__/', include('debug_toolbar.urls')),
 ]
+from django.conf import settings
+if settings.DEBUG: # new
+    import debug_toolbar
+    urlpatterns = [
+    path("__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns
