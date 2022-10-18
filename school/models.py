@@ -70,6 +70,7 @@ class Student(models.Model):
                                 null=True,
                                 limit_choices_to={'is_teacher': True},
                                 related_name='students')
+    siblings_names = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Students"

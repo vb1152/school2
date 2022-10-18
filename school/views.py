@@ -127,7 +127,7 @@ def student_data_profile(request, **kwargs):
             'observations': observations,
             'supports': supports
         }
-        return render(request, 'school/student_profile.html', context)
+        return render(request, 'school/teacher/student_profile.html', context)
 
 
 @ user_passes_test(teacher_check)
