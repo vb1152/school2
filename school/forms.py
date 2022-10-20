@@ -43,25 +43,25 @@ class ConsernForm(ModelForm):
         ),
         label="Date",
     )
-    consern_type = forms.CharField(
-        required=True,
-        widget=forms.widgets.TextInput(
-            attrs={
-                "placeholder": "Add type of Concern",
-                "class": "form-control",
-            }
-        ),
-        label="Type of Concern",
-    )
+    # consern_type = forms.CharField(
+    #     required=True,
+    #     widget=forms.widgets.TextInput(
+    #         attrs={
+    #             "placeholder": "Add type of Concern",
+    #             "class": "form-control",
+    #         }
+    #     ),
+    #     label="Type of Concern",
+    # )
 
-    consern_type = forms.CharField(
+    consern_type = forms.ChoiceField(
         required=True,
-        widget=forms.widgets.TextInput(
+        widget=forms.widgets.Select(
             attrs={
-                "placeholder": "Add type of Concern",
                 "class": "form-control",
             }
         ),
+        choices=Consern.TYPES_CHOICES,
         label="Type of Concern",
     )
 

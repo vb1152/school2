@@ -60,6 +60,7 @@ urlpatterns = [
     path('save_observation', views.save_observation, name='save_observation'),
     path('download_users', views.DownloadSampleUsers.as_view(),
          name='download_sample_users'),
+    path('new_stream', views.CreateNewStream.as_view(), name='new_stream'),
 
 
     path('update_concern/', views.update_concern, name='update_concern'),

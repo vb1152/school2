@@ -1,3 +1,6 @@
+'''Django views'''
+
+import json
 from django.views import View
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
@@ -16,6 +19,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.urls import reverse_lazy
 
+from datetime import datetime
+from dateutil import relativedelta
+
 from .utils import (SstCheckMixin, TeacherCheckMixin,
                     StaffCheckMixin,
                     )
@@ -24,7 +30,7 @@ from .models import (Consern, Intake, NotesPTS,
                      Student, MyUser, Observation,
                      Support, OcupationalTherapy,
                      SpeechTherapy, ResponceToSupport,
-                     ReadingScreening
+                     ReadingScreening, Stream
                      )
 from .forms import (MyUserForm, UploadExcelFileForm, ConsernForm,
                     IntakeForm, SupportForm, OcupationalTherapyForm,
@@ -38,7 +44,7 @@ from .utils import (read_excel_with_students,
                     create_sample_excel_users,
                     create_sample_excel_students
                     )
-import json
+
 
 
 # Create your views here.
@@ -48,6 +54,7 @@ def index(request):
 
 
 def login_view(request):
+    '''Login view'''
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -56,35 +63,32 @@ def login_view(request):
         # check authentication
         if user is not None:
             login(request, user)
-            if user.is_teacher == True:  # redirect to a teacher page
+            if user.is_teacher is True:  # redirect to a teacher page
                 return HttpResponseRedirect(reverse('school:teacher_view'))
-            elif user.is_sst == True:
+            if user.is_sst is True:
                 return HttpResponseRedirect(reverse('school:sst_view'))
-            elif user.is_staff:
+            if user.is_staff:
                 return HttpResponseRedirect(reverse('school:staff_view'))
-            else:
-                return HttpResponseRedirect(reverse('school:index'))
+            return HttpResponseRedirect(reverse('school:index'))
 
-        else:
-            messages.error(request, 'Wrong username and/or password')
-            # return render(request, 'school/login.html')
-            return HttpResponseRedirect(reverse('school:login'))
+        messages.error(request, 'Wrong username and/or password')
+        return HttpResponseRedirect(reverse('school:login'))
 
-    else:
-        user_form = MyUserForm()
-        context = {
-            'form': user_form
-        }
-        return render(request, 'school/login.html', context)
+    user_form = MyUserForm()
+    context = {
+        'form': user_form
+    }
+    return render(request, 'school/login.html', context)
 
 
 def logout_view(request):
+    '''Logout view'''
     logout(request)
     return HttpResponseRedirect(reverse('school:index'))
 
-
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def teacher_view(request):
+    '''Teacher view'''
     # get list of students for one teacher
     students = Student.objects.filter(teacher=request.user).select_related('teacher')
     context = {
@@ -92,8 +96,7 @@ def teacher_view(request):
     }
     return render(request, 'school/teacher.html', context)
 
-
-@ user_passes_test(staff_check)
+@user_passes_test(staff_check)
 def upload_students(request):
     '''Save student to the data base '''
     if request.method == 'POST':
@@ -107,7 +110,7 @@ def upload_students(request):
             return HttpResponseRedirect(reverse('school:staff_view'))
 
 
-@ login_required
+@login_required
 def student_data_profile(request, **kwargs):
     '''Function to show student data profile for a teacher'''
     if request.method == 'GET':
@@ -130,7 +133,7 @@ def student_data_profile(request, **kwargs):
         return render(request, 'school/teacher/student_profile.html', context)
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def save_note_from_PTC(request):
     if request.method == 'POST':
         note = json.load(request)
@@ -145,10 +148,10 @@ def save_note_from_PTC(request):
         return JsonResponse(data, safe=False)
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def make_consern(request, **kwargs):
+    '''View for making a concern'''
     if request.method == 'GET':
-
         student = Student.objects.get(id=kwargs['stud_id'])
         cons_form = ConsernForm()
         intake_form = IntakeForm()
@@ -160,7 +163,7 @@ def make_consern(request, **kwargs):
         return render(request, 'school/consern.html', context)
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def make_consern_post(request):
     '''Function to save concern and intake forms to database.'''
     if request.method == 'POST':
@@ -187,16 +190,18 @@ def make_consern_post(request):
 
                 messages.success(
                     request, 'Thank you! Concern and Intake data is saved!')
-                return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
+                return HttpResponseRedirect(reverse('school:student_data_profile',
+                                                    args=[student.id]))
 
             messages.success(request, 'Thank you! Concern is saved!')
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
 
         messages.error(request, 'Some error. Concern is not saved.')
-        return HttpResponseRedirect(reverse('school:student_data_profile', args=[request.POST['stud_id']]))
+        return HttpResponseRedirect(reverse('school:student_data_profile',
+                                    args=[request.POST['stud_id']]))
 
 
-@ user_passes_test(sst_check)
+@user_passes_test(sst_check)
 def sst_view(request):
     '''Function to show main page for SST'''
     if request.method == 'GET':
@@ -211,13 +216,12 @@ def sst_view(request):
         return render(request, 'school/sst.html', context)
 
 
-@ user_passes_test(sst_check)
+@user_passes_test(sst_check)
 def save_observation(request):
     '''Function to save observation from SST team
     via fetch api call'''
     if request.method == 'POST':
         observ_data = json.load(request)
-        print(observ_data)
         observation = Observation(
             date=observ_data['obs_date'],
             note=observ_data['obs_text'],
@@ -231,7 +235,7 @@ def save_observation(request):
         return JsonResponse(data, safe=False)
 
 
-@ user_passes_test(sst_check)
+@user_passes_test(sst_check)
 def support(request, **kwargs):
     if request.method == 'GET':
         concern = Consern.objects.select_related(
@@ -244,7 +248,7 @@ def support(request, **kwargs):
         return render(request, 'school/support.html', context)
 
 
-@ user_passes_test(sst_check)
+@user_passes_test(sst_check)
 def make_support_post(request):
     if request.method == "POST":
         support_form = SupportForm(request.POST)
@@ -264,7 +268,7 @@ def make_support_post(request):
             return HttpResponseRedirect(reverse('school:sst_view'))
 
 
-@ user_passes_test(staff_check)
+@user_passes_test(staff_check)
 def staff_view(request):
     '''Function for main page for user with is_staff rights'''
     if request.method == 'GET':
@@ -275,7 +279,7 @@ def staff_view(request):
         return render(request, 'school/staff.html', context)
 
 
-@ user_passes_test(sst_check)
+@user_passes_test(sst_check)
 def sst_view_intake(request):
     if request.method == 'POST':
         concern = Consern.objects.get(id=request.POST['concern_id'])
@@ -300,7 +304,7 @@ def sst_view_intake(request):
         return render(request, 'school/sst_intake.html', context)
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def update_concern(request):
     '''Function to update concern form and intake forms'''
     if request.method == 'GET':
@@ -379,7 +383,7 @@ def update_concern(request):
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def ocupational_therapy(request, *, stud_id):
     '''Function to open OcupationalTherapyForm'''
     if request.method == 'GET':
@@ -392,7 +396,7 @@ def ocupational_therapy(request, *, stud_id):
         return render(request, 'school/occup_therap.html', context)
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def ocupational_therapy_post(request):
     '''Function to save data from Ocupational Therapy Form'''
     if request.method == 'POST':
@@ -409,7 +413,7 @@ def ocupational_therapy_post(request):
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def speech_therapy(request, *, stud_id):
     '''Function to show SpeechTherapyForm for the user'''
     if request.method == 'GET':
@@ -422,7 +426,7 @@ def speech_therapy(request, *, stud_id):
         return render(request, 'school/speech_therap.html', context)
 
 
-@ user_passes_test(teacher_check)
+@user_passes_test(teacher_check)
 def speech_therapy_post(request):
     '''Function to save result of Speech Therapy'''
     if request.method == 'POST':
@@ -439,7 +443,7 @@ def speech_therapy_post(request):
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
 
 
-@ user_passes_test(staff_check)
+@user_passes_test(staff_check)
 def upload_users(request):
     if request.method == 'POST':
         saved_users = read_excel_save_users(request)
@@ -610,3 +614,25 @@ class CustomPasswordChangeView(PasswordChangeView):
 class CustomPasswordDoneView(PasswordChangeDoneView):
     '''Custom class to verify password changes'''
     template_name = 'registration/custom_password_change_done.html'
+
+
+class CreateNewStream(TeacherCheckMixin, View):
+    '''View to create new stream in responce to 
+    post request from fetch
+    '''
+    def post(self, request):
+        print(request.body)#, request.body['stud_id'])
+        # start = datetime.now()
+        stream_data = json.load(request)
+        stream = Stream(
+            student=Student.objects.get(id=stream_data['stud_id']),
+            teacher = request.user,
+            # datetime.date.today().strftime('%Y-%m-%d')
+            date_start = datetime.date.today().strftime('%Y-%m-%d'),
+            date_review = stream_data['review_date'],
+            # TODO save stream to db, then connect concern form
+        )
+        stream.save()
+        print(stream.id)
+        # data = {'stream': stream.id, }
+        # return JsonResponse(data, safe=False)

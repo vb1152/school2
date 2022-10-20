@@ -1,3 +1,5 @@
+from email.policy import default
+from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -107,8 +109,17 @@ class NotesPTS(models.Model):
 
 class Consern(models.Model):
     date = models.DateField(verbose_name='Date')
+    ACADEMIC = 'A'
+    GUIDANCE = 'G'
+    SOCIAL = 'S'
+    CARE = 'C'
+    TYPES_CHOICES = [(ACADEMIC, 'Academic'),
+                     (GUIDANCE, 'Guidance and Discipline'), 
+                     (SOCIAL, 'Social Inclusion'),
+                     (CARE, 'Care and Therapeutic')]
     consern_type = models.CharField(
-        verbose_name='Type of Concern', max_length=2000)
+        max_length=1, choices=TYPES_CHOICES, verbose_name='Type of Concern')
+    
     strategy_used = models.CharField(
         verbose_name='Strategies Used', max_length=2000)
     num_weeks = models.PositiveSmallIntegerField(
@@ -152,6 +163,9 @@ class Intake(models.Model):
     ]
     behavior_quality = models.CharField(
         max_length=1, choices=BEHAVE_CHOICES, verbose_name='Qualify this behavior')
+    
+    
+    
     why_consern = models.CharField(
         verbose_name='Concern reasoning', max_length=2000)
     what_done = models.CharField(verbose_name='What done', max_length=2000)
@@ -326,3 +340,50 @@ class ReadingScreening(BaseModel):
 
     def __str__(self) -> str:
         return self.screen_type[:15]
+
+
+class Stream(BaseModel):
+    student = models.ForeignKey( 
+        Student, on_delete=models.CASCADE, related_name='stream_student')
+    teacher = models.ForeignKey(MyUser,
+                                on_delete=models.PROTECT,
+                                null=True,
+                                limit_choices_to={'is_teacher': True})
+    date_start = models.DateField(verbose_name='Start date')
+    date_review = models.DateField(verbose_name='Review Date')
+    concern = models.OneToOneField(
+        Consern, on_delete=models.CASCADE, related_name = 'stream_concern',
+        blank=True, null=True)
+    intake = models.OneToOneField(
+        Intake, on_delete=models.CASCADE, related_name = 'stream_intake',
+        blank=True, null=True)
+
+    ONE = '1'
+    TWO = '2'
+    THREE = '3'
+    FOUR = '4'
+    FIVE = '5'
+    SIX = '6'
+    LEVEL_CHOICES = [
+        (ONE, '1'),
+        (TWO, '2'),
+        (THREE, '3'),
+        (FOUR, '4'),
+        (FIVE, '5'),
+        (SIX, '6'),
+    ]
+    level = models.CharField(max_length=1, choices=LEVEL_CHOICES, default=ONE, verbose_name='Stream level')
+
+    CLOSED = 'CL'
+    PROCEEDING = 'PR'
+    OPEN = 'OP'
+    STATUS_CHOICES = [
+        (CLOSED, 'Closed'),
+        (PROCEEDING, 'Proceeding'),
+        (OPEN, 'Open'),
+    ]
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=OPEN, verbose_name='Status')
+    observation = models.ForeignKey(Observation, on_delete=models.CASCADE, 
+                            null=True, related_name='stream_observations', verbose_name='Observations')
+    support = models.ForeignKey(Support, on_delete=models.CASCADE, 
+                            null=True, related_name='stream_supports', verbose_name='Support')

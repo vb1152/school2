@@ -12,7 +12,7 @@
                 <div class="card-body text-center">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
                         class="rounded-circle img-fluid" style="width: 150px;">
-                    <h4 class="my-3">{{ student.first_name }} {{ student.last_name }}</h4>
+                    <h4 class="my-3" id="stud-name">{{ student.first_name }} {{ student.last_name }}</h4>
                     <!-- <p class="text-muted mb-1">Full Stack Developer</p>
                 <p class="text-muted mb-4">Bay Area, San Francisco, CA</p> -->
 
@@ -47,7 +47,6 @@
                 </div>
             </div>
         </div>
-        <!-- Teacher Concerns Form -->
         <div class="col-lg-8">
             <div class="card mb-4">
                 <div class="card-body">
@@ -133,7 +132,6 @@
 
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
@@ -141,7 +139,128 @@
     <div class="col-lg-12">
         <div class="card mb-4 mb-2">
             <div class="card-body">
+                <table class="table table-sm" id="stream-table">
+                    actual
+                    <thead>
+                        <tr>
+                            <th scope="col">Student Name</th>
+                            <th scope="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Stream
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Academic</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Guidance and Discipline</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Social Inclusion</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Care and Therapeutic</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Level
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                1
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                2
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                3
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                4
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                5
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                6
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Forms and Notes                                    
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
+                                        <li>
+                                            <a class="dropdown-item" href="">Intake Form</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Recommendations for Outside Support</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Gender Support Plan</a> 
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Incident Report</a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Observation</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Review Meeting Notes</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Support Circle Notes</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th scope="col">Supports/Interventions</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">Review Date</th>
+                            <th scope="col">Red/Green</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card mb-4 mb-2">
+            <div class="card-body">
                 <table class="table table-sm">
+                    show end result. will be deleted
                     <thead>
                         <tr>
                             <th scope="col">Student Name</th>
@@ -305,7 +424,6 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="col-lg-4">
             <!-- Notes from Parent-Teacher Conference and modal-->
@@ -367,72 +485,6 @@
 
 
         </div>
-        <div class="col-lg-8">
-            <div class="card mb-4 mb-2">
-                <div class="card-body">
-                    <h4 class="card-title">
-                        <div class="row">
-                            <div class="col">
-                                <strong>OT, ST, PM, Read Screen</strong>
-                            </div>
-                        </div>
-                    </h4>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Links</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for speech in student.stud_st.all %}
-                            <tr>
-                                <td>{{ speech.screen_date }}</td>
-                                <td>Speech_therapy</td>
-                                <td>
-
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_speech_ther' student.pk speech.pk  %}"
-                                            type="button" class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% for el in student.stud_ot.all %}
-                            <tr>
-                                <td>{{el.screen_date}}</td>
-                                <td>Ocupational_therapy</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_occup_ther' student.pk el.pk  %}" type="button"
-                                            class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% for read in student.student_reading.all %}
-                            <tr>
-                                <td>{{ read.date_screen }}</td>
-                                <td>Reading screening</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_read_screen' student.pk read.pk  %}" type="button"
-                                            class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-        </div>
     </div>
     <div class="col-lg-12">
         <div class="card mb-4">
@@ -493,6 +545,8 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <a href="{% url 'school:make_consern' stud_id=student.id %}"
+                            class="btn btn-outline-primary">Make Concern (delete before deploy)</a>
             </div>
         </div>
     </div>
