@@ -109,17 +109,16 @@ class NotesPTS(models.Model):
 
 class Consern(models.Model):
     date = models.DateField(verbose_name='Date')
-    ACADEMIC = 'A'
-    GUIDANCE = 'G'
-    SOCIAL = 'S'
-    CARE = 'C'
-    TYPES_CHOICES = [(ACADEMIC, 'Academic'),
-                     (GUIDANCE, 'Guidance and Discipline'), 
-                     (SOCIAL, 'Social Inclusion'),
-                     (CARE, 'Care and Therapeutic')]
-    consern_type = models.CharField(
-        max_length=1, choices=TYPES_CHOICES, verbose_name='Type of Concern')
-    
+    # ACADEMIC = 'A'
+    # GUIDANCE = 'G'
+    # SOCIAL = 'S'
+    # CARE = 'C'
+    # TYPES_CHOICES = [(ACADEMIC, 'Academic'),
+    #                  (GUIDANCE, 'Guidance and Discipline'), 
+    #                  (SOCIAL, 'Social Inclusion'),
+    #                  (CARE, 'Care and Therapeutic')]
+    # consern_type = models.CharField(
+    #     max_length=1, choices=TYPES_CHOICES, verbose_name='Type of Concern')
     strategy_used = models.CharField(
         verbose_name='Strategies Used', max_length=2000)
     num_weeks = models.PositiveSmallIntegerField(

@@ -54,16 +54,16 @@ class ConsernForm(ModelForm):
     #     label="Type of Concern",
     # )
 
-    consern_type = forms.ChoiceField(
-        required=True,
-        widget=forms.widgets.Select(
-            attrs={
-                "class": "form-control",
-            }
-        ),
-        choices=Consern.TYPES_CHOICES,
-        label="Type of Concern",
-    )
+    # consern_type = forms.ChoiceField(
+    #     required=True,
+    #     widget=forms.widgets.Select(
+    #         attrs={
+    #             "class": "form-control",
+    #         }
+    #     ),
+    #     choices=Consern.TYPES_CHOICES,
+    #     label="Type of Concern",
+    # )
 
     refers = forms.ChoiceField(
         required=True,

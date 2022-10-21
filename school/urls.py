@@ -50,9 +50,12 @@ urlpatterns = [
          views.ShowReadScreen.as_view(), name='show_read_screen'),
 
 
-    path('make_consern/<int:stud_id>', views.make_consern, name='make_consern'),
+    path('make_consern/<int:stud_id>/<int:stream_id>', views.make_consern, name='make_consern'),
     path('make_consern_post', views.make_consern_post, name='make_consern_post'),
+    path('update_concern/', views.update_concern, name='update_concern'),
+    path('read_concern/<int:pk>/', views.ShowConcernTeacher.as_view(), name='read_concern'),
     path('staff', views.staff_view, name='staff_view'),
+
 
     # API
     path('save_note_from_PTC', views.save_note_from_PTC,
@@ -63,7 +66,7 @@ urlpatterns = [
     path('new_stream', views.CreateNewStream.as_view(), name='new_stream'),
 
 
-    path('update_concern/', views.update_concern, name='update_concern'),
+    
     path('ocupational_therapy/<int:stud_id>',
          views.ocupational_therapy, name='ocupational_therapy'),
     path('ocupational_therapy_post', views.ocupational_therapy_post,

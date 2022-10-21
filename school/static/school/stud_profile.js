@@ -105,11 +105,7 @@ function makeRow(elem){
                             })
     })
     
-    
     let stud_name = document.getElementById('stud-name').innerHTML
-    
-
-   
     
     // Add some text to the new cells:
     cell1.innerHTML = stud_name;

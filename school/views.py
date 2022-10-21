@@ -148,19 +148,36 @@ def save_note_from_PTC(request):
 
 
 @user_passes_test(teacher_check)
-def make_consern(request, **kwargs):
+def make_consern(request, *, stud_id, stream_id):
     '''View for making a concern'''
+    # def update_get(request, *, pk):
     if request.method == 'GET':
-        student = Student.objects.get(id=kwargs['stud_id'])
+        # print('make concern GET', stud_id, stream_id)
+        student = Student.objects.get(id=stud_id)
+        stream = Stream.objects.get(id=stream_id)
         cons_form = ConsernForm()
         intake_form = IntakeForm()
         context = {
             'student': student,
             'cons_form': cons_form,
-            'intake_form': intake_form
+            'intake_form': intake_form,
+            'stream_id': stream.id
         }
         return render(request, 'school/consern.html', context)
 
+@user_passes_test(teacher_check, sst_check)
+def read_concern(request, *, concern_id):
+    if request.method == 'GET':
+        concern = Consern.objects.get(id=concern_id)
+        context = {
+            'concern': concern
+        }
+        return render(request, 'school/teacher/consern_view_teacher.html', context)
+
+class ShowConcernTeacher(TeacherCheckMixin, DetailView):
+    model = Consern
+    template_name = 'school/teacher/consern_view_teacher.html'
+    login_url = 'login'
 
 @user_passes_test(teacher_check)
 def make_consern_post(request):
@@ -173,11 +190,19 @@ def make_consern_post(request):
         student = Student.objects.get(id=request.POST['stud_id'])
         teacher = MyUser.objects.get(id=request.user.id)
 
+        stream = Stream.objects.get(id=request.POST['stream_id'])
+
         if cons_form.is_valid():
             new_concern = cons_form.save(commit=False)
             new_concern.student = student
             new_concern.teacher = teacher
             new_concern.save()
+            # add concern form to a stream 
+            stream.concern = new_concern
+            print(new_concern.refers)
+            
+            if new_concern.refers == 'RES':
+                stream.status = 'CL'
 
             if intake_form.is_valid() and 'timeline' in request.POST and 'sst_reasoning' in request.POST:
 
@@ -186,11 +211,15 @@ def make_consern_post(request):
                 new_intake.teacher = teacher
                 new_intake.concern = new_concern
                 new_intake.save()
+                # add intake form to a stream
+                stream.intake = new_intake
+                stream.save()
 
                 messages.success(
                     request, 'Thank you! Concern and Intake data is saved!')
                 return HttpResponseRedirect(reverse('school:student_data_profile',
                                                     args=[student.id]))
+            stream.save()
 
             messages.success(request, 'Thank you! Concern is saved!')
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))

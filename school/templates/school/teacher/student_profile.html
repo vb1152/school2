@@ -251,14 +251,20 @@
                                 <td>{{ student.first_name }} {{ student.last_name }}</td>
                                 <td>{{ stream.name }}</td>
                                 <td>{{ stream.level }}</td>
-                                <td></td>
+                                <td>
+                                    {% if stream.concern %}
+                                        <a href="{% url 'school:read_concern' stream.concern.pk %}">Concern form</a>
+                                    {% else %} {% endif %}
+                                    {% if stream.intake %}
+                                        <a href=""><br>Intake form</a>
+                                    {% else %} {% endif %}
+                                </td>
                                 <td></td>
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
                                 <td data-color="{{ stream.status|lower }}"></td>
-                                <td><a href="{% url 'school:make_consern' stud_id=student.id %}">Form</a></td>
+                                <td><a href="{% url 'school:make_consern' stud_id=student.id stream_id=stream.id %}">Form</a></td>
                             </tr>
-                            
                         {% endfor %}
                     </tbody>
                 </table>
@@ -563,43 +569,41 @@
     <div class="col-lg-8">
         <div class="card mb-4">
             <div class="card-body">
-                <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Links</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for concern in concerns %}
-                            <tr>
-                                <td>{{ concern.date }}</td>
-                                <td>{{ concern.consern_type|truncatechars:25 }}</td>
-                                <td>
-                                    <div class="col" style="border-radius:5px">
-                                        <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <form action="{% url 'school:update_concern' %}" method="get">
-                                            <input hidden class="form-control" value="{{ concern.id }}"
-                                                name="concern_id">
-                                            <button type="submit"
-                                                class="btn btn-sm btn-outline-info">Update</button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <a href="{% url 'school:make_consern' stud_id=student.id %}"
-                        class="btn btn-outline-primary">Make Concern</a>
+                <h4 class="card-title"><strong>Teacher Concerns Form</strong></h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Links</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for concern in concerns %}
+                        <tr>
+                            <td>{{ concern.date }}</td>
+                            <td>{{ concern.consern_type|truncatechars:25 }}</td>
+                            <td>
+                                <div class="col" style="border-radius:5px">
+                                    <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group"
+                                    aria-label="Basic mixed styles example">
+                                    <form action="{% url 'school:update_concern' %}" method="get">
+                                        <input hidden class="form-control" value="{{ concern.id }}"
+                                            name="concern_id">
+                                        <button type="submit"
+                                            class="btn btn-sm btn-outline-info">Update</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 

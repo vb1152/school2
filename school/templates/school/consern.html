@@ -7,11 +7,12 @@
 {% if user.is_authenticated %}
 
 <div class="container py-5">
-    <h3 class="d-flex justify-content-center">Form</h3>
+    <h3 class="d-flex justify-content-center">Concern Form</h3>
     <div class="mx-auto">
         <div class="mb-3">
             <form action="{% url 'school:make_consern_post' %}" method="post" id="consern-form">
                 <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
+                <input id='stream_id' class="form-control" hidden value="{{ stream_id }}" name="stream_id">
                 {% csrf_token %}
                 {% for field in cons_form %}
                     {{ field.errors }}
@@ -19,9 +20,8 @@
                     <div class="input-group mb-3">
                         {{ field }}
                     </div>
-
                     {% if field.help_text %}
-                    <p class="help">{{ field.help_text|safe }}</p>
+                        <p class="help">{{ field.help_text|safe }}</p>
                     {% endif %}
                 {% endfor %}
                 <div class="progress" hidden id="progress">
@@ -93,7 +93,6 @@
             </tr>
         </tbody>
     </table> -->
-    
     
     <br>
     <div class="mx-auto">
