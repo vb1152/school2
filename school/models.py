@@ -387,3 +387,7 @@ class Stream(BaseModel):
                             null=True, related_name='stream_observations', verbose_name='Observations')
     support = models.ForeignKey(Support, on_delete=models.CASCADE, 
                             null=True, related_name='stream_supports', verbose_name='Support')
+    name = models.CharField(max_length=100, verbose_name='Stream name', default=None)
+
+    class Meta:
+        ordering = ["date_start"]

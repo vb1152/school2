@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import MyUser, Student, NotesPTS, Consern, Intake, Observation, Support, OcupationalTherapy, SpeechTherapy, UsersData
+from .models import (MyUser, Student, NotesPTS, 
+                    Consern, Intake, Observation, 
+                    Support, OcupationalTherapy, 
+                    SpeechTherapy, UsersData, Stream)
 
 
 
@@ -39,6 +42,9 @@ class SpeechTherapyAdmin(admin.ModelAdmin):
 class UsersDataAdmin(admin.ModelAdmin):
     list_display = ('user', 'person_id', 'grades')
 
+class StreamAdmin(admin.ModelAdmin):
+    pass
+
 
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Student, StudentAdmin)
@@ -50,10 +56,4 @@ admin.site.register(Support, SupportAdmin)
 admin.site.register(OcupationalTherapy, OcupationalTherapyAdmin)
 admin.site.register(SpeechTherapy, SpeechTherapyAdmin)
 admin.site.register(UsersData, UsersDataAdmin)
-
-
-
-
-
-
-
+admin.site.register(Stream, StreamAdmin)

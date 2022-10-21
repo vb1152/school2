@@ -19,8 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.urls import reverse_lazy
 
-from datetime import datetime
-from dateutil import relativedelta
+from datetime import datetime, timedelta, date
 
 from .utils import (SstCheckMixin, TeacherCheckMixin,
                     StaffCheckMixin,
@@ -118,17 +117,17 @@ def student_data_profile(request, **kwargs):
         age_years, age_months = calculate_age(str(student.date_of_birth))
         notes = NotesPTS.objects.filter(student=student)
         concerns = Consern.objects.filter(student=student)
-        observations = Observation.objects.filter(student=student).select_related('sst')
+        # observations = Observation.objects.filter(student=student).select_related('sst')
         supports = Support.objects.filter(student=student).select_related('sst')
 
         context = {
             'student': student,
             'age_years': age_years,
             'age_months': age_months,
-            'notes': notes,
+            # 'notes': notes,
             'concerns': concerns,
-            'observations': observations,
-            'supports': supports
+            # 'observations': observations,
+            'supports': supports,
         }
         return render(request, 'school/teacher/student_profile.html', context)
 
@@ -618,21 +617,23 @@ class CustomPasswordDoneView(PasswordChangeDoneView):
 
 class CreateNewStream(TeacherCheckMixin, View):
     '''View to create new stream in responce to 
-    post request from fetch
+    post request from fetch (student profile page)
     '''
     def post(self, request):
-        print(request.body)#, request.body['stud_id'])
-        # start = datetime.now()
         stream_data = json.load(request)
+        print(stream_data)
+        # get datetime now
+        now_date = datetime.now()
+        # now_date_str = now_date.strftime("%d-%m-%Y"),
+        review_date = now_date + timedelta(days=21)
+
         stream = Stream(
+            name = stream_data['stream_name'],
             student=Student.objects.get(id=stream_data['stud_id']),
             teacher = request.user,
-            # datetime.date.today().strftime('%Y-%m-%d')
-            date_start = datetime.date.today().strftime('%Y-%m-%d'),
-            date_review = stream_data['review_date'],
-            # TODO save stream to db, then connect concern form
+            date_start = now_date,
+            date_review = review_date,
         )
         stream.save()
-        print(stream.id)
-        # data = {'stream': stream.id, }
-        # return JsonResponse(data, safe=False)
+        data = {'stream': stream.id,}
+        return JsonResponse(data, safe=False)

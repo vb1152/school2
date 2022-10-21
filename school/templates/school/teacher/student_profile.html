@@ -4,6 +4,23 @@
 {% block title %}{{ student.first_name }} {{ student.last_name }}{% endblock %}
 
 {% block content %}
+
+<style>
+    /* coloring cell in table with stream 
+    op, cl and pr are the stream status from a db
+    reference: STATUS_CHOICES in model Stream
+    */
+    td[data-color="op"] {
+        background-color: red;
+    }
+    td[data-color="cl"] {
+        background-color: green;
+    }
+    td[data-color="pr"] {
+        background-color: red;
+    }
+</style>
+
 <section style="background-color: #eee;">
     <!-- <div class="container py-5"> -->
     <div class="row">
@@ -30,7 +47,7 @@
                         <div class="col-auto">
                             <p hidden id="stud_id">{{ student.id }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left" id="">
-                                {{ student.first_name }} {% if tudent.middle_name != None %} {{ student.middle_name }}
+                                {{ student.first_name }} {% if student.middle_name != "None" %} {{ student.middle_name }}
                                 {% else %} {% endif %} {{ student.last_name }}
                             </p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.cur_grade }}</p>
@@ -85,49 +102,26 @@
                             <tr>
                                 <th scope="col">Date</th>
                                 <th scope="col">Type</th>
-                                <th scope="col">Links</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for speech in student.stud_st.all %}
-                            <tr>
-                                <td>{{ speech.screen_date }}</td>
-                                <td>Speech_therapy</td>
-                                <td>
-
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_speech_ther' student.pk speech.pk  %}"
-                                            type="button" class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ speech.screen_date }}</td>
+                                    <td><a href="{% url 'school:show_speech_ther' student.pk speech.pk %}">Speech_therapy</a></td>
+                                </tr>
                             {% endfor %}
                             {% for el in student.stud_ot.all %}
-                            <tr>
-                                <td>{{el.screen_date}}</td>
-                                <td>Ocupational_therapy</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_occup_ther' student.pk el.pk  %}" type="button"
-                                            class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{el.screen_date}}</td>
+                                    <td><a href="{% url 'school:show_occup_ther' student.pk el.pk  %}">Ocupational_therapy</a></td>
+                                </tr>
                             {% endfor %}
                             {% for read in student.student_reading.all %}
-                            <tr>
-                                <td>{{ read.date_screen }}</td>
-                                <td>Reading screening</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_read_screen' student.pk read.pk  %}" type="button"
-                                            class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ read.date_screen }}</td>
+                                    <td><a href="{% url 'school:show_read_screen' student.pk read.pk  %}">Reading screening</a></td>
+                                </tr>
                             {% endfor %}
 
                         </tbody>
@@ -248,9 +242,24 @@
                             <th scope="col">Start Date</th>
                             <th scope="col">Review Date</th>
                             <th scope="col">Red/Green</th>
+                            <th>Links</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for stream in student.stream_student.all %}
+                            <tr>
+                                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                <td>{{ stream.name }}</td>
+                                <td>{{ stream.level }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ stream.date_start }}</td>
+                                <td>{{ stream.date_review }}</td>
+                                <td data-color="{{ stream.status|lower }}"></td>
+                                <td><a href="{% url 'school:make_consern' stud_id=student.id %}">Form</a></td>
+                            </tr>
+                            
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -545,11 +554,54 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <a href="{% url 'school:make_consern' stud_id=student.id %}"
-                            class="btn btn-outline-primary">Make Concern (delete before deploy)</a>
             </div>
         </div>
     </div>
+
+
+    <!-- Teacher Concerns Form DELETE BEFORE DEPLOY-->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Links</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for concern in concerns %}
+                            <tr>
+                                <td>{{ concern.date }}</td>
+                                <td>{{ concern.consern_type|truncatechars:25 }}</td>
+                                <td>
+                                    <div class="col" style="border-radius:5px">
+                                        <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group"
+                                        aria-label="Basic mixed styles example">
+                                        <form action="{% url 'school:update_concern' %}" method="get">
+                                            <input hidden class="form-control" value="{{ concern.id }}"
+                                                name="concern_id">
+                                            <button type="submit"
+                                                class="btn btn-sm btn-outline-info">Update</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'school:make_consern' stud_id=student.id %}"
+                        class="btn btn-outline-primary">Make Concern</a>
+            </div>
+        </div>
 
 
 

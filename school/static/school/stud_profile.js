@@ -100,10 +100,8 @@ function makeRow(elem){
         'Content-Type':'application/json',
         'X-CSRFToken': csrftoken
             },
-        body: JSON.stringify({'stream': elem.target.innerHTML,
-                                'stud_id': student_id,
-                                // 'start_date': date_stream_str,
-                                // 'review_date': inThreeWeeks,
+        body: JSON.stringify({'stream_name': elem.target.innerHTML,
+                              'stud_id': student_id,
                             })
     })
     
