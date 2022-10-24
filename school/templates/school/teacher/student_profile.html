@@ -134,7 +134,6 @@
         <div class="card mb-4 mb-2">
             <div class="card-body">
                 <table class="table table-sm" id="stream-table">
-                    actual
                     <thead>
                         <tr>
                             <th scope="col">Student Name</th>
@@ -263,7 +262,12 @@
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
                                 <td data-color="{{ stream.status|lower }}"></td>
-                                <td><a href="{% url 'school:make_consern' stud_id=student.id stream_id=stream.id %}">Form</a></td>
+                                <td>
+                                    {% if stream.concern %}
+                                    {% else %} 
+                                        <a href="{% url 'school:make_consern' stud_id=student.id stream_id=stream.id %}">Create form</a>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -271,7 +275,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-12">
+    <!-- <div class="col-lg-12">
         <div class="card mb-4 mb-2">
             <div class="card-body">
                 <table class="table table-sm">
@@ -442,7 +446,7 @@
     <div class="row">
         <div class="col-lg-4">
             <!-- Notes from Parent-Teacher Conference and modal-->
-            <div class="card mb-4 mb-2">
+            <!-- <div class="card mb-4 mb-2">
                 <div class="card-body">
                     <h4 class="card-title"><strong>Notes from Parent-Teacher Conference</strong></h5>
                         <div id="notes-list">
@@ -497,11 +501,9 @@
                         </div>
                 </div>
             </div>
-
-
         </div>
     </div>
-    <div class="col-lg-12">
+    <!-- <div class="col-lg-12">
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>SST Team Member Observation and Notes</strong></h5>
@@ -530,7 +532,7 @@
         </div>
     </div>
     <!-- Suports table  -->
-    <div class="col-lg-12">
+    <!-- <div class="col-lg-12">
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>Supports from SST</strong></h5>
@@ -562,11 +564,10 @@
                     </table>
             </div>
         </div>
-    </div>
-
+    </div> -->
 
     <!-- Teacher Concerns Form DELETE BEFORE DEPLOY-->
-    <div class="col-lg-8">
+    <!-- <div class="col-lg-8">
         <div class="card mb-4">
             <div class="card-body">
                 <h4 class="card-title"><strong>Teacher Concerns Form</strong></h4>
@@ -606,6 +607,8 @@
                 </table>
             </div>
         </div>
+    </div> -->
+
 
 
 
