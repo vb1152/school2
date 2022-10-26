@@ -190,7 +190,7 @@ def make_consern_post(request):
         student = Student.objects.get(id=request.POST['stud_id'])
         teacher = MyUser.objects.get(id=request.user.id)
 
-        stream = Stream.objects.get(id=request.POST['stream_id'])
+        stream_first = Stream.objects.get(id=request.POST['stream_id'])
 
         if cons_form.is_valid():
             new_concern = cons_form.save(commit=False)
@@ -198,11 +198,11 @@ def make_consern_post(request):
             new_concern.teacher = teacher
             new_concern.save()
             # add concern form to a stream 
-            stream.concern = new_concern
+            stream_first.concern = new_concern
             print(new_concern.refers)
             
             if new_concern.refers == 'RES':
-                stream.status = 'CL'
+                stream_first.status = 'CL'
 
             if intake_form.is_valid() and 'timeline' in request.POST and 'sst_reasoning' in request.POST:
 
@@ -212,14 +212,30 @@ def make_consern_post(request):
                 new_intake.concern = new_concern
                 new_intake.save()
                 # add intake form to a stream
-                stream.intake = new_intake
-                stream.save()
+                stream_first.intake = new_intake
+                stream_first.save()
+                
+                # Create new stream with level 2, 
+                # now_date = datetime.now()
+                # review_date = now_date + timedelta(days=21)
+
+                print('stream_first.date_review', stream_first.date_review, type(stream_first.date_review))
+                # stream_first.date_review 2022-11-15 <class 'datetime.date'>
+                stream_intake = Stream(
+                    name = stream_first.name,
+                    student=stream_first.student,
+                    teacher = request.user,
+                    date_start = stream_first.date_review + timedelta(days=1),
+                    date_review = stream_first.date_review + timedelta(days=22),
+                    level = '2'
+                )
+                stream_intake.save()
 
                 messages.success(
                     request, 'Thank you! Concern and Intake data is saved!')
                 return HttpResponseRedirect(reverse('school:student_data_profile',
                                                     args=[student.id]))
-            stream.save()
+            stream_first.save()
 
             messages.success(request, 'Thank you! Concern is saved!')
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))

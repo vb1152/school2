@@ -86,6 +86,7 @@ function makeRow(elem){
     var cell7 = newRow.insertCell(6);
     var cell8 = newRow.insertCell(7);
 
+
     //send data about new stream to back-end 
     let url = '/new_stream'
     let student_id = document.getElementById('stud_id').innerHTML
@@ -114,8 +115,7 @@ function makeRow(elem){
     cell6.innerHTML = date_stream_str
     cell7.innerHTML = inThreeWeeks.toLocaleDateString()
     cell8.style.backgroundColor = 'red'
-
-
+    
 
     console.log(current_date)
 }

@@ -241,7 +241,7 @@
                             <th scope="col">Start Date</th>
                             <th scope="col">Review Date</th>
                             <th scope="col">Red/Green</th>
-                            <th>Links</th>
+                            <th>Links (temporarily)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -255,17 +255,22 @@
                                         <a href="{% url 'school:read_concern' stream.concern.pk %}">Concern form</a>
                                     {% else %} {% endif %}
                                     {% if stream.intake %}
-                                        <a href=""><br>Intake form</a>
+                                        <a href="{% url 'school:read_concern' stream.concern.pk %}"><br>Intake form</a>
                                     {% else %} {% endif %}
                                 </td>
-                                <td></td>
+                                <td>
+                                    
+                                </td>
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
                                 <td data-color="{{ stream.status|lower }}"></td>
                                 <td>
-                                    {% if stream.concern %}
-                                    {% else %} 
-                                        <a href="{% url 'school:make_consern' stud_id=student.id stream_id=stream.id %}">Create form</a>
+                                    {% if stream.level == "1" %}
+                                        {% if stream.concern %}
+                                        {% else %} 
+                                            <a href="{% url 'school:make_consern' stud_id=student.id stream_id=stream.id %}">Create form</a>
+                                        {% endif %}
+                                    {% else %}
                                     {% endif %}
                                 </td>
                             </tr>

@@ -43,6 +43,10 @@ class UsersDataAdmin(admin.ModelAdmin):
     list_display = ('user', 'person_id', 'grades')
 
 class StreamAdmin(admin.ModelAdmin):
+    list_display = ('student', 'teacher', 'date_start', 
+                    'date_review', 'concern', 'intake',
+                    'level', 'status', 'observation', 'support', 'name' )
+
     pass
 
 

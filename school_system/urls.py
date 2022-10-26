@@ -20,9 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('school.urls')),
     path('', include('django.contrib.auth.urls')),
-
     
-    # path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 # from django.conf import settings
