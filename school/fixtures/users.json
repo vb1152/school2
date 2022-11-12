@@ -1,0 +1,82 @@
+[
+  {
+    "model": "school.myuser",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$3BRy8Bx9oYDieZsRXIffVS$QHG7iSghd+qCyz9gGkyE7oi0T3LFf/5M9SjfCAp8/Ds=",
+      "is_superuser": true,
+      "username": "v",
+      "first_name": "",
+      "last_name": "",
+      "email": "a@a.com",
+      "is_staff": true,
+      "is_active": true,
+      "is_sst": false,
+      "is_teacher": false,
+      "is_conselor": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "school.myuser",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$3BRy8Bx9oYDieZsRXIffVS$QHG7iSghd+qCyz9gGkyE7oi0T3LFf/5M9SjfCAp8/Ds=",
+      "last_login": "2022-11-06T20:03:26.286Z",
+      "is_superuser": false,
+      "username": "Amy_Doe",
+      "first_name": "Amy",
+      "last_name": "Doe",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2022-08-14T16:47:15Z",
+      "is_sst": false,
+      "is_teacher": true,
+      "is_conselor": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "school.myuser",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$3BRy8Bx9oYDieZsRXIffVS$QHG7iSghd+qCyz9gGkyE7oi0T3LFf/5M9SjfCAp8/Ds=",
+      "last_login": "2022-11-06T13:54:07.045Z",
+      "is_superuser": false,
+      "username": "sst",
+      "first_name": "firstname",
+      "last_name": "lastname",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2022-08-14T16:47:43Z",
+      "is_sst": true,
+      "is_teacher": false,
+      "is_conselor": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "school.myuser",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$3BRy8Bx9oYDieZsRXIffVS$QHG7iSghd+qCyz9gGkyE7oi0T3LFf/5M9SjfCAp8/Ds=",
+      "is_superuser": false,
+      "username": "staff",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "is_sst": false,
+      "is_teacher": false,
+      "is_conselor": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

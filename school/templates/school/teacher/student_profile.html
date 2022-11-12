@@ -136,7 +136,6 @@
                 <table class="table table-sm" id="stream-table">
                     <thead>
                         <tr>
-                            <th scope="col">Student Name</th>
                             <th scope="col">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
@@ -247,7 +246,6 @@
                     <tbody>
                         {% for stream in student.stream_student.all %}
                             <tr>
-                                <td>{{ student.first_name }} {{ student.last_name }}</td>
                                 <td>{{ stream.name }}</td>
                                 <td>{{ stream.level }}</td>
                                 <td>
@@ -268,7 +266,7 @@
                                     {% if stream.level == "1" %}
                                         {% if stream.concern %}
                                         {% else %} 
-                                            <a href="{% url 'school:make_consern' stud_id=student.id stream_id=stream.id %}">Create form</a>
+                                            <a href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">Make review</a>
                                         {% endif %}
                                     {% else %}
                                     {% endif %}

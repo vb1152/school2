@@ -1,12 +1,13 @@
 from django.forms import ModelForm
 from .models import (MyUser,
-                     Consern,
                      Intake,
                      Support,
                      OcupationalTherapy,
                      SpeechTherapy,
                      ResponceToSupport,
-                     ReadingScreening
+                     ReadingScreening,
+                     ReviewMeetingNote,
+                     ImplicitStrategy
                      )
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -29,74 +30,6 @@ class MyUserForm(ModelForm):
 class UploadExcelFileForm(forms.Form):
     '''form to upload data from excel files'''
     file = forms.FileField()
-
-
-class ConsernForm(ModelForm):
-    date = forms.DateField(
-        required=True,
-        widget=forms.widgets.DateInput(
-            attrs={
-                "placeholder": "Add date ...",
-                "class": "form-control",
-                'type': 'date'
-            }
-        ),
-        label="Date",
-    )
-    # consern_type = forms.CharField(
-    #     required=True,
-    #     widget=forms.widgets.TextInput(
-    #         attrs={
-    #             "placeholder": "Add type of Concern",
-    #             "class": "form-control",
-    #         }
-    #     ),
-    #     label="Type of Concern",
-    # )
-
-    # consern_type = forms.ChoiceField(
-    #     required=True,
-    #     widget=forms.widgets.Select(
-    #         attrs={
-    #             "class": "form-control",
-    #         }
-    #     ),
-    #     choices=Consern.TYPES_CHOICES,
-    #     label="Type of Concern",
-    # )
-
-    refers = forms.ChoiceField(
-        required=True,
-        widget=forms.widgets.Select(
-            attrs={
-                "class": "form-control",
-            }
-        ),
-        choices=Consern.CONSERN_CHOICES
-    )
-
-    class Meta:
-        model = Consern
-        exclude = ['student', 'teacher']
-        labels = {
-            # 'date': _('Date'),
-            # 'consern_type': _('Type of Concern'),
-            'strategy_used': _('Strategies Used'),
-            'num_weeks': _('Number of weeks'),
-            'st_responce': _('Student Response'),
-            'teach_comm': _('Teacher Comments'),
-            'refers': _('Referral')
-        }
-
-        widgets = {
-            # 'date': forms.DateInput(attrs={'class':'form-control', 'type':'date'}),
-            # 'consern_type': forms.TextInput(attrs={'class':'form-control'}),
-            'strategy_used': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'custom'}),
-            'num_weeks': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'any???'}),
-            'st_responce': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'any???'}),
-            'teach_comm': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'any???'}),
-            # 'refers': forms.ChoiceField(choices=Consern.CONSERN_CHOICES),
-        }
 
 
 class IntakeForm(ModelForm):
@@ -520,3 +453,103 @@ class ReadingScreeningForm(ModelForm):
         model = ReadingScreening
         fields = ['date_screen', 'screen_type',
                   'errors_screen', 'question_screen', 'notes']
+
+
+class ReviewMeetingNoteForm(forms.Form):
+    strategy = forms.ModelMultipleChoiceField(
+        required=True,
+        queryset=ImplicitStrategy.objects.all(),
+        widget=forms.widgets.SelectMultiple(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+    text_strategy = forms.CharField(
+        required=False,
+        widget=forms.widgets.Textarea(
+            attrs={
+                'placeholder': 'Add custom strategies, if used. ',
+                'class': 'form-control',
+                'type': 'text',
+                'rows': '3'
+            }
+        ),
+        label='Other strategy',
+    )
+    notes = forms.CharField(
+        required=True,
+        widget=forms.widgets.Textarea(
+            attrs={
+                'placeholder': 'Add custom strategies, if used. ',
+                'class': 'form-control',
+                'type': 'text',
+                'rows': '3'
+            }
+        ),
+        label='Anectodal notes',
+    )
+    progress = forms.ChoiceField(
+        required=True,
+        widget=forms.widgets.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+        choices= [('','Choose YES or NO')] + ReviewMeetingNote.PROGRESS_CHOICES,
+        label='Has the student made sufficient progress?',
+    )
+
+
+# class ReviewMeetingNoteForm(ModelForm):
+#     strategy = forms.ModelMultipleChoiceField(
+#         required=True,
+#         queryset=ImplicitStrategy.objects.all(),
+#         widget=forms.widgets.SelectMultiple(
+#             attrs={
+#                 "class": "form-control",
+#             }
+#         ),
+#         label='Implicit strategies (all to choose)', 
+#         # to_field_name="id"
+#     )
+
+#     text_strategy = forms.CharField(
+#         required=False,
+#         widget=forms.widgets.Textarea(
+#             attrs={
+#                 'placeholder': 'Add custom strategies, if used. ',
+#                 'class': 'form-control',
+#                 'type': 'text',
+#                 'rows': '3'
+#             }
+#         ),
+#         label='Other strategy',
+#         # help_text='The field can be blank'
+#     )
+#     progress = forms.ChoiceField(
+#         required=True,
+#         widget=forms.widgets.Select(
+#             attrs={
+#                 "class": "form-control",
+#             }
+#         ),
+#         choices= [('','Choose YES or NO')] + ReviewMeetingNote.PROGRESS_CHOICES,
+#         label='Has the student made sufficient progress?',
+#     )
+       
+#     # def __init__(self, *args, **kwargs):
+#     #     super().__init__(*args, **kwargs)
+#     #     # self.fields['strategy'].queryset = ImplicitStrategy.objects.values_list('name', flat=True).distinct()
+#     #     self.fields['strategy'].queryset = ImplicitStrategy.objects.all()
+
+#     class Meta:
+#         model = ReviewMeetingNote
+#         fields = ['strategy', 'text_strategy', 'notes', 'progress']
+#         # labels = {
+#         #     'strategy': _('Implicit strategies'),
+#         # }
+
+#         widgets = {
+#             'notes': forms.Textarea(attrs={'class': 'form-control', 'type': 'text', 'rows': '3'}),
+#         }

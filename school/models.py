@@ -1,5 +1,3 @@
-from email.policy import default
-from tabnanny import verbose
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -107,42 +105,42 @@ class NotesPTS(models.Model):
         return str(self.date)
 
 
-class Consern(models.Model):
-    date = models.DateField(verbose_name='Date')
-    # ACADEMIC = 'A'
-    # GUIDANCE = 'G'
-    # SOCIAL = 'S'
-    # CARE = 'C'
-    # TYPES_CHOICES = [(ACADEMIC, 'Academic'),
-    #                  (GUIDANCE, 'Guidance and Discipline'), 
-    #                  (SOCIAL, 'Social Inclusion'),
-    #                  (CARE, 'Care and Therapeutic')]
-    # consern_type = models.CharField(
-    #     max_length=1, choices=TYPES_CHOICES, verbose_name='Type of Concern')
-    strategy_used = models.CharField(
-        verbose_name='Strategies Used', max_length=2000)
-    num_weeks = models.PositiveSmallIntegerField(
-        verbose_name='Number of weeks')
-    st_responce = models.CharField(
-        verbose_name='Student Response', max_length=2000)
-    teach_comm = models.CharField(
-        verbose_name='Teacher Comments', max_length=2000)
-    student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name='stud_consern')
-    teacher = models.ForeignKey(MyUser,
-                                on_delete=models.PROTECT,
-                                null=True,
-                                limit_choices_to={'is_teacher': True})
-    NOREFERRAL = 'NO'
-    REFERRAL = 'R'
-    RESOLVED = 'RES'
-    CONSERN_CHOICES = [(NOREFERRAL, 'No Referral'),
-                       (REFERRAL, 'Referral'), (RESOLVED, 'Concern Resolved')]
-    refers = models.CharField(
-        max_length=3, choices=CONSERN_CHOICES, verbose_name='Referral')
+# class Consern(models.Model):
+#     date = models.DateField(verbose_name='Date')
+#     # ACADEMIC = 'A'
+#     # GUIDANCE = 'G'
+#     # SOCIAL = 'S'
+#     # CARE = 'C'
+#     # TYPES_CHOICES = [(ACADEMIC, 'Academic'),
+#     #                  (GUIDANCE, 'Guidance and Discipline'),
+#     #                  (SOCIAL, 'Social Inclusion'),
+#     #                  (CARE, 'Care and Therapeutic')]
+#     # consern_type = models.CharField(
+#     #     max_length=1, choices=TYPES_CHOICES, verbose_name='Type of Concern')
+#     strategy_used = models.CharField(
+#         verbose_name='Strategies Used', max_length=2000)
+#     num_weeks = models.PositiveSmallIntegerField(
+#         verbose_name='Number of weeks')
+#     st_responce = models.CharField(
+#         verbose_name='Student Response', max_length=2000)
+#     teach_comm = models.CharField(
+#         verbose_name='Teacher Comments', max_length=2000)
+#     student = models.ForeignKey(
+#         Student, on_delete=models.CASCADE, related_name='stud_consern')
+#     teacher = models.ForeignKey(MyUser,
+#                                 on_delete=models.PROTECT,
+#                                 null=True,
+#                                 limit_choices_to={'is_teacher': True})
+#     NOREFERRAL = 'NO'
+#     REFERRAL = 'R'
+#     RESOLVED = 'RES'
+#     CONSERN_CHOICES = [(NOREFERRAL, 'No Referral'),
+#                        (REFERRAL, 'Referral'), (RESOLVED, 'Concern Resolved')]
+#     refers = models.CharField(
+#         max_length=3, choices=CONSERN_CHOICES, verbose_name='Referral')
 
-    class Meta:
-        ordering = ['-date']
+#     class Meta:
+#         ordering = ['-date']
 
 
 class Intake(models.Model):
@@ -162,9 +160,7 @@ class Intake(models.Model):
     ]
     behavior_quality = models.CharField(
         max_length=1, choices=BEHAVE_CHOICES, verbose_name='Qualify this behavior')
-    
-    
-    
+
     why_consern = models.CharField(
         verbose_name='Concern reasoning', max_length=2000)
     what_done = models.CharField(verbose_name='What done', max_length=2000)
@@ -184,9 +180,9 @@ class Intake(models.Model):
                                 on_delete=models.PROTECT,
                                 null=True,
                                 limit_choices_to={'is_teacher': True})
-    concern = models.OneToOneField(Consern, on_delete=models.CASCADE,
-                                   related_name='consern_intake',
-                                   default=None, null=True, blank=True)
+    # concern = models.OneToOneField(Consern, on_delete=models.CASCADE,
+    #                                related_name='consern_intake',
+    #                                default=None, null=True, blank=True)
 
 
 class BaseModel(models.Model):
@@ -212,8 +208,8 @@ class Observation(BaseModel):
     student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name='stud_observation')
     note = models.CharField(verbose_name='Observation note', max_length=2000)
-    concern = models.ForeignKey(
-        Consern, on_delete=models.CASCADE, related_name='observation_consern')
+    # concern = models.ForeignKey(
+    #     Consern, on_delete=models.CASCADE, related_name='observation_consern')
 
     class Meta:
         ordering = ["-date"]
@@ -239,8 +235,8 @@ class Support(models.Model):
     suport_text = models.CharField(
         verbose_name='Support text', max_length=2000)
     note = models.CharField(verbose_name='Support note', max_length=2000)
-    concern = models.ForeignKey(
-        Consern, on_delete=models.CASCADE, related_name='concern_support', default=None)
+    # concern = models.ForeignKey(
+    #     Consern, on_delete=models.CASCADE, related_name='concern_support', default=None)
 
     class Meta:
         ordering = ["-date"]
@@ -342,7 +338,7 @@ class ReadingScreening(BaseModel):
 
 
 class Stream(BaseModel):
-    student = models.ForeignKey( 
+    student = models.ForeignKey(
         Student, on_delete=models.CASCADE, related_name='stream_student')
     teacher = models.ForeignKey(MyUser,
                                 on_delete=models.PROTECT,
@@ -350,11 +346,8 @@ class Stream(BaseModel):
                                 limit_choices_to={'is_teacher': True})
     date_start = models.DateField(verbose_name='Start date')
     date_review = models.DateField(verbose_name='Review Date')
-    concern = models.OneToOneField(
-        Consern, on_delete=models.CASCADE, related_name = 'stream_concern',
-        blank=True, null=True)
     intake = models.OneToOneField(
-        Intake, on_delete=models.CASCADE, related_name = 'stream_intake',
+        Intake, on_delete=models.CASCADE, related_name='stream_intake',
         blank=True, null=True)
 
     ONE = '1'
@@ -371,7 +364,8 @@ class Stream(BaseModel):
         (FIVE, '5'),
         (SIX, '6'),
     ]
-    level = models.CharField(max_length=1, choices=LEVEL_CHOICES, default=ONE, verbose_name='Stream level')
+    level = models.CharField(
+        max_length=1, choices=LEVEL_CHOICES, default=ONE, verbose_name='Stream level')
 
     CLOSED = 'CL'
     PROCEEDING = 'PR'
@@ -381,12 +375,56 @@ class Stream(BaseModel):
         (PROCEEDING, 'Proceeding'),
         (OPEN, 'Open'),
     ]
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default=OPEN, verbose_name='Status')
-    observation = models.ForeignKey(Observation, on_delete=models.CASCADE, 
-                            null=True, related_name='stream_observations', verbose_name='Observations')
-    support = models.ForeignKey(Support, on_delete=models.CASCADE, 
-                            null=True, related_name='stream_supports', verbose_name='Support')
-    name = models.CharField(max_length=100, verbose_name='Stream name', default=None)
+    status = models.CharField(
+        max_length=2, choices=STATUS_CHOICES, default=OPEN, verbose_name='Status')
+    observation = models.ForeignKey(Observation, on_delete=models.CASCADE,
+                                    null=True, related_name='stream_observations', verbose_name='Observations')
+    support = models.ForeignKey(Support, on_delete=models.CASCADE,
+                                null=True, related_name='stream_supports', verbose_name='Support')
+    name = models.CharField(
+        max_length=100, verbose_name='Stream name', default=None)
+    stream_prev = models.ForeignKey(
+        'self', on_delete=models.CASCADE, blank=True, null=True, verbose_name='Previous Stream')
 
     class Meta:
         ordering = ["date_start"]
+
+    def __str__(self) -> str:
+        return self.name
+
+class ImplicitStrategy(BaseModel):
+    '''Save names of the strategies for using in Review meetin notes'''
+    name = models.CharField(
+        max_length=2000, verbose_name='Implicit Strategy')
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self) -> str:
+        return str(self.name[:20])
+
+class ReviewMeetingNote(BaseModel):
+    '''Model to store data about review meeting notes from teacher and SST'''
+    strategy = models.ManyToManyField(
+        ImplicitStrategy, related_name='strategy_name')
+    text_strategy = models.CharField(
+        verbose_name='Other strategy', max_length=2000, blank=True, null=True)
+    notes = models.CharField(
+        verbose_name='Anectodal notes', max_length=2000)
+    YES = 'Y'
+    NO = 'N'
+    PROGRESS_CHOICES = [
+        (YES, 'Yes'),
+        (NO, 'No')
+    ]
+    progress = models.CharField(
+        max_length=1, choices=PROGRESS_CHOICES, default=YES, verbose_name='Progress')
+    user = models.ForeignKey(MyUser,
+                             on_delete=models.PROTECT)
+    stream = models.ForeignKey(Stream, on_delete=models.CASCADE, verbose_name='Stream review')
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self) -> str:
+        return str(self.id)

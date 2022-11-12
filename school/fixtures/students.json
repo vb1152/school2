@@ -1,0 +1,163 @@
+[
+    {
+        "model": "school.student",
+        "pk": 1,
+        "fields": {
+            "school_id": "57290",
+            "first_name": "Allen",
+            "middle_name": "None",
+            "last_name": "Dianne",
+            "preferred_name": "None",
+            "date_of_birth": "2003-11-02",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 2,
+            "gender": "M",
+            "cur_grade": 10,
+            "grad_year": "2022",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-08",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+        }
+    },
+    {
+        "model": "school.student",
+        "pk": 2,
+        "fields": {
+            "school_id": "4926",
+            "first_name": "Cox",
+            "middle_name": "None",
+            "last_name": "Oscar",
+            "preferred_name": "None",
+            "date_of_birth": "2003-01-05",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 3,
+            "gender": "F",
+            "cur_grade": 12,
+            "grad_year": "2020",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-03",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+        }
+    },
+    {
+        "model": "school.student",
+        "pk": 3,
+        "fields": {
+            "school_id": "4522",
+            "first_name": "Glover",
+            "middle_name": "None",
+            "last_name": "Myron",
+            "preferred_name": "None",
+            "date_of_birth": "2003-02-18",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 1,
+            "gender": "M",
+            "cur_grade": 11,
+            "grad_year": "2021",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-04",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+        }
+    },
+    {
+        "model": "school.student",
+        "pk": 4,
+        "fields": {
+            "school_id": "42942",
+            "first_name": "Drake",
+            "middle_name": "None",
+            "last_name": "Clayton",
+            "preferred_name": "None",
+            "date_of_birth": "2004-05-16",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 3,
+            "gender": "F",
+            "cur_grade": 10,
+            "grad_year": "2022",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-05",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+        }
+    },
+    {
+        "model": "school.student",
+        "pk": 5,
+        "fields": {
+            "school_id": "44089",
+            "first_name": "Malone",
+            "middle_name": "None",
+            "last_name": "Sabrina",
+            "preferred_name": "None",
+            "date_of_birth": "2004-12-10",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 2,
+            "gender": "M",
+            "cur_grade": 10,
+            "grad_year": "2022",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-06",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+    }
+    },
+    {
+        "model": "school.student",
+        "pk": 6,
+        "fields": {
+            "school_id": "33116",
+            "first_name": "Flowers",
+            "middle_name": "None",
+            "last_name": "Theodore",
+            "preferred_name": "None",
+            "date_of_birth": "2004-08-30",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 3,
+            "gender": "F",
+            "cur_grade": 10,
+            "grad_year": "2022",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-07",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+        }
+    },
+    {
+        "model": "school.student",
+        "pk": 7,
+        "fields": {
+            "school_id": "29853",
+            "first_name": "Watson",
+            "middle_name": "None",
+            "last_name": "Diana",
+            "preferred_name": "None",
+            "date_of_birth": "2003-04-12",
+            "birth_order_in_class": 7,
+            "birth_order_in_family": 1,
+            "gender": "F",
+            "cur_grade": 10,
+            "grad_year": "2022",
+            "email": "None",
+            "home_lang": "English ",
+            "date_join": "2013-09-09",
+            "entrygrades": 5,
+            "teacher": 2,
+            "siblings_names": null
+        }
+    }
+]

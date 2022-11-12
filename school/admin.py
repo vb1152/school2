@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import (MyUser, Student, NotesPTS, 
-                    Consern, Intake, Observation, 
+                    Intake, Observation, 
                     Support, OcupationalTherapy, 
-                    SpeechTherapy, UsersData, Stream)
+                    SpeechTherapy, UsersData, Stream, 
+                    ImplicitStrategy, ReviewMeetingNote)
 
 
 
@@ -44,16 +45,26 @@ class UsersDataAdmin(admin.ModelAdmin):
 
 class StreamAdmin(admin.ModelAdmin):
     list_display = ('student', 'teacher', 'date_start', 
-                    'date_review', 'concern', 'intake',
+                    'date_review', 'intake',
                     'level', 'status', 'observation', 'support', 'name' )
-
+class ImplicitStrategyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
     pass
 
+class ReviewMeetingNoteAdmin(admin.ModelAdmin):
+    list_display = ('strategies', 'text_strategy', 'notes', 
+                    'progress', 'user', 'stream', 'student')
+    def strategies(self, obj):
+        resp = "/ ".join([note.name for note in obj.strategy.all()])
+        return resp
+        
+    def student(self, obj):
+        return (obj.stream.student.first_name + ' '
+                +  obj.stream.student.last_name)
 
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(NotesPTS, NotesPTSAdmin)
-admin.site.register(Consern, ConsernAdmin)
 admin.site.register(Intake, IntakeAdmin)
 admin.site.register(Observation, ObservationAdmin)
 admin.site.register(Support, SupportAdmin)
@@ -61,3 +72,5 @@ admin.site.register(OcupationalTherapy, OcupationalTherapyAdmin)
 admin.site.register(SpeechTherapy, SpeechTherapyAdmin)
 admin.site.register(UsersData, UsersDataAdmin)
 admin.site.register(Stream, StreamAdmin)
+admin.site.register(ImplicitStrategy, ImplicitStrategyAdmin)
+admin.site.register(ReviewMeetingNote, ReviewMeetingNoteAdmin)

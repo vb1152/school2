@@ -1,0 +1,79 @@
+[
+    {
+        "model": "school.stream",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-03-01T15:34:35.791Z",
+            "updated_at": "2022-03-01T15:34:35.792Z",
+            "student": 1,
+            "teacher": 2,
+            "date_start": "2022-09-09",
+            "date_review": "2022-09-30",
+            "intake": null,
+            "level": "1",
+            "status": "PR",
+            "observation": null,
+            "support": null,
+            "name": "Academic",
+            "stream_prev": null
+        }
+    },
+    {
+        "model": "school.stream",
+        "pk": 2,
+        "fields": {
+            "created_at": "2022-03-01T15:34:35.791Z",
+            "updated_at": "2022-03-01T15:34:35.792Z",
+            "student": 1,
+            "teacher": 2,
+            "date_start": "2022-10-01",
+            "date_review": "2022-10-22",
+            "intake": null,
+            "level": "2",
+            "status": "PR",
+            "observation": null,
+            "support": null,
+            "name": "Academic",
+            "stream_prev": null
+        }
+    },
+    {
+        "model": "school.stream",
+        "pk": 3,
+        "fields": {
+            "created_at": "2022-03-01T15:34:35.791Z",
+            "updated_at": "2022-03-01T15:34:35.792Z",
+            "student": 1,
+            "teacher": 2,
+            "date_start": "2022-10-23",
+            "date_review": "2022-11-14",
+            "intake": null,
+            "level": "3",
+            "status": "OP",
+            "observation": null,
+            "support": null,
+            "name": "Academic",
+            "stream_prev": null
+        }
+    },
+    {
+        "model": "school.stream",
+        "pk": 4,
+        "fields": {
+            "created_at": "2022-03-01T15:34:35.791Z",
+            "updated_at": "2022-03-01T15:34:35.792Z",
+            "student": 5,
+            "teacher": 2,
+            "date_start": "2022-10-25",
+            "date_review": "2022-11-15",
+            "intake": null,
+            "level": "1",
+            "status": "OP",
+            "observation": null,
+            "support": null,
+            "name": "Guidance and Discipline",
+            "stream_prev": null
+        }
+    }
+
+]
