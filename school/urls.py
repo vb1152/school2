@@ -55,7 +55,7 @@ urlpatterns = [
     path('make_review_post/', views.make_review_post, name='make_review_post'),
     # path('make_consern_post', views.make_consern_post, name='make_consern_post'),
     path('update_concern/', views.update_concern, name='update_concern'),
-    path('read_concern/<int:pk>/', views.ShowConcernTeacher.as_view(), name='read_concern'),
+    path('read_review/<int:pk>/', views.ShowReviewTeacher.as_view(), name='read_review'),
     path('staff', views.staff_view, name='staff_view'),
 
 

@@ -249,11 +249,11 @@
                                 <td>{{ stream.name }}</td>
                                 <td>{{ stream.level }}</td>
                                 <td>
-                                    {% if stream.concern %}
-                                        <a href="{% url 'school:read_concern' stream.concern.pk %}">Concern form</a>
+                                    {% if stream.student_stream.get %}
+                                        <a href="{% url 'school:read_review' stream.student_stream.get %}">Review note</a>
                                     {% else %} {% endif %}
                                     {% if stream.intake %}
-                                        <a href="{% url 'school:read_concern' stream.concern.pk %}"><br>Intake form</a>
+                                        <a href=""><br>Intake form</a>
                                     {% else %} {% endif %}
                                 </td>
                                 <td>
@@ -261,10 +261,10 @@
                                 </td>
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
-                                <td data-color="{{ stream.status|lower }}"></td>
+                                <td data-color="{{ stream.status|lower }}">{{stream.status}}</td>
                                 <td>
                                     {% if stream.level == "1" %}
-                                        {% if stream.concern %}
+                                        {% if stream.student_stream.get %}
                                         {% else %} 
                                             <a href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">Make review</a>
                                         {% endif %}

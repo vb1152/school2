@@ -92,7 +92,7 @@ def teacher_view(request):
     students = Student.objects.filter(
         teacher=request.user).select_related('teacher')
     streams = Stream.objects.filter(
-        teacher=request.user, date_review__gte=datetime.now(), status=Stream.OPEN)
+        teacher=request.user, date_review__gte=datetime.now())
     context = {
         'students': students,
         'streams': streams
@@ -120,20 +120,21 @@ def student_data_profile(request, **kwargs):
     if request.method == 'GET':
         student = get_object_or_404(Student, id=kwargs['stud_id'])
         age_years, age_months = calculate_age(str(student.date_of_birth))
-        notes = NotesPTS.objects.filter(student=student)
+        stream = Stream.objects.get(id=1)
         supports = Support.objects.filter(
             student=student).select_related('sst')
-
         context = {
             'student': student,
             'age_years': age_years,
             'age_months': age_months,
-            # 'notes': notes,
-            # 'observations': observations,
             'supports': supports,
         }
         return render(request, 'school/teacher/student_profile.html', context)
 
+                                #    <!-- {{ stream.reviewmeetingnote.all }} -->
+                                #     {% for rev in stream.student_stream.all %}
+                                #         {{ rev.progress }}
+                                #     {% endfor %}
 
 @user_passes_test(teacher_check)
 def save_note_from_PTC(request):
@@ -171,42 +172,65 @@ def make_review(request, *, stud_id, stream_id):
 def make_review_post(request):
     '''Save review note from a teacher'''
     if request.method == 'POST':
-        print(request.POST)
         review_form = ReviewMeetingNoteForm(request.POST)
-        # intake_form = IntakeForm(request.POST)
-        # student = Student.objects.get(id=request.POST['stud_id'])
-        # teacher = MyUser.objects.get(id=request.user.id)
-        print(review_form.is_valid())
-        for field in review_form:
-            print("Field Error:", field.name,  field.errors)
-
+        intake_form = IntakeForm(request.POST)
+        student = Student.objects.get(id=request.POST['stud_id'])
+        stream_first = Stream.objects.get(id=request.POST['stream_id'])
+        
         if review_form.is_valid():
-            print(review_form.cleaned_data)
             new_review = ReviewMeetingNote()
             new_review.text_strategy = review_form.cleaned_data['text_strategy']
             new_review.notes = review_form.cleaned_data['notes']
             new_review.progress = review_form.cleaned_data['progress']
-            new_review.stream = Stream.objects.get(id=request.POST['stream_id'])
+            new_review.stream = stream_first
+            new_review.student = student
             new_review.user = request.user
             new_review.save()
+            new_review.strategy.set(review_form.cleaned_data['strategy'])
 
-            new_review.strategy.set(review_form.cleaned_data['strategy'])# = review_form.cleaned_data['strategy']
+            if review_form.cleaned_data['progress'] == 'Y':
+                stream_first.status = Stream.CLOSED
 
+                new_start = stream_first.date_review + timedelta(days=1)
+                new_review = new_start + timedelta(days=21)
 
-            # new_review = review_form.save(commit=False)
-            # new_review.user = request.user.id
-            # new_review.stream = Stream.objects.get(id=request.POST['stream_id'])
-            # new_review.save()
-        
+                stream = Stream(
+                    name = stream_first.name,
+                    student=student,
+                    teacher = request.user,
+                    date_start = new_start,
+                    date_review = new_review,
+                    stream_prev = stream_first
+                )
+                stream.save()
+            
+            if intake_form.is_valid() and 'timeline' in request.POST and 'sst_reasoning' in request.POST:
+                new_intake = intake_form.save(commit=False)
+                new_intake.student = student
+                new_intake.teacher = request.user
+                new_intake.save()
+                # add intake form to a stream
+                stream_first.intake = new_intake
+                stream_first.save()
+
+                # Create new stream with level 2,
+                stream_intake = Stream(
+                    name = stream_first.name,
+                    student=stream_first.student,
+                    teacher = request.user,
+                    date_start = stream_first.date_review + timedelta(days=1),
+                    date_review = stream_first.date_review + timedelta(days=22),
+                    level = '2'
+                )
+                stream_intake.save()
+
+                messages.success(
+                request, 'Thank you! Review Note and Intake data is saved!')
+                return HttpResponseRedirect(reverse('school:student_data_profile',
+                                                    args=[student.id]))
+            stream_first.save()
             messages.success(request, 'Thank you! Review is saved!')
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[request.POST['stud_id']]))
-
-
-
-
-        print(request.POST)
-    pass
-
 
 
 @user_passes_test(teacher_check)
@@ -237,12 +261,11 @@ def make_consern(request, *, stud_id, stream_id):
 #         }
 #         return render(request, 'school/teacher/consern_view_teacher.html', context)
 
-
-class ShowConcernTeacher(TeacherCheckMixin, DetailView):
-    pass
-    # model = Consern
-    # template_name = 'school/teacher/consern_view_teacher.html'
-    # login_url = 'login'
+# ShowConcernTeacher
+class ShowReviewTeacher(TeacherCheckMixin, DetailView):
+    model = ReviewMeetingNote
+    template_name = 'school/teacher/review_view_teacher.html'
+    login_url = 'login'
 
 
 @user_passes_test(teacher_check)

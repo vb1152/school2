@@ -46,7 +46,7 @@ class UsersDataAdmin(admin.ModelAdmin):
 class StreamAdmin(admin.ModelAdmin):
     list_display = ('student', 'teacher', 'date_start', 
                     'date_review', 'intake',
-                    'level', 'status', 'observation', 'support', 'name' )
+                    'level', 'observation', 'support', 'name' )
 class ImplicitStrategyAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     pass
@@ -57,7 +57,7 @@ class ReviewMeetingNoteAdmin(admin.ModelAdmin):
     def strategies(self, obj):
         resp = "/ ".join([note.name for note in obj.strategy.all()])
         return resp
-        
+
     def student(self, obj):
         return (obj.stream.student.first_name + ' '
                 +  obj.stream.student.last_name)

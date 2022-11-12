@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
         element.setAttribute('disabled', '')
     })
 
-    console.log('review ready')
+    console.log(intakeForm)
 
     progSelectField.addEventListener('change', (e) => {
         console.log('change', e.target.value)
@@ -18,35 +18,35 @@ document.addEventListener('DOMContentLoaded', function(){
             //The bar is green
             elemProgress.removeAttribute('hidden')
             barProgress.setAttribute('class', 'progress-bar bg-success')
-            // intakeForm.setAttribute('hidden', '')
+            intakeForm.setAttribute('hidden', '')
             // sbmConcernBtn.removeAttribute('hidden')
             
-            // inputElements.forEach(element => {
-            //     element.setAttribute('disabled', '')
-            //     element.removeAttribute('required')
-            // })
+            inputElements.forEach(element => {
+                element.setAttribute('disabled', '')
+                element.removeAttribute('required')
+            })
         }
         else if (e.target.value === 'N') {
             //Concern Resolved RES - the bar is green
             elemProgress.removeAttribute('hidden')
             barProgress.setAttribute('class', 'progress-bar bg-danger')
-            // intakeForm.setAttribute('hidden', '')
+            intakeForm.removeAttribute('hidden')
             // sbmConcernBtn.removeAttribute('hidden')
             
-            // inputElements.forEach(element => {
-            //     element.setAttribute('disabled', '')
-            //     element.removeAttribute('required')
-            // })
+            inputElements.forEach(element => {
+                element.removeAttribute('disabled')
+                element.setAttribute('required', '')
+            })
         }
         else {
             elemProgress.setAttribute('hidden', '')
-            // intakeForm.setAttribute('hidden', '')
+            intakeForm.setAttribute('hidden', '')
             // sbmConcernBtn.removeAttribute('hidden')
             
-            // inputElements.forEach(element => {
-            //     element.setAttribute('disabled', '')
-            //     element.removeAttribute('required')
-            // })
+            inputElements.forEach(element => {
+                element.setAttribute('disabled', '')
+                element.removeAttribute('required')
+            })
         }
     })
 })

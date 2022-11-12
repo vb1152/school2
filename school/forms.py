@@ -464,6 +464,8 @@ class ReviewMeetingNoteForm(forms.Form):
                 "class": "form-control",
             }
         ),
+        label='Implicit strategy',
+        help_text = 'Hold Shift button on your keyboard and choose more than one strategy'
     )
     text_strategy = forms.CharField(
         required=False,
@@ -475,7 +477,7 @@ class ReviewMeetingNoteForm(forms.Form):
                 'rows': '3'
             }
         ),
-        label='Other strategy',
+        label='Custom strategy',
     )
     notes = forms.CharField(
         required=True,
@@ -499,57 +501,3 @@ class ReviewMeetingNoteForm(forms.Form):
         choices= [('','Choose YES or NO')] + ReviewMeetingNote.PROGRESS_CHOICES,
         label='Has the student made sufficient progress?',
     )
-
-
-# class ReviewMeetingNoteForm(ModelForm):
-#     strategy = forms.ModelMultipleChoiceField(
-#         required=True,
-#         queryset=ImplicitStrategy.objects.all(),
-#         widget=forms.widgets.SelectMultiple(
-#             attrs={
-#                 "class": "form-control",
-#             }
-#         ),
-#         label='Implicit strategies (all to choose)', 
-#         # to_field_name="id"
-#     )
-
-#     text_strategy = forms.CharField(
-#         required=False,
-#         widget=forms.widgets.Textarea(
-#             attrs={
-#                 'placeholder': 'Add custom strategies, if used. ',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'rows': '3'
-#             }
-#         ),
-#         label='Other strategy',
-#         # help_text='The field can be blank'
-#     )
-#     progress = forms.ChoiceField(
-#         required=True,
-#         widget=forms.widgets.Select(
-#             attrs={
-#                 "class": "form-control",
-#             }
-#         ),
-#         choices= [('','Choose YES or NO')] + ReviewMeetingNote.PROGRESS_CHOICES,
-#         label='Has the student made sufficient progress?',
-#     )
-       
-#     # def __init__(self, *args, **kwargs):
-#     #     super().__init__(*args, **kwargs)
-#     #     # self.fields['strategy'].queryset = ImplicitStrategy.objects.values_list('name', flat=True).distinct()
-#     #     self.fields['strategy'].queryset = ImplicitStrategy.objects.all()
-
-#     class Meta:
-#         model = ReviewMeetingNote
-#         fields = ['strategy', 'text_strategy', 'notes', 'progress']
-#         # labels = {
-#         #     'strategy': _('Implicit strategies'),
-#         # }
-
-#         widgets = {
-#             'notes': forms.Textarea(attrs={'class': 'form-control', 'type': 'text', 'rows': '3'}),
-#         }

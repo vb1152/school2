@@ -16,12 +16,17 @@
                 {% csrf_token %}
                 {% for field in review_form %}
                     {{ field.errors }}
-                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    <div class="input-group mb-3">
-                        {{ field }}
-                    </div>
                     {% if field.help_text %}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="input-group">
+                            {{ field }}
+                        </div>
                         <p class="help mb-3">{{ field.help_text|safe }}</p>
+                    {% else %}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="input-group mb-3">
+                            {{ field }}
+                        </div>
                     {% endif %}
                 {% endfor %}
                 <div class="progress" hidden id="progress">

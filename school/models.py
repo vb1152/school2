@@ -180,6 +180,8 @@ class Intake(models.Model):
                                 on_delete=models.PROTECT,
                                 null=True,
                                 limit_choices_to={'is_teacher': True})
+    
+    
     # concern = models.OneToOneField(Consern, on_delete=models.CASCADE,
     #                                related_name='consern_intake',
     #                                default=None, null=True, blank=True)
@@ -387,7 +389,7 @@ class Stream(BaseModel):
         'self', on_delete=models.CASCADE, blank=True, null=True, verbose_name='Previous Stream')
 
     class Meta:
-        ordering = ["date_start"]
+        ordering = ["id"]
 
     def __str__(self) -> str:
         return self.name
@@ -421,7 +423,10 @@ class ReviewMeetingNote(BaseModel):
         max_length=1, choices=PROGRESS_CHOICES, default=YES, verbose_name='Progress')
     user = models.ForeignKey(MyUser,
                              on_delete=models.PROTECT)
-    stream = models.ForeignKey(Stream, on_delete=models.CASCADE, verbose_name='Stream review')
+    stream = models.ForeignKey(Stream, on_delete=models.CASCADE, 
+                                verbose_name='Stream review', related_name='student_stream')
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name='review_student', default=None)
 
     class Meta:
         ordering = ['id']
