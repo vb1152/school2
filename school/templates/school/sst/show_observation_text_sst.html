@@ -39,16 +39,16 @@
         </div>
         <div class="col-md-8">
             <article class="blog-post">
-                <h2 class="blog-post-title">Observation notes</h2>
+                <h2 class="blog-post-title">Observation note</h2>
                 <hr>
                 <h5>Observation date</h5>
                 <p>{{ object.date }}</p>
                 <h5>Observation note</h5>
                 <p>{{ object.note }}</p>
+                <h5>Made {{ object.created_at }} by </h5>
+                <p>{{ object.sst.first_name }} {{ object.sst.last_name }}</p>
             </article>
         </div>
-        <a href="{% url 'school:student_profile' object.student.pk %}">
-            <-Back </a>
     </div>
 </div>
 {% else %}

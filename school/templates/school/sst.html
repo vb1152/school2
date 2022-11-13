@@ -133,7 +133,7 @@
                         <tbody>
                             {% for stream in streams %}
                                 <tr>
-                                    <td><a href="{% url 'school:student_data_profile' stud_id=stream.student.id %}">
+                                    <td><a href="{% url 'school:student_profile' stream.student.id %}">
                                     {{ stream.student.first_name }} {{ stream.student.last_name }}</a></td>
                                     <td>{{ stream.name }}</td>
                                     <td>{{ stream.level }}</td>
@@ -146,7 +146,7 @@
                                         {% else %} {% endif %}
                                         {% if stream.sream_observation.all %}
                                             {% for observation in stream.sream_observation.all %}
-                                                <a href="">{{ observation.note|truncatechars:7 }}</a><br>
+                                                <a href="{% url 'school:read_full_observ_text_sst' observation.id %}">{{ observation.note|truncatechars:7 }}</a><br>
                                             {% endfor %}
                                         {% else %} {% endif %}
                                     </td>

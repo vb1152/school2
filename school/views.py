@@ -120,7 +120,6 @@ def student_data_profile(request, **kwargs):
     if request.method == 'GET':
         student = get_object_or_404(Student, id=kwargs['stud_id'])
         age_years, age_months = calculate_age(str(student.date_of_birth))
-        stream = Stream.objects.get(id=1)
         supports = Support.objects.filter(
             student=student).select_related('sst')
         context = {
@@ -190,6 +189,7 @@ def make_review_post(request):
 
             if review_form.cleaned_data['progress'] == 'Y':
                 stream_first.status = Stream.CLOSED
+                stream_first.progress = Stream.YES
 
                 new_start = stream_first.date_review + timedelta(days=1)
                 new_review = new_start + timedelta(days=21)
@@ -640,7 +640,8 @@ class ReadingScreenView(TeacherCheckMixin, CreateView):
 
 
 class ShowObservation(LoginRequiredMixin, DetailView):
-    '''View to show observations from student profile'''
+    '''View to show observations from student profile 
+    for all users with login'''
     model = Observation
     template_name = 'school/teacher/show_observation.html'
     login_url = 'login'

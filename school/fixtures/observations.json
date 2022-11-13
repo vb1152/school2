@@ -1,0 +1,44 @@
+[
+    {
+        "model": "school.observation",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-11-13T21:54:52.309Z",
+            "updated_at": "2022-11-13T21:54:52.309Z",
+            "date": "2022-11-15",
+            "teacher": 2,
+            "sst": 3,
+            "student": 5,
+            "note": "one",
+            "stream": 5
+        }
+    },
+    {
+        "model": "school.observation",
+        "pk": 2,
+        "fields": {
+            "created_at": "2022-11-13T21:55:03.500Z",
+            "updated_at": "2022-11-13T21:55:03.500Z",
+            "date": "2022-11-18",
+            "teacher": 2,
+            "sst": 3,
+            "student": 5,
+            "note": "two note",
+            "stream": 5
+        }
+    },
+    {
+        "model": "school.observation",
+        "pk": 3,
+        "fields": {
+            "created_at": "2022-11-13T21:55:13.453Z",
+            "updated_at": "2022-11-13T21:55:13.454Z",
+            "date": "2022-11-20",
+            "teacher": 2,
+            "sst": 3,
+            "student": 5,
+            "note": "three note",
+            "stream": 5
+        }
+    }
+]

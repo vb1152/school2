@@ -10,14 +10,11 @@
     op, cl and pr are the stream status from a db
     reference: STATUS_CHOICES in model Stream
     */
-    td[data-color="op"] {
+    td[data-color="n"] {
         background-color: red;
     }
-    td[data-color="cl"] {
+    td[data-color="y"] {
         background-color: green;
-    }
-    td[data-color="pr"] {
-        background-color: red;
     }
 </style>
 
@@ -257,7 +254,7 @@
                                     {% else %} {% endif %}
                                     {% if stream.sream_observation.all %}
                                         {% for observation in stream.sream_observation.all %}
-                                            <a href="">{{ observation.note|truncatechars:7 }}</a><br>
+                                            <a href="{% url 'school:show_observation' student.id observation.id %}">{{ observation.note|truncatechars:7 }}</a><br>
                                         {% endfor %}
                                     {% else %} {% endif %}
                                 </td>
@@ -266,7 +263,7 @@
                                 </td>
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
-                                <td data-color="{{ stream.status|lower }}">{{stream.status}}</td>
+                                <td data-color="{{ stream.progress|lower }}"></td>
                                 <td>
                                     {% if stream.level == "1" %}
                                         {% if stream.student_stream.get %}

@@ -356,6 +356,15 @@ class Stream(BaseModel):
         'self', on_delete=models.CASCADE, blank=True, null=True, 
         verbose_name='Previous Stream', related_name='prev_stream')
 
+    YES = 'Y'
+    NO = 'N'
+    PROGRESS_CHOICES = [
+        (YES, 'Yes'),
+        (NO, 'No')
+    ]
+    progress = models.CharField(
+        max_length=1, choices=PROGRESS_CHOICES, default=NO, verbose_name='Progress')
+
     class Meta:
         ordering = ["id"]
 

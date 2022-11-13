@@ -22,8 +22,9 @@ urlpatterns = [
          views.SpeechTherapyView.as_view(), name='show_speech_sst'),
     path('sst/student_profile/<int:pk>/support/',
          views.ReadSupportSstView.as_view(), name='read_full_support_text_sst'),
-    path('sst/student_profile/<int:pk>/observation/',
+    path('sst/observation/<int:pk>/',
          views.ShowObservationTextSstView.as_view(), name='read_full_observ_text_sst'),
+
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
     path('upload_students', views.upload_students, name='upload_students'),
