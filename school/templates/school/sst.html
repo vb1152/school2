@@ -17,56 +17,191 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Conserns from teachers</h5>
-                    <table class="table" id="consern_table">
+                    <h5 class="card-title">Streams</h5>
+                    <table class="table table-sm" id="stream-table">
                         <thead>
                             <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Concern</th>
-                                <th scope="col">Student</th>
-                                <th scope="col">Teacher</th>
+                                <th scope="col">Student Name</th>
+                                <th scope="col">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                            id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Stream
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <a class="dropdown-item" data-functional="add-stream">Academic</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-functional="add-stream">Guidance and Discipline</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-functional="add-stream">Social Inclusion</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" data-functional="add-stream">Care and Therapeutic</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                            id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Level
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="">
+                                                    1
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="">
+                                                    2
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="">
+                                                    3
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="">
+                                                    4
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="">
+                                                    5
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item"
+                                                    href="">
+                                                    6
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                            id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Forms and Notes                                    
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
+                                            <li>
+                                                <a class="dropdown-item" href="">Intake Form</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="">Recommendations for Outside Support</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="">Gender Support Plan</a> 
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="">Incident Report</a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <a class="dropdown-item" href="">Observation</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="">Review Meeting Notes</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="">Support Circle Notes</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th scope="col">Supports/Interventions</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">Review Date</th>
+                                <th scope="col">Red/Green</th>
                                 <th scope="col">Commands</th>
 
                             </tr>
                         </thead>
                         <tbody>
-                            {% for concern in concerns %}
-                            <tr>
-                                <td>{{ concern.date }}</td>
-                                <td>{{ concern.consern_type }}</td>
-                                <td>{{ concern.student.first_name }} {{ concern.student.last_name }}</td>
-                                <td>{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}</td>
-                                <td>
-                                    <form action="{% url 'school:sst_view_intake' %}" method="post">
-                                        <input hidden class='form-control' name="concern_id" value="{{concern.id}}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-outline-success btn-sm">View</button>
-                                    </form>
-                                    <input type="button" data-bs-toggle="modal" data-bs-target="#observModal"
-                                        class="btn btn-outline-warning btn-sm" id="observ-btn" value="Observ."
-                                        data-observation="observ" data-teacher-id="{{ concern.teacher.id }}"
-                                        data-names="{{ concern.teacher.first_name }} {{ concern.teacher.last_name }}"
-                                        data-student-id="{{ concern.student.id }}" data-consern-id="{{ concern.id }}">
-                                    </input>
-                                    <a href="{% url 'school:support' concern.id %}" type="button"
-                                        class="btn btn-outline-info btn-sm">Support</a>
-                                </td>
-                            </tr>
+                            {% for stream in streams %}
+                                <tr>
+                                    <td><a href="{% url 'school:student_data_profile' stud_id=stream.student.id %}">
+                                    {{ stream.student.first_name }} {{ stream.student.last_name }}</a></td>
+                                    <td>{{ stream.name }}</td>
+                                    <td>{{ stream.level }}</td>
+                                    <td>
+                                        {% if stream.student_stream.get %}
+                                            <a href="{% url 'school:sst_read_review' stream.student_stream.get %}">Review note</a>
+                                        {% else %} {% endif %}
+                                        {% if stream.intake %}
+                                            <a href="{% url 'school:sst_read_intake' stream.student_stream.get %}"><br>Intake form</a>
+                                        {% else %} {% endif %}
+                                        {% if stream.sream_observation.all %}
+                                            {% for observation in stream.sream_observation.all %}
+                                                <a href="">{{ observation.note|truncatechars:7 }}</a><br>
+                                            {% endfor %}
+                                        {% else %} {% endif %}
+                                    </td>
+                                    <td></td>
+                                    <td>{{ stream.date_start }}</td>
+                                    <td>{{ stream.date_review }}</td>
+                                    <td data-color="{{ stream.status|lower }}"></td>
+                                    <td>
+                                        {% if stream.level == '2' %}
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                                    id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Forms and Notes                                    
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
+                                                    <li>
+                                                        <a class="dropdown-item" href="">Intake Form</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="">Recommendations for Outside Support</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="">Gender Support Plan</a> 
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="">Incident Report</a>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li>
+                                                        <input type="button" data-bs-toggle="modal" data-bs-target="#observModal"
+                                                            class="dropdown-item" id="observ-btn" value="Add observation"
+                                                            data-observation="observ" data-teacher-id="{{ stream.teacher.id }}"
+                                                            data-names="{{ stream.teacher.first_name }} {{ stream.teacher.last_name }}"
+                                                            data-student-id="{{ stream.student.id }}" data-stream-id="{{ stream.id }}">
+                                                        </input>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="">Review Meeting Notes</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="">Support Circle Notes</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        {% else %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
-        <!-- <div class="col-sm-6">
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                  </div>
-                </div>
-            </div> -->
     </div>
     <br>
     <div class="mx-auto">
@@ -112,8 +247,7 @@
                 <form id="form-observ" action="" method="post">
                     <input hidden id="teacher-id-in-modal" name="teacher-id-in-modal">
                     <input hidden id="student-id-in-modal" name="student-id-in-modal">
-                    <input hidden id="consern-id-in-modal" name="consern-id-in-modal">
-
+                    <input hidden id="stream-id-in-modal" name="stream-id-in-modal">
                     <div class="modal-body">
                         <h4 class="d-flex justify-content-center" id="teacher-name-in-modal"></h4>
                         <div class="mb-3">

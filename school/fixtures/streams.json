@@ -12,7 +12,6 @@
             "intake": null,
             "level": "1",
             "status": "PR",
-            "observation": null,
             "support": null,
             "name": "Academic",
             "stream_prev": null
@@ -31,10 +30,9 @@
             "intake": null,
             "level": "2",
             "status": "PR",
-            "observation": null,
             "support": null,
             "name": "Academic",
-            "stream_prev": null
+            "stream_prev": 1
         }
     },
     {
@@ -50,10 +48,9 @@
             "intake": null,
             "level": "3",
             "status": "OP",
-            "observation": null,
             "support": null,
             "name": "Academic",
-            "stream_prev": null
+            "stream_prev": 2
         }
     },
     {
@@ -66,14 +63,30 @@
             "teacher": 2,
             "date_start": "2022-10-25",
             "date_review": "2022-11-15",
-            "intake": null,
+            "intake": 1,
             "level": "1",
             "status": "OP",
-            "observation": null,
             "support": null,
             "name": "Guidance and Discipline",
             "stream_prev": null
         }
+    },
+    {
+        "model": "school.stream",
+        "pk": 5,
+        "fields": {
+            "created_at": "2022-03-01T15:34:35.791Z",
+            "updated_at": "2022-03-01T15:34:35.792Z",
+            "student": 5,
+            "teacher": 2,
+            "date_start": "2022-11-16",
+            "date_review": "2022-12-07",
+            "intake": null,
+            "level": "2",
+            "status": "OP",
+            "support": null,
+            "name": "Guidance and Discipline",
+            "stream_prev": 4
+        }
     }
-
 ]

@@ -1,0 +1,44 @@
+[
+    {
+        "model": "school.ocupationaltherapy",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-08-22T20:39:12.673Z",
+            "updated_at": "2022-08-22T20:39:12.673Z",
+            "screen_date": "2022-08-16",
+            "screen_time": "10:00:00",
+            "full_screen_recom": "Recomendation about the full screening",
+            "notes": "Screen notes from a teacher",
+            "student": 5,
+            "teacher": 2
+        }
+    },
+    {
+        "model": "school.speechtherapy",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-08-22T20:39:22.075Z",
+            "updated_at": "2022-08-22T20:39:22.075Z",
+            "screen_date": "2022-08-02",
+            "add_notes": "Notes about speech therapy",
+            "scr_res": "Screening Results / Recomm",
+            "student": 5,
+            "teacher": 2
+        }
+    },
+    {
+        "model": "school.readingscreening",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-08-22T20:39:31.737Z",
+            "updated_at": "2022-08-22T20:39:31.737Z",
+            "screen_type": "IND",
+            "date_screen": "2022-08-15",
+            "errors_screen": "Describe errors happened during the screen",
+            "question_screen": "Describe errors happened during the screen",
+            "notes": "Describe errors happened during the screen",
+            "student": 5,
+            "teacher": 2
+        }
+    }
+]

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('teacher-id-in-modal').setAttribute('value', btn.target.getAttribute('data-teacher-id'))
             document.getElementById('teacher-name-in-modal').innerHTML = btn.target.getAttribute('data-names')
             document.getElementById('student-id-in-modal').setAttribute('value', btn.target.getAttribute('data-student-id'))
-            document.getElementById('consern-id-in-modal').setAttribute('value', btn.target.getAttribute('data-consern-id'))
+            document.getElementById('stream-id-in-modal').setAttribute('value', btn.target.getAttribute('data-stream-id'))
 
         })
     })
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let obs_text = document.getElementById('obs-text')
         let teach_id = document.getElementById('teacher-id-in-modal').value
         let stud_id = document.getElementById('student-id-in-modal').value
-        let cons_id = document.getElementById('consern-id-in-modal').value
+        let stream_id = document.getElementById('stream-id-in-modal').value
 
         fetch(url, {
             method: 'POST',
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 'obs_text': obs_text.value,
                 'teach_id': teach_id,
                 'stud_id': stud_id,
-                'cons_id': cons_id
+                'stream_id': stream_id
             })
         })
             .then(response => response.json())

@@ -11,7 +11,8 @@ urlpatterns = [
     path('teacher', views.teacher_view, name='teacher_view'),
     path('sst', views.sst_view, name='sst_view'),
     path('sst/support/<int:conc_id>', views.support, name='support'),
-    path('sst/intake/', views.sst_view_intake, name='sst_view_intake'),
+    path('sst/review/<int:pk>/', views.ShowReviewSST.as_view(), name='sst_read_review'),
+    path('sst/intake/<int:pk>/', views.ShowIntakeSST.as_view(), name='sst_read_intake'),
 
     path('sst/student_profile/<int:pk>/',
          views.StudentProfileSstView.as_view(), name='student_profile'),
@@ -19,8 +20,6 @@ urlpatterns = [
          views.OccupationalTherapyView.as_view(), name='show_therapy_sst'),
     path('sst/student_profile/<int:pk>/speech_therapy',
          views.SpeechTherapyView.as_view(), name='show_speech_sst'),
-    path('sst/student_profile/<int:pk>/concern',
-         views.ShowConcernSST.as_view(), name='show_concern_sst'),
     path('sst/student_profile/<int:pk>/support/',
          views.ReadSupportSstView.as_view(), name='read_full_support_text_sst'),
     path('sst/student_profile/<int:pk>/observation/',
@@ -49,15 +48,11 @@ urlpatterns = [
     path('student_data_profile/<int:stud_id>/show_read_screen/<int:pk>/',
          views.ShowReadScreen.as_view(), name='show_read_screen'),
 
-
-    # path('make_consern/<int:stud_id>/<int:stream_id>', views.make_consern, name='make_consern'),
     path('make_review/<int:stud_id>/<int:stream_id>', views.make_review, name='make_review'),
     path('make_review_post/', views.make_review_post, name='make_review_post'),
-    # path('make_consern_post', views.make_consern_post, name='make_consern_post'),
-    path('update_concern/', views.update_concern, name='update_concern'),
     path('read_review/<int:pk>/', views.ShowReviewTeacher.as_view(), name='read_review'),
     path('staff', views.staff_view, name='staff_view'),
-
+    path('read_intake/<int:pk>', views.ShowIntakeTeacher.as_view(), name='read_intake'),
 
     # API
     path('save_note_from_PTC', views.save_note_from_PTC,

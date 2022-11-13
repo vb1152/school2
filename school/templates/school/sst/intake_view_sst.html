@@ -1,0 +1,80 @@
+{% extends 'school/layout.html' %}
+{% load static %}
+
+{% block title %}Intake {{ object.student.first_name }} {{ object.student.last_name }}{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container py-5">
+    <h3 class="d-flex justify-content-center">Intake form data</h3>
+    <div class="mx-auto">
+        <div class="mb-3">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">DoB</th>
+                        <th scope="col">Birth order in class</th>
+                        <th scope="col">Birth order in family</th>
+                        <th scope="col">Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ object.student.first_name }} {% if object.student.middle_name != 'None' %}
+                            {{ object.student.middle_name }} {% else %} {% endif %} {{ object.student.last_name }}</td>
+                        <td>{{ object.student.date_of_birth }}</td>
+                        <td>{{ object.student.birth_order_in_class }}</td>
+                        <td>{{ object.student.birth_order_in_family }}</td>
+                        <td>{{ object.student.cur_grade }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <article class="blog-post">
+                <h2 class="blog-post-title">Intake data</h2>
+                <h5>How long has the student been with you?</h5>
+                <p>{{ object.timeline }}</p>
+                <h5>In one sentence, why did you bring this child to the
+                    attention of the SST?</h5>
+                <p>{{ object.sst_reasoning }}</p>
+                <h5>What are the primary behavior patterns that
+                    you are concerned about?</h5>
+                <p>{{ object.behavior_patterns }}</p>
+                <h5>How would you qualify this behavior?</h5>
+                <p>{{ object.get_behavior_quality_display }}</p>
+                <h5>Why is this concerning to you?</h5>
+                <p>{{ object.why_consern }}</p>
+                <h5>What have you done to help alleviate or work through
+                    these concerning patterns</h5>
+                <p>{{ object.what_done }}</p>
+                <h5>What have you done that has worked, even to a small extent?</h5>
+                <p>{{ object.smal_done }}</p>
+                <h5>What have you done that has not worked or shown no positive change?</h5>
+                <p>{{ object.didnt_worked }}</p>
+                <h5>What have you done that has made things worse?</h5>
+                <p>{{ object.worse }}</p>
+                <h5>What response level do you believe the student is currently
+                    in? Have there been any threshold events that require an
+                    immediate response (Attach incident report)?</h5>
+                <p>{{ object.response_level }}</p>
+                <h5>What other pieces of information would it be helpful
+                    for the SST to have when deciding on how to move
+                    forward with your student?</h5>
+                <p>{{ object.other_info }}</p>
+                <h5>What would you like to see out of this process
+                    for your student?</h5>
+                <p>{{ object.estim_result }}</p>
+                <hr>
+            </article>
+        </div>
+    </div>
+</div>
+{% else %}
+{% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+{{ block.super }}
+{% endblock %}

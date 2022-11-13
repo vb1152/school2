@@ -180,12 +180,6 @@ class Intake(models.Model):
                                 on_delete=models.PROTECT,
                                 null=True,
                                 limit_choices_to={'is_teacher': True})
-    
-    
-    # concern = models.OneToOneField(Consern, on_delete=models.CASCADE,
-    #                                related_name='consern_intake',
-    #                                default=None, null=True, blank=True)
-
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(db_index=True, default=timezone.now)
@@ -193,31 +187,6 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Observation(BaseModel):
-    date = models.DateField(verbose_name='Date')
-    teacher = models.ForeignKey(MyUser,
-                                on_delete=models.PROTECT,
-                                null=True,
-                                limit_choices_to={'is_teacher': True},
-                                related_name='observations_teacher')
-    sst = models.ForeignKey(MyUser,
-                            on_delete=models.PROTECT,
-                            null=True,
-                            limit_choices_to={'is_sst': True},
-                            related_name='sst_observation')
-    student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name='stud_observation')
-    note = models.CharField(verbose_name='Observation note', max_length=2000)
-    # concern = models.ForeignKey(
-    #     Consern, on_delete=models.CASCADE, related_name='observation_consern')
-
-    class Meta:
-        ordering = ["-date"]
-
-    def __str__(self) -> str:
-        return 'Observation_note'
 
 
 class Support(models.Model):
@@ -379,20 +348,42 @@ class Stream(BaseModel):
     ]
     status = models.CharField(
         max_length=2, choices=STATUS_CHOICES, default=OPEN, verbose_name='Status')
-    observation = models.ForeignKey(Observation, on_delete=models.CASCADE,
-                                    null=True, related_name='stream_observations', verbose_name='Observations')
     support = models.ForeignKey(Support, on_delete=models.CASCADE,
                                 null=True, related_name='stream_supports', verbose_name='Support')
     name = models.CharField(
         max_length=100, verbose_name='Stream name', default=None)
     stream_prev = models.ForeignKey(
-        'self', on_delete=models.CASCADE, blank=True, null=True, verbose_name='Previous Stream')
+        'self', on_delete=models.CASCADE, blank=True, null=True, 
+        verbose_name='Previous Stream', related_name='prev_stream')
 
     class Meta:
         ordering = ["id"]
 
     def __str__(self) -> str:
         return self.name
+
+class Observation(BaseModel):
+    date = models.DateField(verbose_name='Date')
+    teacher = models.ForeignKey(MyUser,
+                                on_delete=models.PROTECT,
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='observations_teacher')
+    sst = models.ForeignKey(MyUser,
+                            on_delete=models.PROTECT,
+                            null=True,
+                            limit_choices_to={'is_sst': True},
+                            related_name='sst_observation')
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name='stud_observation')
+    note = models.CharField(verbose_name='Observation note', max_length=2000)
+    stream = models.ForeignKey(Stream, on_delete=models.PROTECT, related_name='sream_observation', default=None)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self) -> str:
+        return self.note[:50]
 
 class ImplicitStrategy(BaseModel):
     '''Save names of the strategies for using in Review meetin notes'''

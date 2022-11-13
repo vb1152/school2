@@ -220,7 +220,8 @@ def make_review_post(request):
                     teacher = request.user,
                     date_start = stream_first.date_review + timedelta(days=1),
                     date_review = stream_first.date_review + timedelta(days=22),
-                    level = '2'
+                    level = '2',
+                    stream_prev = stream_first
                 )
                 stream_intake.save()
 
@@ -267,6 +268,20 @@ class ShowReviewTeacher(TeacherCheckMixin, DetailView):
     template_name = 'school/teacher/review_view_teacher.html'
     login_url = 'login'
 
+class ShowIntakeTeacher(TeacherCheckMixin, DetailView):
+    model = Intake
+    template_name = 'school/teacher/intake_view_teacher.html'
+    login_url = 'login'
+
+class ShowReviewSST(SstCheckMixin, DetailView):
+    model = ReviewMeetingNote
+    template_name = 'school/sst/review_view_sst.html'
+    login_url = 'login'
+
+class ShowIntakeSST(SstCheckMixin, DetailView):
+    model = Intake
+    template_name = 'school/sst/intake_view_sst.html'
+    login_url = 'login'
 
 @user_passes_test(teacher_check)
 def make_consern_post(request):
@@ -353,8 +368,10 @@ def sst_view(request):
     '''Function to show main page for SST'''
     if request.method == 'GET':
         students = Student.objects.all().select_related('teacher')
+        streams = Stream.objects.all()
         context = {
-            'students': students
+            'students': students,
+            'streams': streams
         }
 
         return render(request, 'school/sst.html', context)
@@ -371,6 +388,7 @@ def save_observation(request):
             note=observ_data['obs_text'],
             teacher=MyUser.objects.get(id=observ_data['teach_id']),
             student=Student.objects.get(id=observ_data['stud_id']),
+            stream = Stream.objects.get(id=observ_data['stream_id']),
             sst=request.user
         )
         observation.save()
@@ -423,30 +441,6 @@ def staff_view(request):
         return render(request, 'school/staff.html', context)
 
 
-@user_passes_test(sst_check)
-def sst_view_intake(request):
-    if request.method == 'POST':
-        pass
-        # # concern = Consern.objects.get(id=request.POST['concern_id'])
-        # concern_form = ConsernForm(instance=concern)
-        # for fieldname in concern_form.fields:
-        #     concern_form.fields[fieldname].disabled = True
-
-        # intake_data = Intake.objects.get(concern=concern)
-        # intake_form = IntakeForm(instance=intake_data)
-        # for fieldname in intake_form.fields:
-        #     intake_form.fields[fieldname].disabled = True
-
-        # student = Student.objects.get(stud_consern=concern)
-
-        # # print(intake_data.sst_reasoning)
-        # # print(student.first_name)
-        # context = {
-        #     'cons_form': concern_form,
-        #     'intake_form': intake_form,
-        #     'student': student
-        # }
-        # return render(request, 'school/sst_intake.html', context)
 
 
 @user_passes_test(teacher_check)
@@ -705,14 +699,6 @@ class CreateResponse(TeacherCheckMixin, CreateView):
             support=self.kwargs['supp_pk'])
         # context['responce'] = ResponceToSupport.objects.all()
         return context
-
-
-class ShowConcernSST(SstCheckMixin, DetailView):
-    pass
-    # model = Consern
-    # template_name = 'school/sst/consern_view_sst.html'
-    # login_url = 'login'
-
 
 class StudentProfileSstView(SstCheckMixin, DetailView):
     '''Function to show Student profile for SST'''

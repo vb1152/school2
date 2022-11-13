@@ -1,0 +1,20 @@
+[
+    {
+        "model": "school.reviewmeetingnote",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "text_strategy": "",
+            "notes": "Note",
+            "progress": "N",
+            "user": 2,
+            "stream": 4,
+            "student": 5,
+            "strategy": [
+                2,
+                3
+            ]
+        }
+    }
+]

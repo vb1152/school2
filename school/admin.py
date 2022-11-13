@@ -46,7 +46,7 @@ class UsersDataAdmin(admin.ModelAdmin):
 class StreamAdmin(admin.ModelAdmin):
     list_display = ('student', 'teacher', 'date_start', 
                     'date_review', 'intake',
-                    'level', 'observation', 'support', 'name' )
+                    'level', 'support', 'name' )
 class ImplicitStrategyAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     pass

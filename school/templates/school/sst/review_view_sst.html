@@ -1,7 +1,7 @@
 {% extends 'school/layout.html' %}
 {% load static %}
 
-{% block title %}Review {{ object.student.first_name }} {{ object.student.last_name }}{% endblock %}
+{% block title %}Review {{ student.first_name }} {{ student.last_name }}{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -21,7 +21,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ object.student.first_name }} {% if object.student.middle_name != 'None' %}
+                        <td>{{ object.student.first_name }} {% if object.student.middle_name != None %}
                             {{ object.student.middle_name }} {% else %} {% endif %} {{ object.student.last_name }}</td>
                         <td>{{ object.student.date_of_birth }}</td>
                         <td>{{ object.student.birth_order_in_class }}</td>
@@ -56,8 +56,6 @@
                     <p class="text-muted">{{ object.created_at }}</p>
                 </article>
             </div>
-            <a href="{% url 'school:student_data_profile' object.student.pk %}">
-                <-Back</a>
         </div>
     </div>
 </div>
