@@ -268,7 +268,7 @@
                                     {% if stream.level == "1" %}
                                         {% if stream.student_stream.get %}
                                         {% else %} 
-                                            <a href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">Make review</a>
+                                            <a href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">Make review</a> 
                                         {% endif %}
                                     {% else %}
                                     {% endif %}

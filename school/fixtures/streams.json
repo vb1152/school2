@@ -11,10 +11,9 @@
             "date_review": "2022-09-30",
             "intake": null,
             "level": "1",
-            "status": "PR",
             "support": null,
             "name": "Academic",
-            "stream_prev": null
+            "stream_next": 2
         }
     },
     {
@@ -29,10 +28,9 @@
             "date_review": "2022-10-22",
             "intake": null,
             "level": "2",
-            "status": "PR",
             "support": null,
             "name": "Academic",
-            "stream_prev": 1
+            "stream_next": 3
         }
     },
     {
@@ -47,46 +45,60 @@
             "date_review": "2022-11-14",
             "intake": null,
             "level": "3",
-            "status": "OP",
             "support": null,
             "name": "Academic",
-            "stream_prev": 2
+            "stream_next": null
         }
     },
     {
         "model": "school.stream",
         "pk": 4,
         "fields": {
-            "created_at": "2022-03-01T15:34:35.791Z",
-            "updated_at": "2022-03-01T15:34:35.792Z",
+            "created_at": "2022-10-15T15:34:35.791Z",
+            "updated_at": "2022-10-15T15:34:35.792Z",
             "student": 5,
             "teacher": 2,
-            "date_start": "2022-10-25",
-            "date_review": "2022-11-15",
+            "date_start": "2022-10-15",
+            "date_review": "2022-11-06",
             "intake": 1,
             "level": "1",
-            "status": "OP",
             "support": null,
             "name": "Guidance and Discipline",
-            "stream_prev": null
+            "stream_next": null
         }
     },
     {
         "model": "school.stream",
         "pk": 5,
         "fields": {
-            "created_at": "2022-03-01T15:34:35.791Z",
-            "updated_at": "2022-03-01T15:34:35.792Z",
+            "created_at": "2022-10-20T15:34:35.791Z",
+            "updated_at": "2022-10-20T15:34:35.792Z",
             "student": 5,
             "teacher": 2,
-            "date_start": "2022-11-16",
-            "date_review": "2022-12-07",
+            "date_start": "2022-10-20",
+            "date_review": "2022-11-11",
+            "intake": null,
+            "level": "1",
+            "support": null,
+            "name": "Academic",
+            "stream_next": null
+        }
+    },
+    {
+        "model": "school.stream",
+        "pk": 6,
+        "fields": {
+            "created_at": "2022-11-05T15:34:35.791Z",
+            "updated_at": "2022-11-05T15:34:35.792Z",
+            "student": 5,
+            "teacher": 2,
+            "date_start": "2022-11-07",
+            "date_review": "2022-11-28",
             "intake": null,
             "level": "2",
-            "status": "OP",
             "support": null,
             "name": "Guidance and Discipline",
-            "stream_prev": 4
+            "stream_next": 4
         }
     }
 ]

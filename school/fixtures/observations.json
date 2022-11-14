@@ -10,7 +10,7 @@
             "sst": 3,
             "student": 5,
             "note": "one",
-            "stream": 5
+            "stream": 6
         }
     },
     {
@@ -24,7 +24,7 @@
             "sst": 3,
             "student": 5,
             "note": "two note",
-            "stream": 5
+            "stream": 6
         }
     },
     {
@@ -38,7 +38,7 @@
             "sst": 3,
             "student": 5,
             "note": "three note",
-            "stream": 5
+            "stream": 6
         }
     }
 ]

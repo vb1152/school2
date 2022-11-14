@@ -122,12 +122,19 @@ def student_data_profile(request, **kwargs):
         age_years, age_months = calculate_age(str(student.date_of_birth))
         supports = Support.objects.filter(
             student=student).select_related('sst')
+
+        stream = Stream.objects.get(id=4)
+        # stream.next_streams()
+        print(stream.next_streams())
+
+
         context = {
             'student': student,
             'age_years': age_years,
             'age_months': age_months,
             'supports': supports,
         }
+
         return render(request, 'school/teacher/student_profile.html', context)
 
                                 #    <!-- {{ stream.reviewmeetingnote.all }} -->

@@ -337,24 +337,13 @@ class Stream(BaseModel):
     ]
     level = models.CharField(
         max_length=1, choices=LEVEL_CHOICES, default=ONE, verbose_name='Stream level')
-
-    CLOSED = 'CL'
-    PROCEEDING = 'PR'
-    OPEN = 'OP'
-    STATUS_CHOICES = [
-        (CLOSED, 'Closed'),
-        (PROCEEDING, 'Proceeding'),
-        (OPEN, 'Open'),
-    ]
-    status = models.CharField(
-        max_length=2, choices=STATUS_CHOICES, default=OPEN, verbose_name='Status')
     support = models.ForeignKey(Support, on_delete=models.CASCADE,
                                 null=True, related_name='stream_supports', verbose_name='Support')
     name = models.CharField(
         max_length=100, verbose_name='Stream name', default=None)
-    stream_prev = models.ForeignKey(
+    stream_next = models.ForeignKey(
         'self', on_delete=models.CASCADE, blank=True, null=True, 
-        verbose_name='Previous Stream', related_name='prev_stream')
+        verbose_name='Next stream', related_name='next_stream')
 
     YES = 'Y'
     NO = 'N'
@@ -370,6 +359,34 @@ class Stream(BaseModel):
 
     def __str__(self) -> str:
         return self.name
+
+    def next_streams(self):
+        if self.stream_next is None:
+            return Stream.objects.none()
+        return Stream.objects.filter(pk=self.stream_next.pk) | self.stream_next.next_streams()
+
+    # @property
+    def all_streams_in_order(self, student):
+        streams = Stream.objects.filter(student=student)
+
+        # if self.stream_next is None:
+        return streams
+
+    def get_all_children(self, include_self=True):
+        r = []
+        if include_self:
+            r.append(self)
+            print('if', len(r))
+
+        for c in Stream.objects.filter(stream_next=self):
+            # print('c', c, type(c))
+            _r = c.get_all_children(include_self=True)
+            if 0 < len(_r):
+                r.extend(_r)
+            print('for', len(r))
+        return r
+
+
 
 class Observation(BaseModel):
     date = models.DateField(verbose_name='Date')
