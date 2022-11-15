@@ -1,0 +1,52 @@
+{% extends 'school/layout.html' %}
+{% load static %}
+
+{% block title %}Review {{ stream.student.first_name }} {{ student.last_name }}{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container py-5">
+    <h3 class="d-flex justify-content-center">Review Note</h3>
+    <div class="mx-auto">
+        <div class="mb-3">
+            <form action="/make_review_post/" method="post">
+                <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
+                <input id='stream_id' class="form-control" hidden value="{{ stream_id }}" name="stream_id">
+                {% csrf_token %}
+                {% for field in form %}
+                    {{ field.errors }}
+                    {% if field.help_text %}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="input-group">
+                            {{ field }}
+                        </div>
+                        <p class="help mb-3">{{ field.help_text|safe }}</p>
+                    {% else %}
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="input-group mb-3">
+                            {{ field }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="progress" hidden id="progress">
+                    <div id="progress-bar"class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <br>
+                <div class="col-auto">
+                    <input type="submit" value="Save Review from SST" class="btn btn-primary mb-3" id="submit-btn-concern">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+{% endif %}
+ 
+{% endblock content %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script src="{% static 'school/review_sst.js' %}"></script>
+
+{% endblock %}

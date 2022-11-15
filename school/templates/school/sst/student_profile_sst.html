@@ -4,6 +4,18 @@
 {% block title %}{{ student.first_name }} {{ student.last_name }}{% endblock %}
 
 {% block content %}
+<style>
+    /* coloring cell in table with stream 
+    op, cl and pr are the stream status from a db
+    reference: STATUS_CHOICES in model Stream
+    */
+    td[data-color="n"] {
+        background-color: red;
+    }
+    td[data-color="y"] {
+        background-color: green;
+    }
+</style>
 <section style="background-color: #eee;">
     <!-- <div class="container py-5"> -->
     <div class="row">
@@ -31,7 +43,7 @@
                         <div class="col-auto">
                             <p hidden id="stud_id">{{ student.id }}</p>
                             <p class="text-muted mb-0 d-flex justify-content-left" id="">
-                                {{ student.first_name }} {% if student.middle_name != None %} {{ student.middle_name }}
+                                {{ student.first_name }} {% if student.middle_name != "None" %} {{ student.middle_name }}
                                 {% else %} {% endif %} {{ student.last_name }}
                             </p>
                             <p class="text-muted mb-0 d-flex justify-content-left">{{ student.date_of_birth }}</p>
@@ -51,148 +63,67 @@
 
                 </div>
             </div>
-
         </div>
-        <!-- Teacher Concerns Form -->
         <div class="col-lg-8">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h4 class="card-title"><strong>Teacher Concerns Form</strong></h5>
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Links</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for concern in object.stud_consern.all %}
-                                <tr>
-                                    <td>{{ concern.date }}</td>
-                                    <td>{{ concern.consern_type|truncatechars:25 }}</td>
-                                    <td>
-                                        <div class="col" style="border-radius:5px">
-                                            <p data-reffers="reffers" class="mb-0">{{ concern.get_refers_display }}</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm" role="group"
-                                            aria-label="Basic mixed styles example">
-                                            <a href="{% url 'school:show_concern_sst' concern.pk %}" type="button"
-                                                class="btn btn-outline-info btn-sm">View</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-4">
-            <!-- Notes from Parent-Teacher Conference and modal-->
-            <div class="card mb-4 mb-2">
-                <div class="card-body">
-                    <h4 class="card-title"><strong>Notes from Parent-Teacher Conference</strong></h5>
-                        <div id="notes-list">
-                            {% for note in student.student_notes.all %}
-                            <div class="row mb-0 mt-1">
-                                <p class="mb-0">{{ note.date }}</p>
-                                <p class="mb-0">{{ note.note|truncatechars:30 }}</p>
-                            </div>
-                            <hr class="mb-0 mt-1">
-                            {% endfor %}
+                    <!-- <div class="col-sm-3">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button"
+                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Screening Data
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item"
+                                        href="{% url 'school:ocupational_therapy' stud_id=student.id %}">
+                                        Occupational Therapy
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                        href="{% url 'school:speech_therapy' stud_id=student.id %}">
+                                        Speech Therapy
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item disabled"
+                                        href="{% url 'school:speech_therapy' stud_id=student.id %}">
+                                        Neuropsych Evaluation
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                        href="{% url 'school:new_read_screen' stud_id=student.id %}">
+                                        Reading Screening
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Add note from Parent-Teacher
-                                            Conference</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <form id="form-note">
-                                        <div class="modal-body">
-                                            <div class="mb-3">
-                                                <label class="form-label">Pick a date:</label>
-                                                <input type="date" name="date" class="form-control" required=""
-                                                    id="id_date">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="note-text" class="col-form-label">Note</label>
-                                                <textarea class="form-control" id="note-text" required=""></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button id="close-modal" type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary" id="save-note-btn">Save
-                                                note</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-
-
-        </div>
-        <div class="col-lg-8">
-            <div class="card mb-4 mb-2">
-                <div class="card-body">
-                    <h4 class="card-title">
-                        <div class="row">
-                            <div class="col">
-                                <strong>OT, ST, PM, Read Screen</strong>
-                            </div>
-                            <div class="col-sm-3">
-                            </div>
-                        </div>
-                    </h4>
+                    </div> -->
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th scope="col">Date</th>
                                 <th scope="col">Type</th>
-                                <th scope="col">Links</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for el in student.stud_st.all %}
-                            <tr>
-                                <td>{{el.screen_date}}</td>
-                                <td>Speech_therapy</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_speech_sst' el.pk %}" type="button"
-                                            class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% for speech in student.stud_st.all %}
+                                <tr>
+                                    <td>{{ speech.screen_date }}</td>
+                                    <td><a href="{% url 'school:show_speech_sst' student.id speech.pk %}">Speech_therapy</a></td>
+                                </tr>
                             {% endfor %}
-                            <hr>
                             {% for el in student.stud_ot.all %}
-                            <tr>
-                                <td>{{el.screen_date}}</td>
-                                <td>Ocupational_therapy</td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group"
-                                        aria-label="Basic mixed styles example">
-                                        <a href="{% url 'school:show_therapy_sst' el.pk %}" type="button"
-                                            class="btn btn-outline-info btn-sm">View</a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{el.screen_date}}</td>
+                                    <td><a href="{% url 'school:show_therapy_sst' student.id el.pk  %}">Ocupational_therapy</a></td>
+                                </tr>
                             {% endfor %}
+                            {% for read in student.student_reading.all %}
+                                <tr>
+                                    <td>{{ read.date_screen }}</td>
+                                    <td><a href="{% url 'school:show_readscreen_sst' student.pk read.pk  %}">Reading screening</a></td>
+                                </tr>
+                            {% endfor %}
+
                         </tbody>
                     </table>
                 </div>
@@ -200,75 +131,158 @@
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="card mb-4">
+        <div class="card mb-4 mb-2">
             <div class="card-body">
-                <h4 class="card-title"><strong>SST Team Member Observation and Notes</strong></h5>
-                    <table class="table table-sm">
-                        <thead>
+                <table class="table table-sm" id="stream-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                        Stream
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Academic</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Guidance and Discipline</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Social Inclusion</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" data-functional="add-stream">Care and Therapeutic</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                        Level
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                1
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                2
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                3
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                4
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                5
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="">
+                                                6
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
+                                        Forms and Notes                                    
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
+                                        <li>
+                                            <a class="dropdown-item" href="">Intake Form</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Recommendations for Outside Support</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Gender Support Plan</a> 
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Incident Report</a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Observation</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Review Meeting Notes</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="">Support Circle Notes</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </th>
+                            <th scope="col">Supports/Interventions</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">Review Date</th>
+                            <th scope="col">Red/Green</th>
+                            <th>Links (temporarily)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stream in student.stream_student.all %}
                             <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Note</th>
-                                <th scope="col">SST</th>
-                                <th scope="col">Links</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for observ in observations %}
-                            <tr>
-                                <td>{{ observ.date }}</td>
-                                <td>{{ observ.note|truncatechars:25 }}</td>
-                                <td>{{ observ.sst.first_name }} {{ observ.sst.last_name }}</td>
-                                <td><a href="{% url 'school:read_full_observ_text_sst' observ.pk %}" type="button"
-                                        class="btn btn-outline-info btn-sm">View</a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-            </div>
-        </div>
-    </div>
-
-    {% if student.stud_support.all %}
-    <div class="col-lg-12">
-        <div class="card mb-4">
-            <div class="card-body">
-                <h4 class="card-title"><strong>Supports from SST</strong></h5>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">Support Text</th>
-                                <th scope="col">Support Note</th>
-                                <th scope="col">SST</th>
-                                <th scope="col">Commands</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for support in supports %}
-                            <tr>
-                                <td>{{ support.date }}</td>
-                                <td>{{ support.suport_text|truncatechars:25 }}</td>
-                                <td>{{ support.note|truncatechars:25 }}</td>
-                                <td>{{ support.sst.first_name }} {{ support.sst.last_name }}</td>
-                                <td><a href="{% url 'school:read_full_support_text_sst' support.pk %}" type="button"
-                                        class="btn btn-outline-info btn-sm">View</a>
-                                    {% if support.responce_support.all %}
-                                    Responded
+                                <td>{{ stream.name }}</td>
+                                <td>{{ stream.level }}</td>
+                                <td>
+                                    {% if stream.student_stream.get %}
+                                        <a href="{% url 'school:sst_read_review' stream.student_stream.get %}">Review note</a>
+                                    {% else %} {% endif %}
+                                    {% if stream.intake %}
+                                        <a href="{% url 'school:sst_read_intake' stream.student_stream.get %}"><br>Intake form</a>
+                                    {% else %} {% endif %}
+                                    {% if stream.sream_observation.all %}
+                                        {% for observation in stream.sream_observation.all %}
+                                            <a href="{% url 'school:read_full_observ_text_sst' observation.id %}">{{ observation.date }}</a><br>
+                                        {% endfor %}
+                                    {% else %} {% endif %}
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>{{ stream.date_start }}</td>
+                                <td>{{ stream.date_review }}</td>
+                                <td data-color="{{ stream.progress|lower }}"></td>
+                                <td>
+                                    {% if stream.level >= "2" %}
+                                        {% if stream.student_stream.get %}
+                                        {% else %} 
+                                            <a href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">Make review</a> 
+                                        {% endif %}
                                     {% else %}
                                     {% endif %}
-
                                 </td>
                             </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    {% else %}
-    {% endif %}
-
-    <!-- </div> -->
 </section>
 {% endblock content %}
 

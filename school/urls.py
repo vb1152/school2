@@ -16,15 +16,18 @@ urlpatterns = [
 
     path('sst/student_profile/<int:pk>/',
          views.StudentProfileSstView.as_view(), name='student_profile'),
-    path('sst/student_profile/<int:pk>/occupational_therapy',
+    path('sst/student_profile/<int:id>/occupational_therapy/<int:pk>/',
          views.OccupationalTherapyView.as_view(), name='show_therapy_sst'),
-    path('sst/student_profile/<int:pk>/speech_therapy',
+    path('sst/student_profile/<int:id>/speech_therapy/<int:pk>/',
          views.SpeechTherapyView.as_view(), name='show_speech_sst'),
+    path('sst/student_profile/<int:id>/read_screening/<int:pk>/',
+         views.ReadScreenSSTView.as_view(), name='show_readscreen_sst'),
     path('sst/student_profile/<int:pk>/support/',
          views.ReadSupportSstView.as_view(), name='read_full_support_text_sst'),
     path('sst/observation/<int:pk>/',
          views.ShowObservationTextSstView.as_view(), name='read_full_observ_text_sst'),
-
+    path('sst/stream/<int:stream_id>/review_meeting_note/', 
+        views.MakeReviewNoteSST.as_view(), name='make_review_sst'),
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
     path('upload_students', views.upload_students, name='upload_students'),
@@ -53,7 +56,7 @@ urlpatterns = [
     path('make_review_post/', views.make_review_post, name='make_review_post'),
     path('read_review/<int:pk>/', views.ShowReviewTeacher.as_view(), name='read_review'),
     path('staff', views.staff_view, name='staff_view'),
-    path('read_intake/<int:pk>', views.ShowIntakeTeacher.as_view(), name='read_intake'),
+    path('student_data_profile/<int:id>/read_intake/<int:pk>', views.ShowIntakeTeacher.as_view(), name='read_intake'),
 
     # API
     path('save_note_from_PTC', views.save_note_from_PTC,
@@ -62,8 +65,6 @@ urlpatterns = [
     path('download_users', views.DownloadSampleUsers.as_view(),
          name='download_sample_users'),
     path('new_stream', views.CreateNewStream.as_view(), name='new_stream'),
-
-
     
     path('ocupational_therapy/<int:stud_id>',
          views.ocupational_therapy, name='ocupational_therapy'),

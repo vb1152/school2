@@ -34,7 +34,8 @@ from .models import (Intake, NotesPTS,
 from .forms import (MyUserForm, UploadExcelFileForm,
                     IntakeForm, SupportForm, OcupationalTherapyForm,
                     SpeechTherapyForm, ResponceToSupportForm,
-                    ReadingScreeningForm, ReviewMeetingNoteForm
+                    ReadingScreeningForm, ReviewMeetingNoteForm,
+                    ReviewMeetingNoteFormModel
                     )
 from .utils import (read_excel_with_students,
                     calculate_age, sst_check,
@@ -123,11 +124,6 @@ def student_data_profile(request, **kwargs):
         supports = Support.objects.filter(
             student=student).select_related('sst')
 
-        stream = Stream.objects.get(id=4)
-        # stream.next_streams()
-        print(stream.next_streams())
-
-
         context = {
             'student': student,
             'age_years': age_years,
@@ -137,11 +133,6 @@ def student_data_profile(request, **kwargs):
 
         return render(request, 'school/teacher/student_profile.html', context)
 
-                                #    <!-- {{ stream.reviewmeetingnote.all }} -->
-                                #     {% for rev in stream.student_stream.all %}
-                                #         {{ rev.progress }}
-                                #     {% endfor %}
-
 @user_passes_test(teacher_check)
 def save_note_from_PTC(request):
     if request.method == 'POST':
@@ -150,14 +141,13 @@ def save_note_from_PTC(request):
         note_inst = NotesPTS(
             student=student, date=note['note_date'], note=note['note_text'])
         note_inst.save()
-        # {'note_date': '2022-07-26', 'note_text': 'ads', 'stud_id': '5'}
 
         all_notes = NotesPTS.objects.filter(student=student).values()
         data = {'notes': list(all_notes), }
         return JsonResponse(data, safe=False)
 
 
-@user_passes_test(teacher_check)
+@user_passes_test(login_required)
 def make_review(request, *, stud_id, stream_id):
     '''View to get a form for a Review Meeting Notex
     for a teacher.'''
@@ -195,7 +185,6 @@ def make_review_post(request):
             new_review.strategy.set(review_form.cleaned_data['strategy'])
 
             if review_form.cleaned_data['progress'] == 'Y':
-                stream_first.status = Stream.CLOSED
                 stream_first.progress = Stream.YES
 
                 new_start = stream_first.date_review + timedelta(days=1)
@@ -207,7 +196,7 @@ def make_review_post(request):
                     teacher = request.user,
                     date_start = new_start,
                     date_review = new_review,
-                    stream_prev = stream_first
+                    stream_next = stream_first
                 )
                 stream.save()
             
@@ -228,7 +217,7 @@ def make_review_post(request):
                     date_start = stream_first.date_review + timedelta(days=1),
                     date_review = stream_first.date_review + timedelta(days=22),
                     level = '2',
-                    stream_prev = stream_first
+                    stream_next = stream_first
                 )
                 stream_intake.save()
 
@@ -614,6 +603,13 @@ class ReadSupportSstView(SstCheckMixin, DetailView):
     template_name = 'school/sst/show_support_text_sst.html'
     login_url = 'login'
 
+class MakeReviewNoteSST(SstCheckMixin, CreateView):
+    '''Create review meeting note from SST'''
+    model = ReviewMeetingNote
+    template_name = 'school/sst/review_note_sst.html'
+    form_class = ReviewMeetingNoteFormModel
+    # TODO save data from SST about the review meeting note
+
 
 class ShowReadScreen(LoginRequiredMixin, DetailView):
     '''View to show results of reading screening'''
@@ -737,9 +733,14 @@ class SpeechTherapyView(SstCheckMixin, DetailView):
     template_name = "school/speech_therapy_sst.html"
     login_url = 'login'
 
+class ReadScreenSSTView(SstCheckMixin, DetailView):
+    '''Show reading screening data for SST team'''
+    model = ReadingScreening
+    template_name = "school/sst/show_read_screen_sst.html"
+    login_url = 'login'
+
 
 class DownloadSampleUsers(StaffCheckMixin, View):
-
     def post(self, request, *args, **kwargs):
         if request.POST['sample'] == 'users':
             return create_sample_excel_users(request)
@@ -763,7 +764,6 @@ class CreateNewStream(TeacherCheckMixin, View):
     '''View to create new stream in responce to 
     post request from fetch (student profile page)
     '''
-
     def post(self, request):
         stream_data = json.load(request)
         # get datetime now

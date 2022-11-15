@@ -158,7 +158,7 @@
                             <th scope="col">
                                 <div class="dropdown">
                                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                        id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                        id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                         Level
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -250,11 +250,11 @@
                                         <a href="{% url 'school:read_review' stream.student_stream.get %}">Review note</a>
                                     {% else %} {% endif %}
                                     {% if stream.intake %}
-                                        <a href="{% url 'school:read_intake' stream.student_stream.get %}"><br>Intake form</a>
+                                        <a href="{% url 'school:read_intake' student.id stream.intake.pk %}"><br>Intake form</a>
                                     {% else %} {% endif %}
                                     {% if stream.sream_observation.all %}
                                         {% for observation in stream.sream_observation.all %}
-                                            <a href="{% url 'school:show_observation' student.id observation.id %}">{{ observation.note|truncatechars:7 }}</a><br>
+                                            <a href="{% url 'school:show_observation' student.id observation.id %}">{{ observation.date }}</a><br>
                                         {% endfor %}
                                     {% else %} {% endif %}
                                 </td>

@@ -3,7 +3,18 @@
 
 {% block title%}SST{% endblock %}
 {% block content %}
-
+<style>
+    /* coloring cell in table with stream 
+    op, cl and pr are the stream status from a db
+    reference: STATUS_CHOICES in model Stream
+    */
+    td[data-color="n"] {
+        background-color: red;
+    }
+    td[data-color="y"] {
+        background-color: green;
+    }
+</style>
 
 <h3>
     Hi!
@@ -25,7 +36,7 @@
                                 <th scope="col">
                                     <div class="dropdown">
                                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                            id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                             Stream
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -47,33 +58,21 @@
                                 <th scope="col">
                                     <div class="dropdown">
                                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                            id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                             Level
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="">
-                                                    1
-                                                </a>
+                                                <a class="dropdown-item" href="">1</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="">
-                                                    2
-                                                </a>
+                                                <a class="dropdown-item" href="">2</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="">
-                                                    3
-                                                </a>
+                                                <a class="dropdown-item" href="">3</a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item"
-                                                    href="">
-                                                    4
-                                                </a>
+                                                <a class="dropdown-item" href="">4</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item"
@@ -93,7 +92,7 @@
                                 <th scope="col">
                                     <div class="dropdown">
                                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                            id="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            id="" data-bs-toggle="dropdown" aria-expanded="false" disabled>
                                             Forms and Notes                                    
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
@@ -146,20 +145,20 @@
                                         {% else %} {% endif %}
                                         {% if stream.sream_observation.all %}
                                             {% for observation in stream.sream_observation.all %}
-                                                <a href="{% url 'school:read_full_observ_text_sst' observation.id %}">{{ observation.note|truncatechars:7 }}</a><br>
+                                                <a href="{% url 'school:read_full_observ_text_sst' observation.id %}">{{ observation.date }}</a><br>
                                             {% endfor %}
                                         {% else %} {% endif %}
                                     </td>
                                     <td></td>
                                     <td>{{ stream.date_start }}</td>
                                     <td>{{ stream.date_review }}</td>
-                                    <td data-color="{{ stream.status|lower }}"></td>
+                                    <td data-color="{{ stream.progress|lower }}"></td>
                                     <td>
-                                        {% if stream.level == '2' %}
+                                        {% if stream.level >= '2' %}
                                             <div class="dropdown">
                                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
                                                     id="" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Forms and Notes                                    
+                                                    Forms/Notes                                    
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
                                                     <li>
@@ -177,14 +176,14 @@
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <input type="button" data-bs-toggle="modal" data-bs-target="#observModal"
-                                                            class="dropdown-item" id="observ-btn" value="Add observation"
+                                                            class="dropdown-item" id="observ-btn" value="Observation"
                                                             data-observation="observ" data-teacher-id="{{ stream.teacher.id }}"
                                                             data-names="{{ stream.teacher.first_name }} {{ stream.teacher.last_name }}"
                                                             data-student-id="{{ stream.student.id }}" data-stream-id="{{ stream.id }}">
                                                         </input>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="">Review Meeting Notes</a>
+                                                        <a class="dropdown-item" href="{% url 'school:make_review_sst' stream_id=stream.id %}">Review Meeting Notes</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item" href="">Support Circle Notes</a>

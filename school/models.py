@@ -189,31 +189,6 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class Support(models.Model):
-    date = models.DateField(verbose_name='Date')
-    teacher = models.ForeignKey(MyUser,
-                                on_delete=models.PROTECT,
-                                null=True,
-                                limit_choices_to={'is_teacher': True},
-                                related_name='support_teacher')
-    sst = models.ForeignKey(MyUser,
-                            on_delete=models.PROTECT,
-                            null=True,
-                            limit_choices_to={'is_sst': True},
-                            related_name='sst_support')
-    student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name='stud_support')
-    suport_text = models.CharField(
-        verbose_name='Support text', max_length=2000)
-    note = models.CharField(verbose_name='Support note', max_length=2000)
-    # concern = models.ForeignKey(
-    #     Consern, on_delete=models.CASCADE, related_name='concern_support', default=None)
-
-    class Meta:
-        ordering = ["-date"]
-
-    def __str__(self) -> str:
-        return self.suport_text[:15]
 
 
 class OcupationalTherapy(BaseModel):
@@ -261,18 +236,7 @@ class SpeechTherapy(BaseModel):
         return str(self.screen_date)
 
 
-class ResponceToSupport(BaseModel):
-    support = models.ForeignKey(
-        Support, on_delete=models.CASCADE, related_name='responce_support')
-    date = models.DateField(verbose_name='Responce date')
-    intervention = models.CharField(max_length=2000)
-    note = models.CharField(max_length=2000)
 
-    class Meta:
-        ordering = ['-date']
-
-    def __str__(self) -> str:
-        return self.intervention[:15]
 
 
 class ReadingScreening(BaseModel):
@@ -337,8 +301,6 @@ class Stream(BaseModel):
     ]
     level = models.CharField(
         max_length=1, choices=LEVEL_CHOICES, default=ONE, verbose_name='Stream level')
-    support = models.ForeignKey(Support, on_delete=models.CASCADE,
-                                null=True, related_name='stream_supports', verbose_name='Support')
     name = models.CharField(
         max_length=100, verbose_name='Stream name', default=None)
     stream_next = models.ForeignKey(
@@ -355,38 +317,48 @@ class Stream(BaseModel):
         max_length=1, choices=PROGRESS_CHOICES, default=NO, verbose_name='Progress')
 
     class Meta:
-        ordering = ["id"]
+        ordering = ["name", "id"]
 
     def __str__(self) -> str:
         return self.name
 
-    def next_streams(self):
-        if self.stream_next is None:
-            return Stream.objects.none()
-        return Stream.objects.filter(pk=self.stream_next.pk) | self.stream_next.next_streams()
+class Support(BaseModel):
+    date = models.DateField(verbose_name='Date')
+    teacher = models.ForeignKey(MyUser,
+                                on_delete=models.PROTECT,
+                                null=True,
+                                limit_choices_to={'is_teacher': True},
+                                related_name='support_teacher')
+    sst = models.ForeignKey(MyUser,
+                            on_delete=models.PROTECT,
+                            null=True,
+                            limit_choices_to={'is_sst': True},
+                            related_name='sst_support')
+    student = models.ForeignKey(
+        Student, on_delete=models.CASCADE, related_name='stud_support')
+    suport_text = models.CharField(
+        verbose_name='Support text', max_length=2000)
+    note = models.CharField(verbose_name='Support note', max_length=2000)
+    stream = models.ForeignKey(Stream, on_delete=models.CASCADE, related_name='support_stream', default=None)
 
-    # @property
-    def all_streams_in_order(self, student):
-        streams = Stream.objects.filter(student=student)
+    class Meta:
+        ordering = ["-date"]
 
-        # if self.stream_next is None:
-        return streams
+    def __str__(self) -> str:
+        return self.suport_text[:15]
 
-    def get_all_children(self, include_self=True):
-        r = []
-        if include_self:
-            r.append(self)
-            print('if', len(r))
+class ResponceToSupport(BaseModel):
+    support = models.ForeignKey(
+        Support, on_delete=models.CASCADE, related_name='responce_support')
+    date = models.DateField(verbose_name='Responce date')
+    intervention = models.CharField(max_length=2000)
+    note = models.CharField(max_length=2000)
 
-        for c in Stream.objects.filter(stream_next=self):
-            # print('c', c, type(c))
-            _r = c.get_all_children(include_self=True)
-            if 0 < len(_r):
-                r.extend(_r)
-            print('for', len(r))
-        return r
+    class Meta:
+        ordering = ['-date']
 
-
+    def __str__(self) -> str:
+        return self.intervention[:15]
 
 class Observation(BaseModel):
     date = models.DateField(verbose_name='Date')
@@ -409,7 +381,7 @@ class Observation(BaseModel):
         ordering = ["-date"]
 
     def __str__(self) -> str:
-        return self.note[:50]
+        return self.date
 
 class ImplicitStrategy(BaseModel):
     '''Save names of the strategies for using in Review meetin notes'''
