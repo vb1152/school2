@@ -317,7 +317,19 @@ class Stream(BaseModel):
     def __str__(self) -> str:
         return str(self.name)
 
+class SupportName(BaseModel):
+    '''List of supports for SST to use in Support form'''
+    name = models.CharField(
+        max_length=2000, verbose_name='Support')
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self) -> str:
+        return str(self.name[:20])
+
 class Support(BaseModel):
+    '''Data about supports from SST to teachers'''
     date = models.DateField(verbose_name='Date')
     teacher = models.ForeignKey(MyUser,
                                 on_delete=models.PROTECT,
@@ -329,10 +341,8 @@ class Support(BaseModel):
                             null=True,
                             limit_choices_to={'is_sst': True},
                             related_name='sst_support')
-    student = models.ForeignKey(
-        Student, on_delete=models.CASCADE, related_name='stud_support')
-    suport_text = models.CharField(
-        verbose_name='Support text', max_length=2000)
+    support = models.ForeignKey(SupportName, on_delete=models.PROTECT, related_name='support_name', 
+                                default=None, null=True, blank=True)
     note = models.CharField(verbose_name='Support note', max_length=2000)
     stream = models.ForeignKey(Stream, on_delete=models.CASCADE, related_name='support_stream', default=None)
 
@@ -340,7 +350,7 @@ class Support(BaseModel):
         ordering = ["-date"]
 
     def __str__(self) -> str:
-        return self.suport_text[:15]
+        return str(self.date)
 
 class ResponceToSupport(BaseModel):
     support = models.ForeignKey(
@@ -417,3 +427,4 @@ class ReviewMeetingNote(BaseModel):
 
     def __str__(self) -> str:
         return str(self.id)
+

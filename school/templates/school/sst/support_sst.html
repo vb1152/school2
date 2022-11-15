@@ -6,11 +6,11 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container py-5">
-    <h3 class="d-flex justify-content-center">Support</h3>
+    <h3 class="d-flex justify-content-center">Support from SST</h3>
     <div class="mx-auto">
         <hr>
-        <h5>Student: {{ concern.student.first_name }} {{ concern.student.last_name }}</h5>
-        <h5>Teacher: {{ concern.student.teacher.first_name }} {{ concern.student.teacher.last_name }}</h5>
+        <h5>Student: {{ stream.student.first_name }} {{ stream.student.last_name }}</h5>
+        <h5>Teacher: {{ stream.student.teacher.first_name }} {{ stream.student.teacher.last_name }}</h5>
         <hr>
 
         <div class="mb-3">

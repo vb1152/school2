@@ -393,17 +393,17 @@ def save_observation(request):
 
 
 @user_passes_test(sst_check)
-def support(request, **kwargs):
-    pass
-    # if request.method == 'GET':
-    #     concern = Consern.objects.select_related(
-    #         'student').get(id=kwargs['conc_id'])
-    #     support_form = SupportForm()
-    #     context = {
-    #         'support_form': support_form,
-    #         'concern': concern,
-    #     }
-    #     return render(request, 'school/support.html', context)
+# def support(request, **kwargs):
+def get_support_form_sst(request, *, stream_id):
+    if request.method == 'GET':
+        support_form = SupportForm()
+        stream = Stream.objects.get(id=stream_id)
+        print(stream.id)
+        context = {
+            'support_form': support_form,
+            'stream': stream
+        }
+        return render(request, 'school/sst/support_sst.html', context)
 
 
 @user_passes_test(sst_check)
@@ -413,13 +413,11 @@ def make_support_post(request):
         if support_form.is_valid():
             student = Student.objects.get(id=request.POST['stud_id'])
             teacher = MyUser.objects.get(id=request.POST['teach_id'])
-            # concern = Consern.objects.get(id=request.POST['cons_id'])
             sst = request.user
             new_support = support_form.save(commit=False)
             new_support.student = student
             new_support.sst = sst
             new_support.teacher = teacher
-            # new_support.concern = concern
             new_support.save()
 
             messages.success(request, 'Thank you! Support note is saved!')

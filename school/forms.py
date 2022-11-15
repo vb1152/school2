@@ -7,7 +7,8 @@ from .models import (MyUser,
                      ResponceToSupport,
                      ReadingScreening,
                      ReviewMeetingNote,
-                     ImplicitStrategy
+                     ImplicitStrategy,
+                     SupportName
                      )
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -111,20 +112,6 @@ class IntakeForm(ModelForm):
         'these concerning patterns',
     )
 
-    # what_done = forms.CharField(
-    #     required=False,
-    #     widget=forms.widgets.TextInput(
-    #         attrs={
-    #             "placeholder": 'Refer to the tools listed in your Teacher Three'
-    #                             'Stream Binder',
-    #             "class": "form-control",
-    #             'type': 'text'
-    #         }
-    #     ),
-    #     label='''What have you done to help alleviate or work through these
-    #             concerning patterns''',
-    # )
-
     smal_done = forms.CharField(
         required=False,
         widget=forms.widgets.Textarea(
@@ -212,6 +199,17 @@ class IntakeForm(ModelForm):
 
 
 class SupportForm(ModelForm):
+    support = forms.ModelMultipleChoiceField(
+        required=True,
+        queryset=SupportName.objects.all(),
+        widget=forms.widgets.SelectMultiple(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+        label='Supports from SST strategy',
+        # help_text = 'Hold Shift button on your keyboard and choose more than one strategy'
+    )
     date = forms.DateField(
         required=True,
         widget=forms.widgets.DateInput(
@@ -222,7 +220,6 @@ class SupportForm(ModelForm):
         ),
         label="Support date",
     )
-
     suport_text = forms.CharField(
         required=True,
         widget=forms.widgets.Textarea(
@@ -251,8 +248,7 @@ class SupportForm(ModelForm):
 
     class Meta:
         model = Support
-        # fields = ['date', 'support_text', 'support_note']
-        exclude = ['teacher', 'sst', 'student', 'concern']
+        exclude = ['created_at', 'updated_at', 'teacher', 'sst', 'student', 'stream']
 
 
 class OcupationalTherapyForm(ModelForm):
