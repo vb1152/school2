@@ -189,8 +189,6 @@ class BaseModel(models.Model):
         abstract = True
 
 
-
-
 class OcupationalTherapy(BaseModel):
     screen_date = models.DateField(verbose_name='Screening Date')
     screen_time = models.TimeField(verbose_name='Screening Time')
@@ -234,9 +232,6 @@ class SpeechTherapy(BaseModel):
 
     def __str__(self) -> str:
         return str(self.screen_date)
-
-
-
 
 
 class ReadingScreening(BaseModel):
@@ -320,7 +315,7 @@ class Stream(BaseModel):
         ordering = ["name", "id"]
 
     def __str__(self) -> str:
-        return self.name
+        return str(self.name)
 
 class Support(BaseModel):
     date = models.DateField(verbose_name='Date')
@@ -381,7 +376,7 @@ class Observation(BaseModel):
         ordering = ["-date"]
 
     def __str__(self) -> str:
-        return self.date
+        return str(self.date)
 
 class ImplicitStrategy(BaseModel):
     '''Save names of the strategies for using in Review meetin notes'''
