@@ -225,9 +225,6 @@
                                             <a class="dropdown-item" href="">Observation</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="">Review Meeting Notes</a>
-                                        </li>
-                                        <li>
                                             <a class="dropdown-item" href="">Support Circle Notes</a>
                                         </li>
                                     </ul>
@@ -246,9 +243,6 @@
                                 <td>{{ stream.name }}</td>
                                 <td>{{ stream.level }}</td>
                                 <td>
-                                    {% if stream.student_stream.get %}
-                                        <a href="{% url 'school:read_review' stream.student_stream.get %}">Review note</a>
-                                    {% else %} {% endif %}
                                     {% if stream.intake %}
                                         <a href="{% url 'school:read_intake' student.id stream.intake.pk %}"><br>Intake form</a>
                                     {% else %} {% endif %}
@@ -259,16 +253,43 @@
                                     {% else %} {% endif %}
                                 </td>
                                 <td>
-                                    
+                                    {% for support in stream.support_stream.all %}
+                                        <a href="{% url 'school:read_full_support' stream.student.id support.id %}">{{ support }}</a><br>
+                                    {% endfor %}
                                 </td>
                                 <td>{{ stream.date_start }}</td>
-                                <td>{{ stream.date_review }}</td>
+                                <td data-review-date="{{ stream.date_review }}">
+                                    {% if stream.level == "1" %}
+                                        {% if not stream.student_stream.get %}    
+                                            <a href="" data-bs-toggle="modal" 
+                                                data-bs-target="#exampleModal"
+                                                data-date="{{ stream.date_review|date:'Y-m-d' }}"
+                                                data-stream-id="{{ stream.id }}">
+                                                {{ stream.student_stream.get }}
+                                                {{ stream.date_review }}
+                                            </a>
+                                        {% else %}
+                                            {{ stream.date_review }}
+                                        {% endif %}
+                                    {% else %}
+                                        {{ stream.date_review }}
+                                    {% endif %}
+                                </td>
                                 <td data-color="{{ stream.progress|lower }}"></td>
                                 <td>
                                     {% if stream.level == "1" %}
                                         {% if stream.student_stream.get %}
-                                        {% else %} 
-                                            <a href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">Make review</a> 
+                                            <a class="btn btn-secondary btn-sm"
+                                                role="button"
+                                                href="{% url 'school:read_review' stream.student_stream.get %}">
+                                                Read Review
+                                            </a>
+                                        {% else %}
+                                            <a class="btn btn-warning btn-sm" 
+                                                role="button"
+                                                href="{% url 'school:make_review' stud_id=student.id stream_id=stream.id %}">
+                                                Review Meeting Note
+                                            </a> 
                                         {% endif %}
                                     {% else %}
                                     {% endif %}
@@ -281,6 +302,29 @@
         </div>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Review Date</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="form-review-date" action="" method="post">
+            <div class="modal-body">
+                Please, choose new date for Review Meeting Note
+                <input type="date" name="screen_date" class="form-control" required="" id="id_new_review_date">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
 {% endblock content %}
 
 {% block scripts %}

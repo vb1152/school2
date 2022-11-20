@@ -60,8 +60,10 @@ urlpatterns = [
 
     # API
     path('save_note_from_PTC', views.save_note_from_PTC,
-         name='save_note_from_PTC'),
+        name='save_note_from_PTC'),
     path('save_observation', views.save_observation, name='save_observation'),
+    path('save_new_review_date/', views.save_new_review_date, 
+        name='save_new_review_date'),
     path('download_users', views.DownloadSampleUsers.as_view(),
          name='download_sample_users'),
     path('new_stream', views.CreateNewStream.as_view(), name='new_stream'),

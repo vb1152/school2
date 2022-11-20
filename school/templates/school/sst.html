@@ -149,7 +149,11 @@
                                             {% endfor %}
                                         {% else %} {% endif %}
                                     </td>
-                                    <td></td>
+                                    <td>
+                                        {% for support in stream.support_stream.all %}
+                                            <a href="{% url 'school:read_full_support_text_sst' support.pk %}">{{ support.date }}</a><br>
+                                        {% endfor %}
+                                    </td>
                                     <td>{{ stream.date_start }}</td>
                                     <td>{{ stream.date_review }}</td>
                                     <td data-color="{{ stream.progress|lower }}"></td>
@@ -158,7 +162,7 @@
                                             <div class="dropdown">
                                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
                                                     id="" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Forms/Notes                                    
+                                                    Add forms/notes                                    
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuFormsNotes">
                                                     <li>

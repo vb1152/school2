@@ -121,14 +121,14 @@ def student_data_profile(request, **kwargs):
     if request.method == 'GET':
         student = get_object_or_404(Student, id=kwargs['stud_id'])
         age_years, age_months = calculate_age(str(student.date_of_birth))
-        supports = Support.objects.filter(
-            student=student).select_related('sst')
+        # supports = Support.objects.filter(
+        #     student=student).select_related('sst')
 
         context = {
             'student': student,
             'age_years': age_years,
             'age_months': age_months,
-            'supports': supports,
+            # 'supports': supports,
         }
 
         return render(request, 'school/teacher/student_profile.html', context)
@@ -147,7 +147,7 @@ def save_note_from_PTC(request):
         return JsonResponse(data, safe=False)
 
 
-@user_passes_test(login_required)
+@user_passes_test(teacher_check)
 def make_review(request, *, stud_id, stream_id):
     '''View to get a form for a Review Meeting Notex
     for a teacher.'''
@@ -391,37 +391,59 @@ def save_observation(request):
         data = {'status': 200}
         return JsonResponse(data, safe=False)
 
+@user_passes_test(teacher_check)
+def save_new_review_date(request):
+    '''Function to save new review date of a stream by fetch from 
+    submitting the form on the modal window.'''
+    if request.method == 'POST':
+        new_data = json.load(request)
+        stream = Stream.objects.get(id=new_data['stream_id'])
+        stream.date_review = new_data['new_review_date']
+        stream.save()
+        data = {'status': 200}
+        return JsonResponse(data, safe=False)
 
 @user_passes_test(sst_check)
-# def support(request, **kwargs):
 def get_support_form_sst(request, *, stream_id):
     if request.method == 'GET':
-        support_form = SupportForm()
-        stream = Stream.objects.get(id=stream_id)
-        print(stream.id)
-        context = {
-            'support_form': support_form,
-            'stream': stream
-        }
-        return render(request, 'school/sst/support_sst.html', context)
-
+        all_supports = Support.objects.filter(stream_id=stream_id).count()
+        if all_supports < 4:
+            support_form = SupportForm()
+            stream = Stream.objects.get(id=stream_id)
+            context = {
+                'support_form': support_form,
+                'stream': stream
+            }
+            return render(request, 'school/sst/support_sst.html', context)
+        messages.error(request, 'Sorry! No more than 4 supports allowed')
+        return HttpResponseRedirect(reverse('school:sst_view'))
 
 @user_passes_test(sst_check)
 def make_support_post(request):
+    '''Save support to database 
+        from a post request'''
+
     if request.method == "POST":
         support_form = SupportForm(request.POST)
         if support_form.is_valid():
-            student = Student.objects.get(id=request.POST['stud_id'])
+            print(support_form.cleaned_data)
+            stream = Stream.objects.get(id=request.POST['stream_id'])
             teacher = MyUser.objects.get(id=request.POST['teach_id'])
-            sst = request.user
-            new_support = support_form.save(commit=False)
-            new_support.student = student
-            new_support.sst = sst
+            new_support = Support()
+            new_support.date = support_form.cleaned_data['date']
+            new_support.sst = request.user
+            new_support.note = support_form.cleaned_data['note']
+            new_support.stream = stream
+            new_support.sst = request.user
             new_support.teacher = teacher
             new_support.save()
-
+            new_support.support_text.set(support_form.cleaned_data['support_name'])
             messages.success(request, 'Thank you! Support note is saved!')
             return HttpResponseRedirect(reverse('school:sst_view'))
+
+        messages.error(request, 'Sorry! Something went wrong.' 
+                                'Support was not saved')
+        return HttpResponseRedirect(reverse('school:sst_view'))
 
 
 @user_passes_test(staff_check)

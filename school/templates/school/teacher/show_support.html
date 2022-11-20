@@ -22,17 +22,17 @@
                 <tbody>
                     <tr>
                         <td>
-                            {{ object.student.first_name }}
-                            {% if object.student.middle_name != None %}
-                            {{ object.student.middle_name }}
+                            {{ object.stream.student.first_name }}
+                            {% if object.student.middle_name != 'None' %}
+                            {{ object.stream.student.middle_name }}
                             {% else %}
                             {% endif %}
-                            {{ student.last_name }}
+                            {{ object.stream.last_name }}
                         </td>
-                        <td>{{ object.student.date_of_birth }}</td>
-                        <td>{{ object.student.birth_order_in_class }}</td>
-                        <td>{{ object.student.birth_order_in_family }}</td>
-                        <td>{{ object.student.cur_grade }}</td>
+                        <td>{{ object.stream.student.date_of_birth }}</td>
+                        <td>{{ object.stream.student.birth_order_in_class }}</td>
+                        <td>{{ object.stream.student.birth_order_in_family }}</td>
+                        <td>{{ object.stream.student.cur_grade }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -44,9 +44,11 @@
                 <h5>Support date</h5>
                 <p>{{ object.date }}</p>
                 <h5>Support text</h5>
-                <p>{{ object.suport_text }}</p>
+                <p>{{ object.support_text.all|join:", " }}</p>
                 <h5>Support note</h5>
                 <p>{{ object.note }}</p>
+                <h5>Support provided by</h5>
+                <p>{{ object.sst }}</p>
             </article>
         </div>
         {% if object.responce_support.all %}
@@ -67,8 +69,6 @@
         </div>
         {% else %}
         {% endif %}
-        <a href="{% url 'school:student_data_profile' object.student.pk %}">
-            <-Back </a>
     </div>
 </div>
 {% else %}

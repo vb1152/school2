@@ -10,15 +10,15 @@
     <div class="mx-auto">
         <hr>
         <h5>Student: {{ stream.student.first_name }} {{ stream.student.last_name }}</h5>
-        <h5>Teacher: {{ stream.student.teacher.first_name }} {{ stream.student.teacher.last_name }}</h5>
+        <h5>Teacher: {{ stream.teacher.first_name }} {{ stream.teacher.last_name }}</h5>
         <hr>
 
         <div class="mb-3">
             <form action="{% url 'school:make_support_post' %}" method="post" id="support-form">
-                <input id='stud_id' class="form-control" hidden value="{{ concern.student.id }}" name="stud_id">
-                <input id='teach_id' class="form-control" hidden value="{{ concern.student.teacher.id }}"
+                <input id='teach_id' class="form-control" hidden value="{{ stream.teacher.id }}"
                     name="teach_id">
-                <input id='cons_id' class="form-control" hidden value="{{ concern.id }}" name="cons_id">
+                <input id='stream_id' class="form-control" hidden value="{{ stream.id }}"
+                    name="stream_id">
 
                 {% csrf_token %}
                 {% for field in support_form %}

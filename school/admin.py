@@ -4,7 +4,8 @@ from .models import (MyUser, Student, NotesPTS,
                     Intake, Observation, 
                     Support, OcupationalTherapy, 
                     SpeechTherapy, UsersData, Stream, 
-                    ImplicitStrategy, ReviewMeetingNote)
+                    ImplicitStrategy, ReviewMeetingNote, 
+                    SupportName)
 
 
 
@@ -62,6 +63,9 @@ class ReviewMeetingNoteAdmin(admin.ModelAdmin):
         return (obj.stream.student.first_name + ' '
                 +  obj.stream.student.last_name)
 
+class SupportNameAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(MyUser, UserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(NotesPTS, NotesPTSAdmin)
@@ -74,3 +78,5 @@ admin.site.register(UsersData, UsersDataAdmin)
 admin.site.register(Stream, StreamAdmin)
 admin.site.register(ImplicitStrategy, ImplicitStrategyAdmin)
 admin.site.register(ReviewMeetingNote, ReviewMeetingNoteAdmin)
+admin.site.register(SupportName, SupportNameAdmin)
+

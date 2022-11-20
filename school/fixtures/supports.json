@@ -1,0 +1,73 @@
+[
+    {
+        "model": "school.support",
+        "pk": 1,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "date": "2022-12-14",
+            "teacher": 2,
+            "sst": 3,
+            "support_text": [1, 2],
+            "note": "support note text",
+            "stream": 2
+        }
+    },
+    {
+        "model": "school.support",
+        "pk": 2,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "date": "2022-12-15",
+            "teacher": 2,
+            "sst": 3,
+            "support_text": [2, 3],
+            "note": "support note text",
+            "stream": 2
+        }
+    },
+    {
+        "model": "school.support",
+        "pk": 3,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "date": "2022-12-16",
+            "teacher": 2,
+            "sst": 3,
+            "support_text": [1, 3],
+            "note": "support note text",
+            "stream": 2
+        }
+    },
+    {
+        "model": "school.support",
+        "pk": 4,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "date": "2022-12-16",
+            "teacher": 2,
+            "sst": 3,
+            "support_text": [1, 3],
+            "note": "support note text",
+            "stream": 6
+        }
+    },
+    {
+        "model": "school.support",
+        "pk": 5,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "date": "2022-12-16",
+            "teacher": 2,
+            "sst": 3,
+            "support_text": [2, 3],
+            "note": "support note text",
+            "stream": 6
+        }
+    }
+
+]

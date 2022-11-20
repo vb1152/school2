@@ -160,7 +160,6 @@ class Intake(models.Model):
     ]
     behavior_quality = models.CharField(
         max_length=1, choices=BEHAVE_CHOICES, verbose_name='Qualify this behavior')
-
     why_consern = models.CharField(
         verbose_name='Concern reasoning', max_length=2000)
     what_done = models.CharField(verbose_name='What done', max_length=2000)
@@ -338,11 +337,11 @@ class Support(BaseModel):
                                 related_name='support_teacher')
     sst = models.ForeignKey(MyUser,
                             on_delete=models.PROTECT,
-                            null=True,
                             limit_choices_to={'is_sst': True},
-                            related_name='sst_support')
-    support = models.ForeignKey(SupportName, on_delete=models.PROTECT, related_name='support_name', 
-                                default=None, null=True, blank=True)
+                            related_name='sst_support', 
+                            default=None)
+    support_text = models.ManyToManyField(SupportName, related_name='support_name', 
+                                default=None, blank=True)
     note = models.CharField(verbose_name='Support note', max_length=2000)
     stream = models.ForeignKey(Stream, on_delete=models.CASCADE, related_name='support_stream', default=None)
 

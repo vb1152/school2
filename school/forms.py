@@ -198,8 +198,8 @@ class IntakeForm(ModelForm):
         exclude = ['student', 'teacher', 'concern']
 
 
-class SupportForm(ModelForm):
-    support = forms.ModelMultipleChoiceField(
+class SupportForm(forms.Form):
+    support_name = forms.ModelMultipleChoiceField(
         required=True,
         queryset=SupportName.objects.all(),
         widget=forms.widgets.SelectMultiple(
@@ -246,9 +246,9 @@ class SupportForm(ModelForm):
         label='Support note'
     )
 
-    class Meta:
-        model = Support
-        exclude = ['created_at', 'updated_at', 'teacher', 'sst', 'student', 'stream']
+    # class Meta:
+    #     model = Support
+    #     exclude = ['created_at', 'updated_at', 'teacher', 'sst', 'student', 'stream']
 
 
 class OcupationalTherapyForm(ModelForm):
@@ -500,6 +500,8 @@ class ReviewMeetingNoteForm(forms.Form):
 
 
 class ReviewMeetingNoteFormModel(forms.ModelForm):
+    '''Form for class based view.
+    save a review form from sst view'''
     strategy = forms.ModelMultipleChoiceField(
         required=True,
         queryset=ImplicitStrategy.objects.all(),

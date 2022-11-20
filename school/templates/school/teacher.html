@@ -142,14 +142,15 @@
                                 <td>{{ stream.name }}</td>
                                 <td>{{ stream.level }}</td>
                                 <td>
-                                    {% if stream.concern %}
-                                        <a href="">Rev meet</a>
-                                    {% else %} {% endif %}
                                     {% if stream.intake %}
                                         <a href=""><br>Intake form</a>
                                     {% else %} {% endif %}
                                 </td>
-                                <td></td>
+                                <td>
+                                    {% for support in stream.support_stream.all %}
+                                        <a href="{% url 'school:read_full_support' stream.student.id support.id %}">{{ support }}</a><br>
+                                    {% endfor %}
+                                </td>
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
                                 <td data-color="{{ stream.progress|lower }}"></td>

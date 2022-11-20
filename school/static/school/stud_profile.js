@@ -3,7 +3,53 @@ document.addEventListener('DOMContentLoaded', function(){
     const streamDropArray = document.querySelectorAll(`[data-functional="add-stream"]`)
     streamDropArray.forEach(streamEl => streamEl.addEventListener("click", makeRow))
 
+    var myModal = document.getElementById('exampleModal')
+    var myInputDate = document.getElementById('id_new_review_date')
+    
+
+    myModal.addEventListener('shown.bs.modal', function (el) {
+        //set old date into datepicker window 
+        var old_date_elem = el.relatedTarget
+        myInputDate.setAttribute("value", old_date_elem.getAttribute('data-date'));
+        // var stream_id = el.relatedTarget.getAttribute('data-stream-id')
+        myInputDate.setAttribute('data-stream-id', old_date_elem.getAttribute('data-stream-id'))
+        console.log(old_date_elem)
+    })
+
+    const formReviewDate = document.getElementById('form-review-date')
+    formReviewDate.addEventListener('submit', function (e) {
+        e.preventDefault()
+
+        const url = '/save_new_review_date/'
+        let new_date = document.getElementById('id_new_review_date')
+        fetch(url, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                'new_review_date': new_date.value,
+                'stream_id': new_date.getAttribute('data-stream-id')
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('close-modal').click();
+            // TODO get new date from responce and set it to clicked link
+            // this is a functionality behind location.reload(). It needs to update 
+            // new review date on a student profile page.
+            location.reload()
+        })
+        .catch((error) => {
+            console.log(error)
+            document.getElementById('close-modal').click();
+            alert('ERROR! Some problem.' + toString(error))
+        });
+    })
+
 })
+
 
 function makeRow(elem){
     console.log('click make row', elem.target)
@@ -28,6 +74,7 @@ function makeRow(elem){
     let student_id = document.getElementById('stud_id').innerHTML
     const now = new Date()
     let date_stream_str = now.toLocaleDateString("en-US")
+    
     const inThreeWeeks = new Date(new Date(now).setDate(now.getDate() + 21))
     console.log(date_stream_str)
 
