@@ -141,7 +141,7 @@
                                             <a href="{% url 'school:sst_read_review' stream.student_stream.get %}">Review note</a>
                                         {% else %} {% endif %}
                                         {% if stream.intake %}
-                                            <a href="{% url 'school:sst_read_intake' stream.student_stream.get %}"><br>Intake form</a>
+                                            <a href=""><br>Intake form</a>
                                         {% else %} {% endif %}
                                         {% if stream.sream_observation.all %}
                                             {% for observation in stream.sream_observation.all %}
@@ -151,7 +151,7 @@
                                     </td>
                                     <td>
                                         {% for support in stream.support_stream.all %}
-                                            <a href="{% url 'school:read_full_support_text_sst' support.pk %}">{{ support.date }}</a><br>
+                                            <a href="{% url 'school:read_full_support_text_sst' stream.student.id support.pk %}">{{ support.date }}</a><br>
                                         {% endfor %}
                                     </td>
                                     <td>{{ stream.date_start }}</td>

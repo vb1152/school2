@@ -7,10 +7,10 @@
 {% if user.is_authenticated %}
 
 <div class="container py-5">
-    <h3 class="d-flex justify-content-center">Review Note</h3>
+    <h3 class="d-flex justify-content-center">Review Note SST</h3>
     <div class="mx-auto">
         <div class="mb-3">
-            <form action="/make_review_post/" method="post">
+            <form action="{% url 'school:save_review_note' %}" method="post">
                 <input id='stud_id' class="form-control" hidden value="{{ student.id }}" name="stud_id">
                 <input id='stream_id' class="form-control" hidden value="{{ stream_id }}" name="stream_id">
                 {% csrf_token %}

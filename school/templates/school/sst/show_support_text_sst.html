@@ -47,6 +47,9 @@
                 <p>{{ object.support_text.all|join:", " }}</p>
                 <h5>Support note</h5>
                 <p>{{ object.note }}</p>
+                <h5>Created by</h5>
+                <p>{{ object.sst }} at {{object.created_at}}</p>
+
             </article>
         </div>
         {% if object.responce_support.all %}

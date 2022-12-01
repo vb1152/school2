@@ -18,5 +18,26 @@
             "student": 5,
             "teacher": 2
         }
+    },
+
+    {
+        "model": "school.intake",
+        "pk": 2,
+        "fields": {
+            "timeline": 2,
+            "sst_reasoning": "one sentence",
+            "behavior_patterns": "one sentence",
+            "behavior_quality": "C",
+            "why_consern": "one sentence",
+            "what_done": "one sentence",
+            "smal_done": "one sentence",
+            "didnt_worked": "one sentence",
+            "worse": "one sentence",
+            "response_level": "one sentence",
+            "other_info": "one sentence",
+            "estim_result": "one sentence",
+            "student": 1,
+            "teacher": 2
+        }
     }
 ]

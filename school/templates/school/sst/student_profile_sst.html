@@ -261,9 +261,9 @@
                                         {% endfor %}
                                     {% else %} {% endif %}
                                 </td>
-                                <td>
-                                    
-                                </td>
+                                <td>{% for support in stream.support_stream.all %}
+                                        <a href="{% url 'school:read_full_support_text_sst' stream.student.id support.pk %}">{{ support }}</a><br>
+                                    {% endfor %}</td>
                                 <td>{{ stream.date_start }}</td>
                                 <td>{{ stream.date_review }}</td>
                                 <td data-color="{{ stream.progress|lower }}"></td>

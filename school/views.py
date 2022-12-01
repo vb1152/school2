@@ -35,7 +35,7 @@ from .forms import (MyUserForm, UploadExcelFileForm,
                     IntakeForm, SupportForm, OcupationalTherapyForm,
                     SpeechTherapyForm, ResponceToSupportForm,
                     ReadingScreeningForm, ReviewMeetingNoteForm,
-                    ReviewMeetingNoteFormModel
+                    # ReviewMeetingNoteFormModel
                     )
 from .utils import (read_excel_with_students,
                     calculate_age, sst_check,
@@ -230,35 +230,6 @@ def make_review_post(request):
             return HttpResponseRedirect(reverse('school:student_data_profile', args=[request.POST['stud_id']]))
 
 
-@user_passes_test(teacher_check)
-def make_consern(request, *, stud_id, stream_id):
-    '''View for making a concern'''
-    pass
-    # def update_get(request, *, pk):
-    # if request.method == 'GET':
-    #     # print('make concern GET', stud_id, stream_id)
-    #     student = Student.objects.get(id=stud_id)
-    #     stream = Stream.objects.get(id=stream_id)
-    #     cons_form = ConsernForm()
-    #     intake_form = IntakeForm()
-    #     context = {
-    #         'student': student,
-    #         'cons_form': cons_form,
-    #         'intake_form': intake_form,
-    #         'stream_id': stream.id
-    #     }
-    #     return render(request, 'school/consern.html', context)
-
-# @user_passes_test(teacher_check, sst_check)
-# def read_concern(request, *, concern_id):
-#     if request.method == 'GET':
-#         concern = Consern.objects.get(id=concern_id)
-#         context = {
-#             'concern': concern
-#         }
-#         return render(request, 'school/teacher/consern_view_teacher.html', context)
-
-# ShowConcernTeacher
 class ShowReviewTeacher(TeacherCheckMixin, DetailView):
     model = ReviewMeetingNote
     template_name = 'school/teacher/review_view_teacher.html'
@@ -623,13 +594,76 @@ class ReadSupportSstView(SstCheckMixin, DetailView):
     template_name = 'school/sst/show_support_text_sst.html'
     login_url = 'login'
 
-class MakeReviewNoteSST(SstCheckMixin, CreateView):
-    '''Create review meeting note from SST'''
-    model = ReviewMeetingNote
-    template_name = 'school/sst/review_note_sst.html'
-    form_class = ReviewMeetingNoteFormModel
-    # TODO save data from SST about the review meeting note
+# class MakeReviewNoteSST(SstCheckMixin, CreateView):
+#     '''Create review meeting note form for SST'''
+#     model = ReviewMeetingNote
+#     template_name = 'school/sst/review_note_sst.html'
+#     form_class = ReviewMeetingNoteFormModel
 
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(*args, **kwargs)
+#         context['student'] = Student.objects.get(id=self.kwargs['stud_id'])
+#         return context
+
+@user_passes_test(sst_check)
+def make_review_sst(request, *, stream_id):
+    '''Create review meeting note form for SST'''
+    if request.method == 'GET':
+        review_form = ReviewMeetingNoteForm()
+        stream = Stream.objects.get(id=stream_id)
+        context = {
+            'student': stream.student,
+            'stream_id': stream.id,
+            'form': review_form,
+        }
+        return render(request, 'school/sst/review_note_sst.html', 
+                    context=context)
+
+@user_passes_test(sst_check)
+def save_review_note_sst(request):
+    '''Save review meeting note from SST'''
+    if request.method  == 'POST':
+        # {'stud_id': ['5'], 'stream_id': ['6'], 
+        # 'strategy': ['2'], 'text_strategy': [''], 'notes': ['note'], 'progress': ['Y']}>
+        review_form = ReviewMeetingNoteForm(request.POST)
+        student = Student.objects.get(id=request.POST['stud_id'])
+        stream_current = Stream.objects.get(id=request.POST['stream_id'])
+        if review_form.is_valid():
+            new_review = ReviewMeetingNote()
+            new_review.text_strategy = review_form.cleaned_data['text_strategy']
+            new_review.notes = review_form.cleaned_data['notes']
+            new_review.progress = review_form.cleaned_data['progress']
+            new_review.stream = stream_current
+            new_review.user = request.user
+            new_review.student = student
+            new_review.save()
+            new_review.strategy.set(review_form.cleaned_data['strategy'])
+
+            if review_form.cleaned_data['progress'] == 'Y':
+                stream_current.progress = Stream.YES
+
+                new_start = stream_current.date_review + timedelta(days=1)
+                new_review = new_start + timedelta(days=21)
+
+                stream = Stream(
+                    name = stream_current.name,
+                    student=student,
+                    date_start = new_start,
+                    date_review = new_review,
+                    stream_next = stream_current,
+                    level = stream_current.level
+                )
+                stream.save()
+
+                messages.success(request, 'Thank you! Review Note is saved!')
+                return HttpResponseRedirect(reverse('school:sst_view'))
+
+                # TODO Create new stream with next level (3)
+
+
+
+
+        print(request.POST)
 
 class ShowReadScreen(LoginRequiredMixin, DetailView):
     '''View to show results of reading screening'''
@@ -708,7 +742,6 @@ class CreateResponse(TeacherCheckMixin, CreateView):
     # save data from a form
     def form_valid(self, form) -> HttpResponse:
         form.instance.support = Support.objects.get(pk=self.kwargs['supp_pk'])
-        # print(self.kwargs)   {'stud_id': 38, 'supp_pk': 3}
         return super().form_valid(form)
 
     # redirect to student profile
@@ -732,8 +765,6 @@ class StudentProfileSstView(SstCheckMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['supports'] = Support.objects.filter(
-            student=self.object).select_related('sst')
         context['observations'] = Observation.objects.filter(
             student=self.object).select_related('sst')
 

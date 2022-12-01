@@ -22,12 +22,15 @@ urlpatterns = [
          views.SpeechTherapyView.as_view(), name='show_speech_sst'),
     path('sst/student_profile/<int:id>/read_screening/<int:pk>/',
          views.ReadScreenSSTView.as_view(), name='show_readscreen_sst'),
-    path('sst/student_profile/<int:pk>/support/',
+    path('sst/student_profile/<int:id>/support/<int:pk>/',
          views.ReadSupportSstView.as_view(), name='read_full_support_text_sst'),
     path('sst/observation/<int:pk>/',
          views.ShowObservationTextSstView.as_view(), name='read_full_observ_text_sst'),
+    
     path('sst/stream/<int:stream_id>/review_meeting_note/', 
-        views.MakeReviewNoteSST.as_view(), name='make_review_sst'),
+        views.make_review_sst, name='make_review_sst'),
+    path('sst/save_review_note', views.save_review_note_sst, 
+            name='save_review_note'),
 
     path('make_support_post/', views.make_support_post, name='make_support_post'),
     path('upload_students', views.upload_students, name='upload_students'),

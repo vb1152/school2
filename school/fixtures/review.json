@@ -16,5 +16,23 @@
                 3
             ]
         }
+    },
+    {
+        "model": "school.reviewmeetingnote",
+        "pk": 2,
+        "fields": {
+            "created_at": "2022-11-13T17:19:27.058Z",
+            "updated_at": "2022-11-13T17:19:27.058Z",
+            "text_strategy": "Custom data",
+            "notes": "Note",
+            "progress": "N",
+            "user": 2,
+            "stream": 1,
+            "student": 1,
+            "strategy": [
+                1,
+                2
+            ]
+        }
     }
 ]
