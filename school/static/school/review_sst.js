@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const barProgress = document.getElementById('progress-bar')
 
     progSelectField.addEventListener('change', (e) => {
-        console.log('change', e.target.value)
         if (e.target.value === 'Y') {
             //The bar is green
             elemProgress.removeAttribute('hidden')

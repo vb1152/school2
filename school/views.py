@@ -15,11 +15,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from django.core.exceptions import ObjectDoesNotExist
 
 from django.urls import reverse_lazy
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 
 from .utils import (SstCheckMixin, TeacherCheckMixin,
                     StaffCheckMixin,
@@ -35,7 +34,6 @@ from .forms import (MyUserForm, UploadExcelFileForm,
                     IntakeForm, SupportForm, OcupationalTherapyForm,
                     SpeechTherapyForm, ResponceToSupportForm,
                     ReadingScreeningForm, ReviewMeetingNoteForm,
-                    # ReviewMeetingNoteFormModel
                     )
 from .utils import (read_excel_with_students,
                     calculate_age, sst_check,
@@ -250,85 +248,6 @@ class ShowIntakeSST(SstCheckMixin, DetailView):
     template_name = 'school/sst/intake_view_sst.html'
     login_url = 'login'
 
-@user_passes_test(teacher_check)
-def make_consern_post(request):
-    '''Function to save concern and intake forms to database.'''
-    pass
-    # if request.method == 'POST':
-
-    #     cons_form = ConsernForm(request.POST)
-    #     intake_form = IntakeForm(request.POST)
-
-    #     student = Student.objects.get(id=request.POST['stud_id'])
-    #     teacher = MyUser.objects.get(id=request.user.id)
-
-    #     stream_first = Stream.objects.get(id=request.POST['stream_id'])
-    #     # save concern and change status of the stream
-    #     if cons_form.is_valid():
-    #         new_concern = cons_form.save(commit=False)
-    #         new_concern.student = student
-    #         new_concern.teacher = teacher
-    #         new_concern.save()
-    #         # add concern form to a stream
-    #         stream_first.concern = new_concern
-
-    #         if new_concern.refers == 'RES':
-    #             stream_first.status = 'CL'
-
-    #             new_start = stream_first.date_review + timedelta(days=1)
-    #             new_review = new_start + timedelta(days=21)
-
-    #             stream = Stream(
-    #                 name = stream_first.name,
-    #                 student=student,
-    #                 teacher = request.user,
-    #                 date_start = new_start,
-    #                 date_review = new_review,
-    #                 stream_prev = stream_first
-    #             )
-    #             stream.save()
-
-    #         # create new stream with three weeks and red status
-    #         if intake_form.is_valid() and 'timeline' in request.POST and 'sst_reasoning' in request.POST:
-
-    #             new_intake = intake_form.save(commit=False)
-    #             new_intake.student = student
-    #             new_intake.teacher = teacher
-    #             new_intake.concern = new_concern
-    #             new_intake.save()
-    #             # add intake form to a stream
-    #             stream_first.intake = new_intake
-    #             stream_first.save()
-
-    #             # Create new stream with level 2,
-    #             # now_date = datetime.now()
-    #             # review_date = now_date + timedelta(days=21)
-
-    #             # stream_first.date_review 2022-11-15 <class 'datetime.date'>
-    #             stream_intake = Stream(
-    #                 name = stream_first.name,
-    #                 student=stream_first.student,
-    #                 teacher = request.user,
-    #                 date_start = stream_first.date_review + timedelta(days=1),
-    #                 date_review = stream_first.date_review + timedelta(days=22),
-    #                 level = '2'
-    #             )
-    #             stream_intake.save()
-
-    #             messages.success(
-    #                 request, 'Thank you! Concern and Intake data is saved!')
-    #             return HttpResponseRedirect(reverse('school:student_data_profile',
-    #                                                 args=[student.id]))
-
-    #         stream_first.save()
-
-    #         messages.success(request, 'Thank you! Concern is saved!')
-    #         return HttpResponseRedirect(reverse('school:student_data_profile', args=[student.id]))
-
-    #     messages.error(request, 'Some error. Concern is not saved.')
-    #     return HttpResponseRedirect(reverse('school:student_data_profile',
-    #                                 args=[request.POST['stud_id']]))
-
 
 @user_passes_test(sst_check)
 def sst_view(request):
@@ -428,88 +347,6 @@ def staff_view(request):
         return render(request, 'school/staff.html', context)
 
 
-
-
-@user_passes_test(teacher_check)
-def update_concern(request):
-    '''Function to update concern form and intake forms'''
-    pass
-    # if request.method == 'GET':
-    #     # concern = Consern.objects.get(id=request.GET['concern_id'])
-    #     concern_form = ConsernForm(instance=concern)
-    #     student = concern.student
-
-    #     try:
-    #         intake_form = IntakeForm(instance=concern.consern_intake)
-    #         context = {
-    #             # 'concern': concern,
-    #             'concern_form': concern_form,
-    #             'intake_form': intake_form,
-    #             'student': student
-    #         }
-    #     # if concern doesn have an intake form
-    #     except ObjectDoesNotExist:
-    #         intake_form = IntakeForm()
-    #         for fieldname in intake_form.fields:
-    #             intake_form.fields[fieldname].disabled = True
-
-    #         context = {
-    #             'concern': concern,
-    #             'concern_form': concern_form,
-    #             'intake_form': intake_form,
-    #             'student': student
-    #         }
-    #     return render(request, 'school/update_concern.html', context)
-
-    # if request.method == 'POST':
-    #     # concern = Consern.objects.get(id=request.POST['concern_id'])
-    #     concern_form = ConsernForm(request.POST, instance=concern)
-
-    #     # update current Intake data
-    #     if 'timeline' in request.POST and 'sst_reasoning' in request.POST:
-    #         # means that intake form are filled and data sent
-    #         try:
-    #             intake = Intake.objects.get(concern=concern)
-    #             intake_form = IntakeForm(request.POST, instance=intake)
-    #             if intake_form.has_changed():
-    #                 intake_form.save()
-    #                 if concern_form.has_changed():
-    #                     concern_form.save()
-    #                     # case: concern and intake forms updated
-    #                     messages.success(
-    #                         request, 'Thank you! Concern updates and Intake updates is saved!')
-    #                     return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
-    #                 # case: intake forms updated
-    #                 messages.success(
-    #                     request, 'Thank you! Intake updates is saved!')
-    #                 return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
-    #         except ObjectDoesNotExist:
-    #             # case when update Concern form and ADD intake form
-    #             if concern_form.has_changed():
-    #                 concern_form.save()
-
-    #             intake_form = IntakeForm(request.POST)
-    #             if intake_form.is_valid():
-    #                 new_intake = intake_form.save(commit=False)
-    #                 new_intake.student = concern.student
-    #                 new_intake.teacher = concern.teacher
-    #                 new_intake.concern = concern
-    #                 new_intake.save()
-
-    #                 messages.success(
-    #                     request, 'Thank you! Intake form added to the Concern!')
-    #                 return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
-
-    # # case only concern form updated.
-    # if concern_form.has_changed():
-    #     concern_form.save()
-    #     messages.success(request, 'Thank you! Concern data is updated!')
-    #     return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
-    # else:
-    #     messages.info(request, 'No changes in Concern data are detected.')
-    #     return HttpResponseRedirect(reverse('school:student_data_profile', args=[concern.student.id]))
-
-
 @user_passes_test(teacher_check)
 def ocupational_therapy(request, *, stud_id):
     '''Function to open OcupationalTherapyForm'''
@@ -594,16 +431,6 @@ class ReadSupportSstView(SstCheckMixin, DetailView):
     template_name = 'school/sst/show_support_text_sst.html'
     login_url = 'login'
 
-# class MakeReviewNoteSST(SstCheckMixin, CreateView):
-#     '''Create review meeting note form for SST'''
-#     model = ReviewMeetingNote
-#     template_name = 'school/sst/review_note_sst.html'
-#     form_class = ReviewMeetingNoteFormModel
-
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(*args, **kwargs)
-#         context['student'] = Student.objects.get(id=self.kwargs['stud_id'])
-#         return context
 
 @user_passes_test(sst_check)
 def make_review_sst(request, *, stream_id):
@@ -623,8 +450,6 @@ def make_review_sst(request, *, stream_id):
 def save_review_note_sst(request):
     '''Save review meeting note from SST'''
     if request.method  == 'POST':
-        # {'stud_id': ['5'], 'stream_id': ['6'], 
-        # 'strategy': ['2'], 'text_strategy': [''], 'notes': ['note'], 'progress': ['Y']}>
         review_form = ReviewMeetingNoteForm(request.POST)
         student = Student.objects.get(id=request.POST['stud_id'])
         stream_current = Stream.objects.get(id=request.POST['stream_id'])
@@ -639,11 +464,11 @@ def save_review_note_sst(request):
             new_review.save()
             new_review.strategy.set(review_form.cleaned_data['strategy'])
 
+            new_start = stream_current.date_review + timedelta(days=1)
+            new_review = new_start + timedelta(days=21)
+
             if review_form.cleaned_data['progress'] == 'Y':
                 stream_current.progress = Stream.YES
-
-                new_start = stream_current.date_review + timedelta(days=1)
-                new_review = new_start + timedelta(days=21)
 
                 stream = Stream(
                     name = stream_current.name,
@@ -654,16 +479,28 @@ def save_review_note_sst(request):
                     level = stream_current.level
                 )
                 stream.save()
+                stream_current.save()
 
                 messages.success(request, 'Thank you! Review Note is saved!')
                 return HttpResponseRedirect(reverse('school:sst_view'))
+            
+            elif review_form.cleaned_data['progress'] == 'N':
+                stream_current.progress = Stream.NO
 
-                # TODO Create new stream with next level (3)
+                stream = Stream(
+                    name = stream_current.name,
+                    student=student,
+                    date_start = new_start,
+                    date_review = new_review,
+                    stream_next = stream_current,
+                    level = Stream.THREE
+                )
+                stream.save()
 
+                stream_current.save()
 
-
-
-        print(request.POST)
+                messages.success(request, 'Thank you! Review Note is saved and new Level achived!')
+                return HttpResponseRedirect(reverse('school:sst_view'))
 
 class ShowReadScreen(LoginRequiredMixin, DetailView):
     '''View to show results of reading screening'''
@@ -754,7 +591,6 @@ class CreateResponse(TeacherCheckMixin, CreateView):
         # add to the returned dictionary
         context['responce'] = ResponceToSupport.objects.filter(
             support=self.kwargs['supp_pk'])
-        # context['responce'] = ResponceToSupport.objects.all()
         return context
 
 class StudentProfileSstView(SstCheckMixin, DetailView):
@@ -819,7 +655,6 @@ class CreateNewStream(TeacherCheckMixin, View):
         stream_data = json.load(request)
         # get datetime now
         now_date = datetime.now()
-        # now_date_str = now_date.strftime("%d-%m-%Y"),
         review_date = now_date + timedelta(days=21)
 
         stream = Stream(

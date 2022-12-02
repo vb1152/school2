@@ -1,7 +1,6 @@
 from django.forms import ModelForm
 from .models import (MyUser,
                      Intake,
-                     Support,
                      OcupationalTherapy,
                      SpeechTherapy,
                      ResponceToSupport,
@@ -245,10 +244,6 @@ class SupportForm(forms.Form):
         ),
         label='Support note'
     )
-
-    # class Meta:
-    #     model = Support
-    #     exclude = ['created_at', 'updated_at', 'teacher', 'sst', 'student', 'stream']
 
 
 class OcupationalTherapyForm(ModelForm):
@@ -498,56 +493,3 @@ class ReviewMeetingNoteForm(forms.Form):
         label='Has the student made sufficient progress?',
     )
 
-
-# class ReviewMeetingNoteFormModel(forms.ModelForm):
-#     '''Form for class based view.
-#     save a review form from sst view'''
-#     strategy = forms.ModelMultipleChoiceField(
-#         required=True,
-#         queryset=ImplicitStrategy.objects.all(),
-#         widget=forms.widgets.SelectMultiple(
-#             attrs={
-#                 "class": "form-control",
-#             }
-#         ),
-#         label='Implicit strategy',
-#         help_text = 'Hold Shift button on your keyboard and choose more than one strategy'
-#     )
-#     text_strategy = forms.CharField(
-#         required=False,
-#         widget=forms.widgets.Textarea(
-#             attrs={
-#                 'placeholder': 'Add custom strategies, if used. ',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'rows': '3'
-#             }
-#         ),
-#         label='Custom strategy',
-#     )
-#     notes = forms.CharField(
-#         required=True,
-#         widget=forms.widgets.Textarea(
-#             attrs={
-#                 'placeholder': 'Add custom strategies, if used. ',
-#                 'class': 'form-control',
-#                 'type': 'text',
-#                 'rows': '3'
-#             }
-#         ),
-#         label='Anectodal notes',
-#     )
-#     progress = forms.ChoiceField(
-#         required=True,
-#         widget=forms.widgets.Select(
-#             attrs={
-#                 "class": "form-control",
-#             }
-#         ),
-#         choices= [('','Choose YES or NO')] + ReviewMeetingNote.PROGRESS_CHOICES,
-#         label='Has the student made sufficient progress?',
-#     )
-
-#     class Meta:
-#         model = ReviewMeetingNote
-#         fields = ['strategy', 'text_strategy', 'notes', 'progress',]
