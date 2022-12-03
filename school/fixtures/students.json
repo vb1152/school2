@@ -11,15 +11,16 @@
             "date_of_birth": "2003-11-02",
             "birth_order_in_class": 7,
             "birth_order_in_family": 2,
-            "gender": "M",
+            "gender": "F",
             "cur_grade": 10,
             "grad_year": "2022",
-            "email": "None",
+            "email": "Dianne@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-08",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/5447fc90-d31d-498c-bc1e-6d891792c89c.jpg"
         }
     },
     {
@@ -37,12 +38,13 @@
             "gender": "F",
             "cur_grade": 12,
             "grad_year": "2020",
-            "email": "None",
+            "email": "Oscar@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-03",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/6ff813e2-479d-42a7-b517-42835f539e44.jpg"
         }
     },
     {
@@ -60,12 +62,13 @@
             "gender": "M",
             "cur_grade": 11,
             "grad_year": "2021",
-            "email": "None",
+            "email": "Glover@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-04",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/77c31258-a9cd-44a9-8373-ed64dd211504.jpg"
         }
     },
     {
@@ -83,12 +86,13 @@
             "gender": "F",
             "cur_grade": 10,
             "grad_year": "2022",
-            "email": "None",
+            "email": "Drake@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-05",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/45061aee-e3b2-494d-9438-6a58d953f342.jpg"
         }
     },
     {
@@ -106,12 +110,13 @@
             "gender": "M",
             "cur_grade": 10,
             "grad_year": "2022",
-            "email": "None",
+            "email": "Malone@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-06",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/2aa867ac-5ff6-4a9a-a707-5d5dbbac17d3.jpg"
     }
     },
     {
@@ -126,15 +131,16 @@
             "date_of_birth": "2004-08-30",
             "birth_order_in_class": 7,
             "birth_order_in_family": 3,
-            "gender": "F",
+            "gender": "M",
             "cur_grade": 10,
             "grad_year": "2022",
-            "email": "None",
+            "email": "Theodore@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-07",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/86f929b5-89ab-445a-a0c2-c56b2129bc19.jpg"
         }
     },
     {
@@ -152,12 +158,13 @@
             "gender": "F",
             "cur_grade": 10,
             "grad_year": "2022",
-            "email": "None",
+            "email": "Watson@a.com",
             "home_lang": "English ",
             "date_join": "2013-09-09",
             "entrygrades": 5,
             "teacher": 2,
-            "siblings_names": null
+            "siblings_names": null,
+            "image": "images/7f53fa10-3f08-4eb2-a91b-30694acd187d.jpg"
         }
     }
 ]

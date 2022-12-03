@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.urls import reverse
+import uuid
+import os
 
 
 class MyUser(AbstractUser):
@@ -28,6 +30,11 @@ class UsersData(models.Model):
     def __str__(self) -> str:
         return self.user.username
 
+def image_directory_path(instance, filename):
+    # return 'images/{0}/'.format(filename)
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return os.path.join('images/', filename)
 
 class Student(models.Model):
     school_id = models.CharField(max_length=10, verbose_name='school_id')
@@ -71,6 +78,7 @@ class Student(models.Model):
                                 limit_choices_to={'is_teacher': True},
                                 related_name='students')
     siblings_names = models.CharField(max_length=200, null=True, blank=True)
+    image = models.ImageField(upload_to=image_directory_path, null=True, blank=True, default='images/default.jpg')
 
     class Meta:
         verbose_name_plural = "Students"
@@ -103,44 +111,6 @@ class NotesPTS(models.Model):
 
     def __str__(self) -> str:
         return str(self.date)
-
-
-# class Consern(models.Model):
-#     date = models.DateField(verbose_name='Date')
-#     # ACADEMIC = 'A'
-#     # GUIDANCE = 'G'
-#     # SOCIAL = 'S'
-#     # CARE = 'C'
-#     # TYPES_CHOICES = [(ACADEMIC, 'Academic'),
-#     #                  (GUIDANCE, 'Guidance and Discipline'),
-#     #                  (SOCIAL, 'Social Inclusion'),
-#     #                  (CARE, 'Care and Therapeutic')]
-#     # consern_type = models.CharField(
-#     #     max_length=1, choices=TYPES_CHOICES, verbose_name='Type of Concern')
-#     strategy_used = models.CharField(
-#         verbose_name='Strategies Used', max_length=2000)
-#     num_weeks = models.PositiveSmallIntegerField(
-#         verbose_name='Number of weeks')
-#     st_responce = models.CharField(
-#         verbose_name='Student Response', max_length=2000)
-#     teach_comm = models.CharField(
-#         verbose_name='Teacher Comments', max_length=2000)
-#     student = models.ForeignKey(
-#         Student, on_delete=models.CASCADE, related_name='stud_consern')
-#     teacher = models.ForeignKey(MyUser,
-#                                 on_delete=models.PROTECT,
-#                                 null=True,
-#                                 limit_choices_to={'is_teacher': True})
-#     NOREFERRAL = 'NO'
-#     REFERRAL = 'R'
-#     RESOLVED = 'RES'
-#     CONSERN_CHOICES = [(NOREFERRAL, 'No Referral'),
-#                        (REFERRAL, 'Referral'), (RESOLVED, 'Concern Resolved')]
-#     refers = models.CharField(
-#         max_length=3, choices=CONSERN_CHOICES, verbose_name='Referral')
-
-#     class Meta:
-#         ordering = ['-date']
 
 
 class Intake(models.Model):
