@@ -84,12 +84,25 @@ WSGI_APPLICATION = 'school_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ['DEBUG'] == 'True':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
+elif os.environ['DEBUG'] == 'False':
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ['DB_NAME'],
+            "USER": os.environ['DB_USERNAME'],
+            "PASSWORD": os.environ['DB_PASSWORD'],
+            "HOST": os.environ['DB_ENDPOINT'],
+            "PORT": os.environ['DB_PORT'],
+        }
+    }
 
 
 # Password validation
