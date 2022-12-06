@@ -1,26 +1,30 @@
+import json
+
 from django.test import TestCase, SimpleTestCase, Client, RequestFactory
 from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.auth import get_user_model
 from django.urls import reverse, resolve
 from datetime import date
 
+
 from .models import MyUser, Student, NotesPTS
 from .views import (index, login_view, upload_users,
-                    teacher_view, sst_view, support,
-                    sst_view_intake, make_support_post,
+                    teacher_view, sst_view,
+                    make_support_post,
                     upload_students, student_data_profile,
-                    make_consern, make_consern_post, staff_view,
+                    staff_view,
                     save_note_from_PTC, save_observation,
-                    update_concern, ocupational_therapy,
+                    ocupational_therapy,
                     ocupational_therapy_post, speech_therapy,
                     speech_therapy_post, upload_users,
 
                     StudentProfileSstView, OccupationalTherapyView,
-                    SpeechTherapyView, ShowConcernSST, ReadSupportSstView,
+                    SpeechTherapyView, ReadSupportSstView,
                     ShowObservationTextSstView, CreateResponse,
                     ShowSpeechTherapy, ShowOcupTherapy, ShowSupport,
                     ShowNote, ShowObservation, ReadingScreenView,
-                    ShowReadScreen,
+                    ShowReadScreen, DownloadSampleUsers, CreateNewStream,
+                    ReadScreenSSTView
                     )
 
 
@@ -68,36 +72,23 @@ class TestUrls(SimpleTestCase):
         url = reverse('school:sst_view')
         self.assertEqual(resolve(url).func, sst_view)
 
-    def test_sst_support_url_resolves(self):
-        url = reverse('school:support', args=[1])
-        self.assertEqual(resolve(url).func, support)
-
-    def test_sst_intake_url_resolve(self):
-        url = reverse('school:sst_view_intake')
-        self.assertEqual(resolve(url).func, sst_view_intake)
-
     def test_sst_student_profile_url_resolve(self):
         url = reverse('school:student_profile', args=[1])
         self.assertEqual(resolve(url).func.view_class,
                          StudentProfileSstView)
 
     def test_sst_show_therapy_url_resolve(self):
-        url = reverse('school:show_therapy_sst', args=[1])
+        url = reverse('school:show_therapy_sst', args=[1, 2])
         self.assertEqual(resolve(url).func.view_class,
                          OccupationalTherapyView)
 
     def test_sst_show_speech_url_resolve(self):
-        url = reverse('school:show_speech_sst', args=[1])
+        url = reverse('school:show_speech_sst', args=[1, 2])
         self.assertEqual(resolve(url).func.view_class,
                          SpeechTherapyView)
 
-    def test_sst_show_concern_url_resolve(self):
-        url = reverse('school:show_concern_sst', args=[1])
-        self.assertEqual(resolve(url).func.view_class,
-                         ShowConcernSST)
-
     def test_sst_read_full_support_url_resolve(self):
-        url = reverse('school:read_full_support_text_sst', args=[1])
+        url = reverse('school:read_full_support_text_sst', args=[1, 2])
         self.assertEqual(resolve(url).func.view_class,
                          ReadSupportSstView)
 
@@ -153,14 +144,6 @@ class TestUrls(SimpleTestCase):
         url = reverse('school:show_read_screen', args=[1, 2])
         self.assertEqual(resolve(url).func.view_class, ShowReadScreen)
 
-    def test_make_consern_url_resolve(self):
-        url = reverse('school:make_consern', args=[1])
-        self.assertEqual(resolve(url).func, make_consern)
-
-    def test_make_consern_post_url_resolve(self):
-        url = reverse('school:make_consern_post')
-        self.assertEqual(resolve(url).func, make_consern_post)
-
     def test_staff_view_url_resolve(self):
         url = reverse('school:staff_view')
         self.assertEqual(resolve(url).func, staff_view)
@@ -172,10 +155,6 @@ class TestUrls(SimpleTestCase):
     def test_save_observations_url_resolve(self):
         url = reverse('school:save_observation')
         self.assertEqual(resolve(url).func, save_observation)
-
-    def test_update_concern_url_resolve(self):
-        url = reverse('school:update_concern')
-        self.assertEqual(resolve(url).func, update_concern)
 
     def test_ocupationl_ther_url_resove(self):
         url = reverse('school:ocupational_therapy', args=[1])
@@ -197,6 +176,13 @@ class TestUrls(SimpleTestCase):
         url = reverse('school:upload_users')
         self.assertEqual(resolve(url).func, upload_users)
 
+    def test_download_sample_users_url_resolve(self):
+        url = reverse('school:download_sample_users')
+        self.assertEqual(resolve(url).func.view_class, DownloadSampleUsers)
+
+    def test_new_stream_url_resolve(self):
+        url = reverse('school:new_stream')
+        self.assertEqual(resolve(url).func.view_class, CreateNewStream)
 
 class MyTest(TestCase):
 
@@ -266,11 +252,7 @@ class MyTest(TestCase):
         self.assertTrue(self.staf_user.is_staff)
         self.assertFalse(self.staf_user.is_superuser)
 
-    
-
      # required registered user
-   
-
     def test_sst_url_exists(self):
         logged_in = self.client.login(
             username=self.sst_user.username, password='1')
@@ -377,3 +359,92 @@ class TestTeacherPages(TestCase):
     def test_student_profile_url_exists(self):
         resp = self.client.get('/student_data_profile/1')
         self.assertEqual(resp.status_code, 200)
+
+    def test_new_stream_created_post(self):
+        '''Test checks for:
+        - accept post requests with data for a
+            new stream
+        - checks if stream is created and responce 
+            with new stream data is returned. 
+        '''
+        stream_data = {
+            "stream_name": "Care and Therapeutic",
+            "stud_id": 1,
+        }
+        resp = self.client.post('/new_stream', 
+                                json.dumps(stream_data),
+                                content_type="application/json")
+        self.assertEqual(resp.status_code, 200)
+        self.assertJSONEqual(str(resp.content, encoding='utf8'), 
+                            {'stream': 1, })
+
+class TestStaffPages(TestCase):
+    '''Test case for a staff user'''
+    def setUp(self) -> None:
+        self.client = Client()
+        self.factory = RequestFactory()
+        MyUser = get_user_model()
+
+        self.staf_user = MyUser.objects.create_user(
+            username='Staff', email='staff@staff.com', password='1',
+            is_staff=True)
+            
+        logged_in = self.client.login(
+            username=self.staf_user.username, password='1')
+
+    def test_staff_url_exists(self):
+        resp = self.client.get('/staff')
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'school/staff.html')
+
+    def test_staff_view_post_download_users_request(self):
+        '''Test for downloading sample file wit users.'''
+        resp = self.client.post('/download_users', {'sample': 'users'})
+        self.assertEqual(resp.get('Content-Disposition'),
+                        "attachment; filename=Sample_users.xlsx")
+
+    def test_staff_view_post_download_students_request(self):
+        '''Test for downloading sample file with students'''
+        resp = self.client.post('/download_users', {'sample': 'students'})
+        self.assertEqual(resp.get('Content-Disposition'), 
+                        'attachment; filename=Sample_students.xlsx')
+
+class TestSSTpages(TestCase):
+    '''Test case for a SST user'''
+    def setUp(self) -> None:
+        self.client = Client()
+        self.factory = RequestFactory()
+        MyUser = get_user_model()
+
+        self.sst_user = MyUser.objects.create_user(
+            username='Bar_SST', email='sst@sst.com', password='1', is_sst=True)
+
+        self.teacher_user = MyUser.objects.create_user(
+            username='Amy_Doe', email='a@a.com', password='1', is_teacher=True)
+
+        self.student = Student.objects.create(
+            school_id='1',
+            first_name='Alan',
+            middle_name=None,
+            last_name='Max',
+            preferred_name='Alan',
+            date_of_birth=date(2000, 10, 5),
+            birth_order_in_class=1,
+            birth_order_in_family=1,
+            gender='Male',
+            cur_grade=8,
+            grad_year='2025',
+            email='alan@gmail.com',
+            home_lang='English',
+            date_join=date(2021, 11, 11),
+            entrygrades=10,
+            teacher=self.teacher_user
+        )
+
+        logged_in = self.client.login(
+            username=self.sst_user.username, password='1')
+    
+    def test_read_screen_sst_url_resolve(self):
+        url = reverse('school:show_readscreen_sst', args=[1, 2])
+        self.assertEqual(resolve(url).func.view_class, ReadScreenSSTView)
+        

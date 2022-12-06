@@ -166,7 +166,7 @@ def create_sample_excel_users(request):
 def create_sample_excel_students(request):
     '''Create sample Excel file to upload students'''
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachments; filename=Sample_students.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=Sample_students.xlsx'
     workbook = xlsxwriter.Workbook(response)  # , {'in_memory': True})
     worksheet = workbook.add_worksheet()
     worksheet.set_column(0, 15, 10)
